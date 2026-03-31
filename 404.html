@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>발전설비 — 리다이렉트</title>
+<meta name="theme-color" content="#0f2744"/>
+<script>
+/* GitHub Pages SPA 리다이렉트 */
+var seg = 1;
+var l = window.location;
+l.replace(
+  l.protocol + '//' + l.host + l.pathname.split('/').slice(0, 1 + seg).join('/') +
+  '/?p=/' + l.pathname.slice(1).split('/').slice(seg).join('/').replace(/&/g,'~and~') +
+  (l.search ? '&q=' + l.search.slice(1).replace(/&/g,'~and~') : '') +
+  l.hash
+);
+</script>
+</head>
+<body style="background:#0d1c30;color:#e2e8f0;font-family:sans-serif;text-align:center;padding:60px 20px;">
+  <div style="font-size:40px;margin-bottom:16px;">⚡</div>
+  <div style="font-size:18px;font-weight:700;margin-bottom:8px;">발전설비</div>
+  <div style="font-size:13px;color:#64748b;">페이지를 불러오는 중...</div>
+</body>
+</html>
