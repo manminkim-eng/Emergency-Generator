@@ -27,25 +27,24 @@
       "short_name": "발전설비",
       "description": "비상발전기 용량 산정 바로 시작",
       "url": "./index.html?tab=calc&pwa=1",
-      "icons": [{ "src": "./icons/icon-96x96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "./icons/icon-192x192.png", "sizes": "192x192" }]
     },
     {
-      "name": "용량 산정표",
-      "short_name": "산정표",
-      "description": "부하 용량 산정표 탭 바로가기",
+      "name": "부하 목록",
+      "short_name": "부하목록",
+      "description": "소방부하 목록표 탭",
       "url": "./index.html?tab=load&pwa=1",
-      "icons": [{ "src": "./icons/icon-96x96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "./icons/icon-192x192.png", "sizes": "192x192" }]
     }
   ],
   "screenshots": [
     {
-      "src": "./icons/icon-512x512.png",
-      "sizes": "512x512",
+      "src": "./icons/splash-1080x1920.png",
+      "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "발전설비 메인 화면"
     }
   ],
-  "prefer_related_applications": false,
-  "related_applications": []
+  "prefer_related_applications": false
 }
