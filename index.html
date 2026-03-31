@@ -1,0 +1,2804 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>발전설비 — 비상발전기 용량 산정 · MANMIN-Ver3.0</title>
+<meta name="description" content="NFTC 602 / NFPC 602 비상발전기 필요 용량(kVA) 자동 산정 — MANMIN-Ver3.0"/>
+<meta name="keywords" content="비상발전기,발전설비,비상전원,NFTC602,소방설계"/>
+<meta property="og:title" content="발전설비 — 비상발전기 용량 산정"/>
+<meta property="og:description" content="NFTC 602 비상발전기 용량 자동 산정 · MANMIN-Ver3.0"/>
+<meta property="og:image" content="./icons/icon-512x512.png"/>
+<meta property="og:type" content="website"/>
+<link rel="manifest" href="./manifest.json"/>
+<meta name="theme-color" content="#0f2744"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="발전설비"/>
+<meta name="application-name" content="발전설비"/>
+<meta name="msapplication-TileColor" content="#0f2744"/>
+<meta name="msapplication-TileImage" content="./icons/icon-144x144.png"/>
+<link rel="icon" href="./icons/favicon.ico"/>
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/icon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="./icons/icon-16x16.png"/>
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png"/>
+<link rel="apple-touch-icon" sizes="152x152" href="./icons/icon-152x152.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180x180.png"/>
+<link rel="apple-touch-startup-image" href="./icons/splash-2048x2732.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&family=Noto+Sans+Mono:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet"/>
+<style>
+/* ════════════════════════════════════════════════
+   0. CSS 변수 — 비상발전기 테마
+   메인: 딥 네이비 + 앰버 골드 + 에너지 오렌지
+════════════════════════════════════════════════ */
+:root{
+  --c-primary:   #0f2744;   /* 딥 네이비 (메인) */
+  --c-primary2:  #1a3a60;   /* 미드 네이비 */
+  --c-primary3:  #234e82;   /* 라이트 네이비 */
+  --c-accent:    #f59e0b;   /* 앰버 골드 (포인트) */
+  --c-accent2:   #d97706;   /* 다크 앰버 */
+  --c-energy:    #ea580c;   /* 에너지 오렌지 */
+  --c-sky:       #38bdf8;   /* 스카이 블루 (값 강조) */
+  --c-bg:        #0d1c30;   /* 앱 배경 */
+  --c-surface:   #ffffff;
+  --c-text:      #e2e8f0;
+}
+
+/* ════════════════════════════════════════════════
+   1. RESET & BASE
+════════════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Noto Sans KR',sans-serif;
+  background:var(--c-bg);
+  color:var(--c-text);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+input,select,button,td,th,div,span,p,h1,h2,h3,label{
+  font-family:'Noto Sans KR',sans-serif !important;
+}
+input[type=number]::-webkit-inner-spin-button{opacity:.4;}
+button{cursor:pointer;}
+
+/* ════════════════════════════════════════════════
+   2. PRINT
+════════════════════════════════════════════════ */
+@media print{
+  @page{
+    size:A4 portrait;
+    margin:14mm 12mm 22mm 14mm;
+    @bottom-right{
+      content:"MANMIN-Ver3.0  |  NFTC 602";
+      font-family:'Orbitron',sans-serif;
+      font-size:7.5pt;font-weight:700;color:#374151;letter-spacing:.08em;
+    }
+  }
+  html,body{background:white !important;margin:0 !important;padding:0 !important;}
+  body>*{display:none !important;}
+  #print-zone{display:block !important;}
+  #print-zone *{visibility:visible !important;}
+  #print-zone{
+    visibility:visible !important;position:static !important;
+    width:100% !important;height:auto !important;
+    background:white !important;padding:0 !important;margin:0 !important;overflow:visible !important;
+  }
+  #print-zone #rpt-print-doc{
+    font-family:'Noto Sans KR',sans-serif !important;
+    font-size:10.5pt !important;line-height:1.65 !important;
+    color:#111 !important;background:white !important;width:100% !important;
+  }
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;color-adjust:exact !important;}
+  .no-break{break-inside:avoid;page-break-inside:avoid;}
+  table{break-inside:auto;}tr{break-inside:avoid;}
+  #report-zone{padding:0 !important;margin:0 !important;box-shadow:none !important;border:none !important;border-radius:0 !important;width:100% !important;}
+  .rpt-outer,.rpt-inner{background:white !important;padding:0 !important;overflow:visible !important;border-radius:0 !important;}
+  .rpt-inner{transform:none !important;transform-origin:unset !important;width:794px !important;box-sizing:border-box !important;}
+  .rpt-hint{display:none !important;}
+  a::after{content:none !important;}
+}
+#print-zone{display:none;}
+
+/* ════════════════════════════════════════════════
+   3. HEADER
+════════════════════════════════════════════════ */
+.site-header{
+  /* 옥내소화전 동일 구조: 135deg 딥 네이비 그라데이션 */
+  background:linear-gradient(135deg,#0d1f33 0%,#1e3a5f 55%,#1a3050 100%);
+  color:white;padding:20px 0 0;
+  position:sticky;top:0;z-index:800;
+  box-shadow:0 4px 24px rgba(0,0,0,.55);
+}
+.hdr-inner{max-width:1300px;margin:0 auto;padding:0 24px;}
+.hdr-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
+.hdr-eng{font-size:11px;font-weight:600;opacity:.65;letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;color:#94a3b8;}
+.hdr-h1{font-size:26px;font-weight:900;letter-spacing:.03em;line-height:1.2;color:white;}
+.hdr-desc{font-size:11px;margin-top:8px;opacity:.85;letter-spacing:.02em;color:#cbd5e1;}
+.hdr-manmin{
+  font-family:'Orbitron',sans-serif !important;
+  font-weight:900;font-size:12px;color:var(--c-accent);
+  letter-spacing:.08em;text-shadow:0 0 8px rgba(245,158,11,.5);
+}
+.hdr-right{text-align:right;opacity:.75;font-size:11px;flex-shrink:0;margin-left:12px;color:#cbd5e1;}
+.hdr-right b{font-size:13px;font-weight:700;display:block;color:white;}
+.hdr-right .accent{color:var(--c-accent);font-size:10px;margin-top:4px;}
+
+/* ── 탭 바 ── */
+.tab-bar-wrap{
+  display:flex;overflow-x:auto;white-space:nowrap;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  /* 모바일 스크롤 힌트 페이드 */
+  -webkit-mask-image:linear-gradient(to right,transparent 0,black 8px,black calc(100% - 20px),transparent 100%);
+  mask-image:linear-gradient(to right,transparent 0,black 8px,black calc(100% - 20px),transparent 100%);
+}
+.tab-bar-wrap::-webkit-scrollbar{display:none;}
+.tab-btn{
+  padding:11px 20px;border:none;font-weight:700;font-size:13px;
+  letter-spacing:.01em;flex-shrink:0;transition:all .15s;
+  background:transparent;color:rgba(255,255,255,.65);
+  border-bottom:3px solid transparent;
+}
+.tab-btn .tab-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:18px;height:18px;border-radius:50%;
+  background:rgba(255,255,255,.15);
+  font-size:10px;font-weight:900;margin-right:5px;
+  vertical-align:middle;line-height:1;
+  transition:background .15s;
+}
+.tab-btn:hover:not(.active){color:white;background:rgba(255,255,255,.06);}
+.tab-btn:hover:not(.active) .tab-num{background:rgba(255,255,255,.25);}
+.tab-btn.active{color:white;background:rgba(245,158,11,.18);border-bottom-color:var(--c-accent);}
+.tab-btn.active .tab-num{background:var(--c-accent);color:#0f2744;}
+.tab-btn.print-tab{color:#fbbf24 !important;}
+.tab-btn.print-tab.active{background:rgba(251,191,36,.15) !important;border-bottom-color:#fbbf24 !important;}
+.tab-btn.print-tab .tab-num{background:rgba(251,191,36,.25) !important;color:#fbbf24 !important;}
+.tab-btn.print-tab.active .tab-num{background:#fbbf24 !important;color:#0f2744 !important;}
+
+/* ── 요약 바 ── */
+.sum-bar-wrap{
+  background:#0a1628;
+  padding:9px 0;
+  border-bottom:1px solid rgba(49,130,206,.15);
+}
+.sum-bar{max-width:1300px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;}
+.sum-item{font-size:12px;color:#64748b;white-space:nowrap;}
+.sum-val{color:var(--c-sky);font-family:'Noto Sans Mono',monospace !important;font-weight:700;}
+
+/* ════════════════════════════════════════════════
+   4. MAIN LAYOUT
+════════════════════════════════════════════════ */
+.main-outer{max-width:1300px;margin:0 auto;padding:22px 24px 120px;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* ════════════════════════════════════════════════
+   5. BOX COMPONENT
+════════════════════════════════════════════════ */
+.box{
+  background:white;border-radius:12px;
+  border:1px solid #e5e7eb;overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  margin-bottom:18px;
+}
+.box-hd{
+  color:white;padding:10px 18px;font-size:12px;
+  font-weight:800;letter-spacing:.04em;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.box-hd .ico{font-size:15px;opacity:.85;}
+.box-hd .sec-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:22px;height:22px;border-radius:6px;
+  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);
+  font-size:11px;font-weight:900;padding:0 5px;letter-spacing:0;
+}
+.box-bd{padding:18px;}
+
+/* 박스 헤더 색상 프리셋 */
+.bh-navy{background:linear-gradient(135deg,var(--c-primary),var(--c-primary3));}
+.bh-amber{background:linear-gradient(135deg,#92400e,#b45309);}
+.bh-energy{background:linear-gradient(135deg,#9a3412,var(--c-energy));}
+.bh-green{background:linear-gradient(135deg,#14532d,#16a34a);}
+.bh-violet{background:linear-gradient(135deg,#3b0764,#6d28d9);}
+.bh-indigo{background:linear-gradient(135deg,#1e1b4b,#4338ca);}
+.bh-teal{background:linear-gradient(135deg,#134e4a,#0d9488);}
+.bh-slate{background:linear-gradient(135deg,#1e293b,#475569);}
+
+/* ════════════════════════════════════════════════
+   6. GRID
+════════════════════════════════════════════════ */
+.g-proj{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;}
+.g-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.g-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.g-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g-2sm{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* ════════════════════════════════════════════════
+   7. FORM ELEMENTS
+════════════════════════════════════════════════ */
+.lbl{
+  display:block;font-size:11px;font-weight:700;
+  color:#6b7280;text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:5px;
+}
+.inp{
+  width:100%;padding:9px 12px;border-radius:8px;
+  border:1.5px solid #d1d5db;background:white;
+  font-size:13px;color:#111;outline:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+.inp:focus{border-color:var(--c-primary3);box-shadow:0 0 0 3px rgba(35,78,130,.15);}
+select.inp option{background:white;color:#111;}
+.inp-wrap{position:relative;}
+.inp-wrap .inp{padding-right:46px;}
+.inp-unit{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-size:10px;font-weight:700;color:#9ca3af;
+  font-family:'Noto Sans Mono',monospace !important;pointer-events:none;
+}
+.inp-linked{border-color:var(--c-primary3) !important;background:#eff6ff !important;}
+
+/* ════════════════════════════════════════════════
+   8. RESULT CARDS
+════════════════════════════════════════════════ */
+.rc{border-radius:12px;padding:13px 14px;border-width:1.5px;border-style:solid;}
+.rc-label{
+  font-size:10px;font-weight:700;color:#9ca3af;
+  text-transform:uppercase;letter-spacing:.07em;
+  margin-bottom:5px;display:flex;justify-content:space-between;align-items:center;
+}
+.rc-val{font-size:22px;font-weight:900;line-height:1.1;font-family:'Noto Sans Mono',monospace !important;}
+.rc-unit{font-size:12px;color:#9ca3af;margin-left:4px;font-family:'Noto Sans KR',sans-serif !important;}
+.rc-sub{font-size:10px;color:#6b7280;margin-top:4px;font-family:'Noto Sans Mono',monospace !important;}
+/* 색상 카드 */
+.rc-navy{background:#eff4fd;border-color:#bfcfe8;}.rc-navy .rc-val{color:#0f2744;}
+.rc-amber{background:#fffbeb;border-color:#fde68a;}.rc-amber .rc-val{color:#92400e;}
+.rc-energy{background:#fff7ed;border-color:#fed7aa;}.rc-energy .rc-val{color:#c2410c;}
+.rc-green{background:#f0fdf4;border-color:#bbf7d0;}.rc-green .rc-val{color:#15803d;}
+.rc-sky{background:#f0f9ff;border-color:#bae6fd;}.rc-sky .rc-val{color:#0369a1;}
+.rc-slate{background:#f8fafc;border-color:#e2e8f0;}.rc-slate .rc-val{color:#334155;}
+.rc-red{background:#fef2f2;border-color:#fecaca;}.rc-red .rc-val{color:#b91c1c;}
+.rc-violet{background:#f5f3ff;border-color:#ddd6fe;}.rc-violet .rc-val{color:#5b21b6;}
+
+/* ════════════════════════════════════════════════
+   9. RESULT BOX (상세 결과)
+════════════════════════════════════════════════ */
+.result-box{
+  background:linear-gradient(135deg,#fdfaf0,#fef9e7);
+  border:2px solid #fde68a;border-radius:12px;padding:16px;
+}
+.result-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:9px;}
+.result-row:last-child{margin-bottom:0;}
+.rl{font-size:11px;font-weight:700;color:#6b7280;}
+.rv{font-family:'Noto Sans Mono',monospace !important;font-size:15px;font-weight:700;color:var(--c-primary);}
+.rv.lg{font-size:20px;color:var(--c-primary);}
+.rv.ok{color:#15803d;}.rv.err{color:#b91c1c;}
+.r-divider{border:none;border-top:1px solid #fde68a;margin:9px 0;}
+
+/* ════════════════════════════════════════════════
+   10. BADGES
+════════════════════════════════════════════════ */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:800;}
+.badge-ok{background:#f0fdf4;border:1px solid #86efac;color:#15803d;}
+.badge-ng{background:#fef2f2;border:1px solid #fca5a5;color:#b91c1c;}
+.badge-warn{background:#fffbeb;border:1px solid #fde68a;color:#92400e;}
+.badge-navy{background:#eff4fd;border:1px solid #bfcfe8;color:var(--c-primary);}
+.badge-amber{background:#fffbeb;border:1px solid #fde68a;color:#92400e;}
+
+/* ════════════════════════════════════════════════
+   11. TABLE
+════════════════════════════════════════════════ */
+.tbl-wrap{width:100%;overflow-x:auto;border-radius:8px;-webkit-overflow-scrolling:touch;}
+.tbl-wrap::-webkit-scrollbar{height:4px;}
+.tbl-wrap::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px;}
+table.dt{width:100%;border-collapse:collapse;font-size:12px;}
+table.dt th{
+  background:var(--c-primary);color:#e0f2fe;
+  padding:9px 12px;text-align:center;
+  font-weight:800;font-size:11px;letter-spacing:.04em;
+  border:1px solid var(--c-primary);
+}
+table.dt td{
+  padding:8px 12px;border:1px solid #d1d5db;
+  color:#111827;text-align:center;background:white;
+  font-size:12px;font-weight:500;
+}
+table.dt tr:nth-child(even) td{background:#fefce8;}
+table.dt td.L{text-align:left;}
+table.dt td b{color:var(--c-primary);font-weight:800;}
+.tbl-note{
+  font-size:11px;color:#374151;margin-top:6px;
+  line-height:1.8;padding:10px 14px;
+  background:#f8fafc;border-radius:6px;border:1px solid #e2e8f0;
+}
+
+/* ════════════════════════════════════════════════
+   12. LAW / INFO CARDS
+════════════════════════════════════════════════ */
+.law-banner{
+  background:linear-gradient(135deg,var(--c-primary),var(--c-primary2));
+  border-radius:12px;padding:13px 18px;
+  display:flex;gap:18px;flex-wrap:wrap;align-items:center;
+  margin-bottom:18px;
+  border:1px solid rgba(245,158,11,.2);
+}
+.lbk{font-size:11px;font-weight:700;color:var(--c-accent);letter-spacing:.08em;text-transform:uppercase;flex-shrink:0;}
+.lbi{display:flex;gap:4px;font-size:11px;}
+.lbi-k{color:var(--c-accent);font-weight:600;}
+.lbi-v{color:white;font-family:'Noto Sans Mono',monospace !important;font-weight:700;}
+.info-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:13px 14px;}
+.info-title{font-size:10px;font-weight:800;color:var(--c-primary);margin-bottom:8px;letter-spacing:.04em;}
+.info-list{list-style:none;}
+.info-list li{font-size:11px;color:#374151;line-height:1.8;padding-left:13px;position:relative;}
+.info-list li::before{content:"▸";position:absolute;left:0;color:var(--c-accent2);font-size:9px;top:1px;}
+.law-box{background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:12px 14px;}
+.law-ref{font-size:10px;font-weight:800;color:#92400e;margin-bottom:4px;}
+.law-text{font-size:11px;color:#374151;line-height:1.75;}
+
+/* ════════════════════════════════════════════════
+   13. FORMULA
+════════════════════════════════════════════════ */
+.fml{
+  font-family:'Noto Sans Mono',monospace !important;
+  font-size:12px;font-weight:700;color:#92400e;
+  background:#fefce8;border-radius:6px;
+  border-left:3px solid var(--c-accent);
+  padding:7px 11px;display:block;margin:5px 0;
+  word-break:break-all;line-height:1.6;
+}
+.fml.green{color:#166534;background:#f0fdf4;border-left-color:#16a34a;}
+.fml.navy{color:var(--c-primary);background:#eff4fd;border-left-color:var(--c-primary3);}
+.fml.red{color:#b91c1c;background:#fef2f2;border-left-color:#ef4444;}
+
+/* ════════════════════════════════════════════════
+   14. CALC BUTTON
+════════════════════════════════════════════════ */
+.calc-btn{
+  width:100%;
+  background:linear-gradient(135deg,var(--c-primary),var(--c-primary3));
+  color:white;border:none;border-radius:9px;
+  padding:13px;font-size:13px;font-weight:800;
+  letter-spacing:.04em;margin-top:14px;
+  box-shadow:0 4px 14px rgba(15,39,68,.45);
+  transition:all .15s;
+  border:1px solid rgba(245,158,11,.2);
+}
+.calc-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 8px 20px rgba(15,39,68,.55);
+  border-color:rgba(245,158,11,.4);
+}
+.calc-btn:active{transform:scale(.98);}
+
+/* ════════════════════════════════════════════════
+   15. OVERVIEW CARDS
+════════════════════════════════════════════════ */
+.ov-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:20px;}
+.ov-card{
+  background:white;border:1px solid #e5e7eb;border-radius:12px;
+  padding:16px 14px;text-align:center;
+  box-shadow:0 1px 5px rgba(0,0,0,.06);
+  transition:border-color .18s,transform .13s;
+}
+.ov-card:hover{border-color:var(--c-accent);transform:translateY(-2px);}
+.ov-icon{font-size:24px;margin-bottom:6px;}
+.ov-val{font-family:'Noto Sans Mono',monospace !important;font-size:20px;font-weight:900;color:var(--c-primary);margin-bottom:3px;}
+.ov-lbl{font-size:10px;color:#9ca3af;font-weight:700;letter-spacing:.04em;}
+
+/* ════════════════════════════════════════════════
+   16. PROGRESS BAR
+════════════════════════════════════════════════ */
+.prog-wrap{margin-top:9px;}
+.prog-row{display:flex;justify-content:space-between;font-size:10px;color:#6b7280;margin-bottom:3px;}
+.prog-bar{height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;transition:width .5s ease;
+  background:linear-gradient(90deg,var(--c-primary),var(--c-primary3));}
+.prog-fill.amber{background:linear-gradient(90deg,#d97706,#f59e0b);}
+.prog-fill.red{background:linear-gradient(90deg,#dc2626,#f87171);}
+
+/* ════════════════════════════════════════════════
+   17. TAG
+════════════════════════════════════════════════ */
+.tag{
+  display:inline-flex;align-items:center;
+  background:#fefce8;border:1px solid #fde68a;
+  color:#92400e;padding:2px 8px;border-radius:12px;
+  font-size:9px;font-weight:700;letter-spacing:.04em;margin:2px;
+}
+.tag.navy{background:#eff4fd;border-color:#bfcfe8;color:var(--c-primary);}
+.tag.green{background:#f0fdf4;border-color:#bbf7d0;color:#15803d;}
+.tag.red{background:#fef2f2;border-color:#fecaca;color:#b91c1c;}
+.tag.white{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);color:white;}
+
+/* ════════════════════════════════════════════════
+   18. FAB — 우측 하단
+════════════════════════════════════════════════ */
+.help-fab{
+  position:fixed;bottom:22px;right:22px;z-index:1200;
+  /* 헤더와 동일: 135deg 딥 네이비 + 앰버 골드 포인트 */
+  background:linear-gradient(135deg,#0d1f33 0%,#1e3a5f 55%,#1a3050 100%);
+  border:2px solid #f59e0b;
+  color:white;border:none;border-radius:14px;padding:11px 16px;
+  box-shadow:0 4px 20px rgba(15,39,68,.6),0 2px 8px rgba(245,158,11,.4);
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  line-height:1.3;transition:transform .15s,box-shadow .15s;
+  animation:fabIn .55s cubic-bezier(.34,1.56,.64,1) forwards;
+  overflow:hidden;
+}
+@keyframes fabIn{from{opacity:0;transform:scale(.3) rotate(-20deg);}to{opacity:1;transform:scale(1) rotate(0);}}
+.help-fab:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(15,39,68,.75),0 4px 14px rgba(245,158,11,.5);}
+.help-fab:active{transform:translateY(0);}
+.help-fab .fab-icon{font-size:20px;line-height:1;}
+.help-fab .fab-lbl{font-size:9.5px;font-weight:900;letter-spacing:.06em;color:#fef9c3;text-transform:uppercase;}
+
+/* ════════════════════════════════════════════════
+   19. 이용안내/법규자료 모달 — 화면 중앙 다이얼로그
+   FAB 버튼 위 삼각자(pointer) 포함
+════════════════════════════════════════════════ */
+.help-overlay{
+  position:fixed;inset:0;z-index:8900;
+  background:rgba(0,0,0,.60);backdrop-filter:blur(6px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+.help-overlay.open{
+  display:flex;
+  animation:fadeIn .22s ease forwards;
+}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* ── 삼각자 포인터 (FAB를 가리킴, 우측하단 고정) ── */
+.help-modal-wrap{
+  position:relative;
+  width:min(580px,96vw);
+  max-height:82vh;
+  display:flex;
+  flex-direction:column;
+  animation:modalPop .28s cubic-bezier(.34,1.5,.64,1) forwards;
+}
+/* 태블릿: 너비 조정 */
+@media(max-width:768px){
+  .help-modal-wrap{width:min(540px,94vw);max-height:86vh;}
+}
+/* 모바일: 하단 시트로 전환 */
+@media(max-width:540px){
+  .help-overlay{align-items:flex-end;}
+  .help-modal-wrap{
+    width:100vw;max-height:88vh;
+    animation:modalSlideUp .28s cubic-bezier(.34,1.5,.64,1) forwards;
+  }
+  .help-modal-wrap::after{display:none;} /* 삼각자 숨김 */
+  @keyframes modalSlideUp{
+    from{opacity:0;transform:translateY(30px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+  .help-modal{border-radius:18px 18px 0 0;}
+  .help-modal-hd{border-radius:18px 18px 0 0;}
+  .hm-drag{display:block !important;} /* 드래그 핸들 표시 */
+}
+@keyframes modalPop{
+  from{opacity:0;transform:scale(.88) translateY(18px);}
+  to{opacity:1;transform:scale(1) translateY(0);}
+}
+/* 삼각자: 모달 우하단 꼬리 */
+.help-modal-wrap::after{
+  content:'';
+  position:absolute;
+  bottom:-18px;
+  right:48px;
+  width:0;height:0;
+  border-left:12px solid transparent;
+  border-right:12px solid transparent;
+  border-top:18px solid var(--c-primary);
+  filter:drop-shadow(0 4px 6px rgba(0,0,0,.35));
+}
+
+.help-modal{
+  width:100%;
+  max-height:82vh;
+  background:#fff;
+  border-radius:20px;
+  display:flex;flex-direction:column;
+  box-shadow:0 24px 80px rgba(0,0,0,.45),0 0 0 1px rgba(245,158,11,.15);
+  overflow:hidden;
+}
+
+.help-modal-hd{
+  /* 헤더와 동일: 135deg 딥 네이비 그라데이션 + 앰버 하단 라인 */
+  background:linear-gradient(135deg,#0d1f33 0%,#1e3a5f 55%,#1a3050 100%);
+  color:white;
+  padding:20px 22px 0;
+  border-radius:20px 20px 0 0;
+  flex-shrink:0;
+  border-bottom:1px solid rgba(245,158,11,.2);
+}
+
+.hm-drag{ display:none; }
+.hm-hd-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;padding-top:2px;}
+.hm-title{font-size:17px;font-weight:900;color:white;}
+.hm-sub{
+  font-family:'Orbitron',sans-serif !important;
+  font-size:9px;font-weight:700;color:var(--c-accent);
+  letter-spacing:.12em;margin-top:3px;
+}
+.hm-close{
+  background:rgba(255,255,255,.15);border:none;color:white;
+  border-radius:50%;width:34px;height:34px;flex-shrink:0;font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s;
+}
+.hm-close:hover{background:rgba(255,255,255,.28);}
+
+.hm-tabs{display:flex;overflow-x:auto;scrollbar-width:none;gap:2px;}
+.hm-tabs::-webkit-scrollbar{display:none;}
+.hm-tab{
+  padding:10px 18px;border:none;background:transparent;
+  color:rgba(255,255,255,.55);font-size:12px;font-weight:700;
+  white-space:nowrap;border-bottom:3px solid transparent;
+  transition:all .15s;flex-shrink:0;letter-spacing:.01em;
+}
+.hm-tab.on{
+  color:white;
+  border-bottom-color:var(--c-accent);
+  position:relative;
+}
+.hm-tab.on::before{
+  content:'';
+  position:absolute;
+  bottom:-1px;left:50%;transform:translateX(-50%);
+  width:0;height:0;
+  border-left:6px solid transparent;
+  border-right:6px solid transparent;
+  border-top:6px solid var(--c-accent);
+}
+.hm-tab:hover:not(.on){color:rgba(255,255,255,.88);}
+
+.help-modal-body{
+  overflow-y:auto;padding:18px 20px 26px;flex:1;
+  -webkit-overflow-scrolling:touch;
+}
+.help-modal-body::-webkit-scrollbar{width:5px;}
+.help-modal-body::-webkit-scrollbar-thumb{background:var(--c-accent);border-radius:3px;}
+
+.hm-panel{display:none;}
+.hm-panel.on{display:block;}
+
+/* 모달 내 섹션 */
+.hm-sec{margin-bottom:20px;}
+.hm-sec-title{
+  font-size:11px;font-weight:800;letter-spacing:.07em;
+  margin-bottom:10px;color:var(--c-primary);
+  border-left:3px solid var(--c-accent);padding-left:9px;
+  text-transform:uppercase;
+}
+.hm-card{
+  background:#f8fafc;border:1px solid #e2e8f0;
+  border-radius:10px;padding:12px 14px;margin-bottom:10px;
+}
+.hm-card-title{font-size:12px;font-weight:800;color:#1e293b;margin-bottom:7px;}
+.hm-item{font-size:11px;color:#374151;line-height:1.9;padding-left:14px;position:relative;margin-bottom:2px;}
+.hm-item::before{content:"▸";position:absolute;left:0;color:var(--c-accent2);font-size:9px;top:2px;}
+.hm-eq{
+  display:block;font-family:'Noto Sans Mono',monospace !important;
+  font-size:12px;font-weight:700;color:#92400e;
+  background:#fefce8;border-radius:6px;
+  border-left:3px solid var(--c-accent);
+  padding:7px 11px;margin:6px 0;word-break:break-all;line-height:1.6;
+}
+.hm-table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}
+.hm-table th{background:var(--c-primary);color:white;padding:6px 9px;font-size:10px;font-weight:800;text-align:center;}
+.hm-table td{padding:5px 9px;border:1px solid #d1d5db;color:#374151;text-align:center;}
+.hm-table tr:nth-child(even) td{background:#fefce8;}
+
+/* 연동 링크 카드 */
+.link-card{
+  display:flex;align-items:center;gap:11px;
+  background:white;border:1.5px solid #e5e7eb;
+  border-radius:10px;padding:10px 13px;
+  text-decoration:none;color:inherit;
+  transition:border-color .15s,box-shadow .15s,transform .12s;
+  margin-bottom:7px;
+}
+.link-card:hover{
+  border-color:var(--c-accent);
+  box-shadow:0 3px 12px rgba(245,158,11,.2);
+  transform:translateY(-1px);
+  background:#fffdf5;
+}
+.link-card-icon{
+  font-size:22px;flex-shrink:0;
+  width:38px;height:38px;
+  display:flex;align-items:center;justify-content:center;
+  background:#f8fafc;border-radius:8px;
+  border:1px solid #e2e8f0;
+}
+.link-card-body{flex:1;min-width:0;}
+.link-card-name{font-size:12.5px;font-weight:800;color:var(--c-primary);margin-bottom:2px;line-height:1.3;}
+.link-card-desc{font-size:10px;color:#6b7280;line-height:1.55;}
+.link-card-badge{
+  background:#fefce8;border:1px solid #fde68a;
+  color:#92400e;font-size:9px;font-weight:700;
+  padding:2px 7px;border-radius:6px;margin-top:4px;display:inline-block;
+  font-family:'Noto Sans Mono',monospace;
+}
+.link-card-arr{
+  font-size:14px;font-weight:700;
+  color:var(--c-accent);flex-shrink:0;
+  width:22px;height:22px;
+  display:flex;align-items:center;justify-content:center;
+  background:#fefce8;border-radius:50%;
+  border:1px solid #fde68a;
+}
+
+/* ════════════════════════════════════════════════
+   20. 연동 배너
+════════════════════════════════════════════════ */
+.link-banner{
+  background:linear-gradient(135deg,#060f1e,#0a1a2e);
+  border:1.5px solid rgba(245,158,11,.25);
+  border-radius:12px;padding:12px 16px;margin-bottom:16px;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.link-dot{
+  width:9px;height:9px;border-radius:50%;background:#4ade80;
+  box-shadow:0 0 0 3px rgba(74,222,128,.2);
+  flex-shrink:0;animation:dotPulse 2s ease-in-out infinite;
+}
+@keyframes dotPulse{0%,100%{box-shadow:0 0 0 3px rgba(74,222,128,.2);}50%{box-shadow:0 0 0 6px rgba(74,222,128,.08);}}
+.link-dot.off{background:#475569;animation:none;box-shadow:none;}
+.link-banner-text{flex:1;font-size:11px;color:#64748b;}
+.link-banner-text b{color:var(--c-sky);}
+
+/* ════════════════════════════════════════════════
+   21. 발전기 결과 히어로
+════════════════════════════════════════════════ */
+.gen-hero{
+  background:linear-gradient(135deg,var(--c-primary),var(--c-primary2));
+  border-radius:14px;padding:22px;margin-bottom:16px;
+  border:2px solid rgba(245,158,11,.3);
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.gen-hero::before{
+  content:'';
+  position:absolute;right:-10px;top:-10px;
+  font-size:100px;opacity:.05;line-height:1;
+}
+.gen-hero .gh-label{font-size:11px;font-weight:700;color:var(--c-accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;}
+.gen-hero .gh-kva{
+  font-family:'Noto Sans Mono',monospace !important;
+  font-size:56px;font-weight:900;color:#fff;line-height:1;margin-bottom:4px;
+}
+.gen-hero .gh-unit{font-size:20px;color:var(--c-accent);margin-left:4px;}
+.gen-hero .gh-sub{font-size:11px;color:#94a3b8;margin-top:8px;font-family:'Noto Sans Mono',monospace !important;}
+
+/* ── 유지시간 배너 ── */
+.time-banner{
+  border-radius:12px;padding:14px 16px;margin-bottom:16px;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.time-banner.t20{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #86efac;}
+.time-banner.t30{background:linear-gradient(135deg,#fefce8,#fef9c3);border:2px solid #fde047;}
+.time-banner.t40{background:linear-gradient(135deg,#fff7ed,#ffedd5);border:2px solid #fdba74;}
+.time-banner.t60{background:linear-gradient(135deg,#fef2f2,#fee2e2);border:2px solid #fca5a5;}
+.time-banner-icon{font-size:28px;flex-shrink:0;}
+.time-banner-main{font-size:14px;font-weight:800;margin-bottom:3px;}
+.time-banner-sub{font-size:11px;color:#6b7280;}
+
+/* ════════════════════════════════════════════════
+   22. A4 계산서 미리보기
+════════════════════════════════════════════════ */
+.rpt-outer{
+  width:100%;max-width:100%;box-sizing:border-box;overflow:hidden;
+  background:#9ca3af;padding:20px 0;margin:0;
+  border-radius:8px;position:relative;display:block;
+}
+.rpt-inner{width:794px;box-sizing:border-box;position:relative;}
+#report-zone{
+  width:794px;background:white;
+  padding:42px 37px 60px 37px;
+  box-shadow:0 6px 32px rgba(0,0,0,.3);
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:7.9pt;line-height:1.6;color:#111;
+}
+.rpt-hint{
+  display:none;align-items:center;gap:6px;
+  background:#fefce8;border:1px solid #fde68a;border-radius:8px;
+  padding:8px 13px;font-size:10px;font-weight:600;color:#92400e;margin-bottom:10px;
+}
+@media(max-width:860px){.rpt-hint{display:flex;}}
+
+/* ════════════════════════════════════════════════
+   23. RESPONSIVE — 데스크탑 / 태블릿 / 모바일
+   breakpoint:
+     1300px+ : 데스크탑 풀레이아웃
+     1024px  : 태블릿 가로 (iPad Pro)
+      768px  : 태블릿 세로 / 대형 폰 가로
+      540px  : 스마트폰 세로 (일반)
+      380px  : 스마트폰 소형
+════════════════════════════════════════════════ */
+
+/* ── 태블릿 가로 (≤1024px) ── */
+@media(max-width:1024px){
+  .g-4{grid-template-columns:repeat(2,1fr);}
+  .ov-grid{grid-template-columns:repeat(2,1fr);}
+  .g-3{grid-template-columns:repeat(3,1fr);}   /* 3열 유지 */
+  .main-outer{padding:18px 20px 100px;}
+}
+
+/* ── 태블릿 세로 / 폰 가로 (≤768px) ── */
+@media(max-width:768px){
+  .site-header{padding:12px 0 0;}
+  .hdr-inner{padding:0 14px;}
+  .hdr-h1{font-size:19px !important;}
+  .hdr-right{display:none;}
+  .hdr-eng{font-size:10px;}
+  .tab-btn{padding:10px 13px;font-size:12px;}
+  .main-outer{padding:14px 12px 90px;}
+  /* 핵심: 2열 레이아웃 → 1열 (입력/결과 세로 배치) */
+  .g-2{grid-template-columns:1fr;}
+  .g-proj{grid-template-columns:1fr 1fr;}
+  .g-3{grid-template-columns:repeat(3,1fr);}   /* 3열 유지 */
+  .box-bd{padding:14px 12px;}
+  /* 요약바: 2행 배치 */
+  .sum-bar{padding:0 14px;gap:8px 16px;}
+  .sum-item{font-size:11px;}
+  /* 결과 카드 2열 유지 */
+  .ov-grid{grid-template-columns:repeat(2,1fr);}
+  /* gen-hero 컴팩트 */
+  .gen-hero{padding:16px;}
+  .gen-hero .gh-kva{font-size:46px;}
+  /* 인쇄버튼 세로 */
+  #t-print > div:first-child{flex-direction:column;align-items:stretch;}
+  #t-print > div:first-child button{width:100%;justify-content:center;}
+}
+
+/* ── 스마트폰 세로 (≤540px) ── */
+@media(max-width:540px){
+  .site-header{padding:10px 0 0;}
+  .hdr-inner{padding:0 12px;}
+  .hdr-h1{font-size:16px !important;letter-spacing:.01em;}
+  .hdr-eng{display:none;}
+  .hdr-desc{font-size:10px;}
+  .tab-btn{padding:9px 10px;font-size:10.5px;letter-spacing:0;}
+  .tab-btn .tab-num{width:15px;height:15px;font-size:8px;margin-right:2px;}
+  .main-outer{padding:12px 10px 80px;}
+  /* 입력 필드 2열 */
+  .g-3{grid-template-columns:1fr 1fr;}
+  .g-proj{grid-template-columns:1fr;}
+  .g-2sm{grid-template-columns:1fr 1fr;}
+  /* 4칸 카드 2열 */
+  .g-4{grid-template-columns:1fr 1fr;}
+  .ov-grid{grid-template-columns:1fr 1fr;}
+  .ov-val{font-size:17px;}
+  /* 히어로 컴팩트 */
+  .gen-hero{padding:14px;}
+  .gen-hero .gh-kva{font-size:38px;}
+  .gen-hero .gh-unit{font-size:16px;}
+  /* 박스 헤더/바디 */
+  .box-hd{font-size:11px;padding:9px 12px;}
+  .box-bd{padding:12px 10px;}
+  /* 법규 배너 wrap */
+  .law-banner{flex-direction:column;align-items:flex-start;gap:8px;padding:10px 12px;}
+  /* 모달 바텀시트 */
+  .help-modal-wrap{width:100vw;}
+  .help-modal{
+    border-radius:18px 18px 0 0;
+    max-height:88vh;
+    /* iOS safe area */
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  /* 결과 유지시간 배너 */
+  .time-banner{padding:10px 12px;gap:8px;}
+  .time-banner-icon{font-size:22px;}
+  .time-banner-main{font-size:13px;}
+}
+
+/* ── 소형 폰 (≤380px) ── */
+@media(max-width:380px){
+  .hdr-h1{font-size:14px !important;}
+  .tab-btn{padding:8px 8px;font-size:10px;}
+  .g-4,.ov-grid{grid-template-columns:1fr 1fr;}
+  .g-3{grid-template-columns:1fr 1fr;}
+  .ov-val{font-size:15px;}
+  .gen-hero .gh-kva{font-size:32px;}
+  .gen-hero .gh-unit{font-size:14px;}
+}
+
+/* ── 가로모드 스마트폰 ── */
+@media(max-width:768px) and (orientation:landscape){
+  .site-header{padding:6px 0 0;}
+  .hdr-row{margin-bottom:8px;}
+  .main-outer{padding:10px 12px 60px;}
+  .gen-hero{padding:12px;}
+  .gen-hero .gh-kva{font-size:36px;}
+}
+
+/* SW 업데이트 바 */
+@keyframes pwaPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,0);}
+  50%{box-shadow:0 0 0 6px rgba(245,158,11,.22);}
+}
+@media(max-width:480px){
+  #pwa-hdr-btn .pwa-txt{display:none;}
+  #pwa-hdr-btn{padding:7px 9px !important;}
+}
+#sw-update-bar{
+  display:flex;visibility:hidden;pointer-events:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:9999;
+  background:linear-gradient(135deg,var(--c-primary),var(--c-primary3));
+  color:#fff;padding:11px 18px;
+  align-items:center;justify-content:space-between;gap:10px;
+  font-size:12px;font-weight:700;
+  box-shadow:0 -4px 16px rgba(0,0,0,.4);
+  transition:visibility 0s,opacity .2s;opacity:0;
+}
+#sw-update-bar.visible{visibility:visible;pointer-events:auto;opacity:1;}
+.sw-upd-btn{
+  background:var(--c-accent);color:var(--c-primary);border:none;
+  padding:6px 16px;border-radius:8px;
+  cursor:pointer;font-weight:800;font-size:11px;font-family:inherit;flex-shrink:0;
+}
+
+/* 체크박스 스타일 */
+.chk-row{display:flex;align-items:center;gap:9px;padding:8px 0;}
+.chk-row input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--c-accent2);}
+.chk-row label{font-size:12px;font-weight:600;color:#374151;cursor:pointer;flex:1;}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header class="site-header">
+  <div class="hdr-inner">
+    <div class="hdr-row">
+      <div>
+        <div class="hdr-eng">Emergency Generator Capacity · NFTC 602 / NFPC 602</div>
+        <h1 class="hdr-h1">비상발전기 용량 산정 계산서</h1>
+        <div class="hdr-desc">
+          소방시설용 비상전원수전설비 화재안전기술기준 NFTC 602 (소방청공고 제2022-240호) ·
+          <span class="hdr-manmin">MANMIN-Ver3.0</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button id="pwa-hdr-btn" title="발전설비 앱 설치" onclick="pwaTrigger('hdr')"
+          style="display:none;align-items:center;gap:6px;
+                 background:linear-gradient(135deg,rgba(245,158,11,.18),rgba(217,119,6,.12));
+                 border:1.5px solid rgba(245,158,11,.45);color:#f59e0b;
+                 padding:7px 14px;border-radius:10px;font-size:12px;font-weight:900;
+                 letter-spacing:.02em;cursor:pointer;flex-shrink:0;white-space:nowrap;
+                 animation:pwaPulse 2.8s ease-in-out infinite;transition:all .15s;">
+          <span style="font-size:16px;line-height:1;">📲</span>
+          <span class="pwa-txt">앱 설치</span>
+        </button>
+        <div class="hdr-right">
+          <b>NFTC 602</b>
+          <div>비상전원수전설비</div>
+          <div>화재안전기술기준</div>
+          <div class="accent">시행 2022.12.01</div>
+        </div>
+      </div>
+    </div>
+    <!-- ══ 탭 바 (번호 포함) ══ -->
+    <div class="tab-bar-wrap">
+      <button class="tab-btn active" onclick="showTab('t-calc',this)"><span class="tab-num">①</span>용량 산정</button>
+      <button class="tab-btn" onclick="showTab('t-load',this)"><span class="tab-num">②</span>부하 목록</button>
+      <button class="tab-btn" onclick="showTab('t-judge',this)"><span class="tab-num">③</span>유지시간 판정</button>
+      <button class="tab-btn" onclick="showTab('t-std',this)"><span class="tab-num">④</span>기준 요약</button>
+      <button class="tab-btn print-tab" onclick="showTab('t-print',this)"><span class="tab-num">⑤</span>계산서 출력</button>
+    </div>
+  </div>
+</header>
+
+<!-- ══ 요약 바 ══ -->
+<div class="sum-bar-wrap">
+  <div class="sum-bar">
+    <span class="sum-item">필요용량 <b class="sum-val" id="sv-kva">—</b> kVA</span>
+    <span class="sum-item">🔌 설치용량 <b class="sum-val" id="sv-inst">—</b> kVA</span>
+    <span class="sum-item">📊 소방부하 <b class="sum-val" id="sv-load">—</b> kW</span>
+    <span class="sum-item">⏱ 유지시간 <b class="sum-val" id="sv-time">—</b></span>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main-outer">
+
+<!-- ════════════ ① 용량 산정 ════════════ -->
+<div id="t-calc" class="tab-panel active">
+
+  <!-- 연동 배너 -->
+  <div class="link-banner">
+    <div class="link-dot off" id="link-dot"></div>
+    <div class="link-banner-text" id="link-text">
+      타 계산기 연동 데이터 없음 — 직접 입력하거나 <b>URL 파라미터</b>로 자동 연동 가능합니다
+    </div>
+  </div>
+
+  <div class="g-2">
+  <!-- 좌: 입력 -->
+  <div>
+
+    <!-- 프로젝트 정보 -->
+    <div class="box">
+      <div class="box-hd bh-slate">
+        프로젝트 정보
+      </div>
+      <div class="box-bd">
+        <div class="g-3">
+          <div>
+            <label class="lbl">공사명</label>
+            <input class="inp" id="bld-name" type="text" value="만민 건축사 신사옥 신축공사"/>
+          </div>
+          <div>
+            <label class="lbl">설계자</label>
+            <input class="inp" id="designer" type="text" value="김만민"/>
+          </div>
+          <div>
+            <label class="lbl">작성일</label>
+            <input class="inp" id="proj-date" type="date"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ⅱ 소방 부하 입력 -->
+    <div class="box">
+      <div class="box-hd bh-navy">
+        소방 부하 입력
+        <span class="tag white" style="margin-left:auto;">kW 단위</span>
+      </div>
+      <div class="box-bd">
+
+        <!-- 옥내소화전 -->
+        <div class="box" style="margin-bottom:12px;border:1.5px solid #c7d2fe;">
+          <div class="box-hd bh-indigo" style="padding:8px 14px;font-size:11px;">
+            <span>🚒 옥내소화전설비</span>
+            <span class="tag white" style="margin-left:auto;font-size:8px;">NFTC 102</span>
+          </div>
+          <div style="padding:12px 14px;">
+            <div class="g-3">
+              <div>
+                <label class="lbl">주 펌프</label>
+                <div class="inp-wrap">
+                  <input class="inp" id="hyd-pump" type="number" min="0" step="0.1" value="0" inputmode="decimal" oninput="calcAll()"/>
+                  <span class="inp-unit">kW</span>
+                </div>
+              </div>
+              <div>
+                <label class="lbl">충압펌프</label>
+                <div class="inp-wrap">
+                  <input class="inp" id="hyd-charge" type="number" min="0" step="0.1" value="0" oninput="calcAll()" inputmode="decimal"/>
+                  <span class="inp-unit">kW</span>
+                </div>
+              </div>
+              <div>
+                <label class="lbl">기타</label>
+                <div class="inp-wrap">
+                  <input class="inp" id="hyd-etc" type="number" min="0" step="0.1" value="0" oninput="calcAll()" inputmode="decimal"/>
+                  <span class="inp-unit">kW</span>
+                </div>
+              </div>
+            </div>
+            <code class="fml navy" style="margin-top:8px;">소화전 소계 = <span id="fml-hyd">0.00</span> kW</code>
+          </div>
+        </div>
+
+        <!-- 스프링클러 -->
+        <div class="box" style="margin-bottom:12px;border:1.5px solid #bbf7d0;">
+          <div class="box-hd bh-green" style="padding:8px 14px;font-size:11px;">
+            <span>💧 스프링클러설비</span>
+            <span class="tag white" style="margin-left:auto;font-size:8px;">NFTC 103</span>
+          </div>
+          <div style="padding:12px 14px;">
+            <div class="g-3">
+              <div>
+                <label class="lbl">주 펌프</label>
+                <div class="inp-wrap">
+                  <input class="inp" id="spr-pump" type="number" min="0" step="0.1" value="0" oninput="calcAll()" inputmode="decimal"/>
+                  <span class="inp-unit">kW</span>
+                </div>
+              </div>
+              <div>
+                <label class="lbl">충압펌프</label>
+                <div class="inp-wrap">
+                  <input class="inp" id="spr-charge" type="number" min="0" step="0.1" value="0" oninput="calcAll()" inputmode="decimal"/>
+                  <span class="inp-unit">kW</span>
+                </div>
+              </div>
+              <div>
+                <label class="lbl">기타</label>
+                <div class="inp-wrap">
+                  <input class="inp" id="spr-etc" type="number" min="0" step="0.1" value="0" oninput="calcAll()" inputmode="decimal"/>
+                  <span class="inp-unit">kW</span>
+                </div>
+              </div>
+            </div>
+            <code class="fml green" style="margin-top:8px;">스프링클러 소계 = <span id="fml-spr">0.00</span> kW</code>
+          </div>
+        </div>
+
+        <!-- 제연설비 -->
+        <div class="box" style="margin-bottom:12px;border:1.5px solid #fde68a;">
+          <div class="box-hd bh-amber" style="padding:8px 14px;font-size:11px;">
+            <span>💨 제연설비</span>
+            <span class="tag white" style="margin-left:auto;font-size:8px;">NFTC 501</span>
+          </div>
+          <div style="padding:12px 14px;">
+            <div class="g-3">
+              <div>
+                <label class="lbl">급기팬</label>
+                <div class="inp-wrap">
+                  <input class="inp" id="smk-supply" type="number" min="0" step="0.1" value="0" oninput="calcAll()" inputmode="decimal"/>
+                  <span class="inp-unit">kW</span>
+                </div>
+              </div>
+              <div>
+                <label class="lbl">배기팬</label>
+                <div class="inp-wrap">
+                  <input class="inp" id="smk-exhaust" type="number" min="0" step="0.1" value="0" oninput="calcAll()" inputmode="decimal"/>
+                  <span class="inp-unit">kW</span>
+                </div>
+              </div>
+              <div>
+                <label class="lbl">기타</label>
+                <div class="inp-wrap">
+                  <input class="inp" id="smk-etc" type="number" min="0" step="0.1" value="0" oninput="calcAll()" inputmode="decimal"/>
+                  <span class="inp-unit">kW</span>
+                </div>
+              </div>
+            </div>
+            <code class="fml" style="margin-top:8px;">제연 소계 = <span id="fml-smk">0.00</span> kW</code>
+          </div>
+        </div>
+
+        <!-- 기타 소방부하 -->
+        <div class="box" style="margin-bottom:0;border:1.5px solid #fecaca;">
+          <div class="box-hd bh-energy" style="padding:8px 14px;font-size:11px;">
+            <span>⚠️ 기타 소방부하</span>
+          </div>
+          <div style="padding:12px 14px;">
+            <div class="g-2sm">
+              <div>
+                <label class="lbl">자탐·방송</label>
+                <div class="inp-wrap">
+                  <input class="inp" id="oth-detect" type="number" min="0" step="0.1" value="0" oninput="calcAll()" inputmode="decimal"/>
+                  <span class="inp-unit">kW</span>
+                </div>
+              </div>
+              <div>
+                <label class="lbl">비상조명</label>
+                <div class="inp-wrap">
+                  <input class="inp" id="oth-light" type="number" min="0" step="0.1" value="0" oninput="calcAll()" inputmode="decimal"/>
+                  <span class="inp-unit">kW</span>
+                </div>
+              </div>
+              <div>
+                <label class="lbl">유도등</label>
+                <div class="inp-wrap">
+                  <input class="inp" id="oth-sign" type="number" min="0" step="0.1" value="0" oninput="calcAll()" inputmode="decimal"/>
+                  <span class="inp-unit">kW</span>
+                </div>
+              </div>
+              <div>
+                <label class="lbl">기타</label>
+                <div class="inp-wrap">
+                  <input class="inp" id="oth-misc" type="number" min="0" step="0.1" value="0" oninput="calcAll()" inputmode="decimal"/>
+                  <span class="inp-unit">kW</span>
+                </div>
+              </div>
+            </div>
+            <code class="fml red" style="margin-top:8px;">기타 소계 = <span id="fml-oth">0.00</span> kW</code>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Ⅲ 설계 계수 -->
+    <div class="box">
+      <div class="box-hd bh-teal">
+        발전기 설계 계수
+      </div>
+      <div class="box-bd">
+        <div class="g-3">
+          <div>
+            <label class="lbl">역률 (PF)</label>
+            <div class="inp-wrap">
+              <input class="inp" id="pf" type="number" min="0.5" max="1" step="0.01" value="0.8" oninput="calcAll()" inputmode="decimal"/>
+              <span class="inp-unit">—</span>
+            </div>
+          </div>
+          <div>
+            <label class="lbl">수용률 (DF)</label>
+            <div class="inp-wrap">
+              <input class="inp" id="df" type="number" min="0.1" max="1" step="0.01" value="1.0" oninput="calcAll()" inputmode="decimal"/>
+              <span class="inp-unit">—</span>
+            </div>
+          </div>
+          <div>
+            <label class="lbl">여유율 (MF)</label>
+            <div class="inp-wrap">
+              <input class="inp" id="mf" type="number" min="1" max="2" step="0.01" value="1.2" oninput="calcAll()" inputmode="decimal"/>
+              <span class="inp-unit">배</span>
+            </div>
+          </div>
+        </div>
+        <div class="g-2" style="margin-top:12px;">
+          <div>
+            <label class="lbl">비상전원 유지시간</label>
+            <select class="inp" id="hold-time" onchange="calcAll()">
+              <option value="20">20분 이상 (일반 건물)</option>
+              <option value="30">30분 이상</option>
+              <option value="40">40분 이상 (고층·지하가)</option>
+              <option value="60">60분 이상 (초고층)</option>
+            </select>
+          </div>
+          <div>
+            <label class="lbl">설치(선정) 발전기 용량</label>
+            <div class="inp-wrap">
+              <input class="inp" id="inst-kva" type="number" min="0" step="5" value="0" oninput="calcAll()" placeholder="선정값 입력" inputmode="decimal"/>
+              <span class="inp-unit">kVA</span>
+            </div>
+          </div>
+        </div>
+        <button class="calc-btn" onclick="calcAll()">필요 용량 산정</button>
+      </div>
+    </div>
+
+  </div><!-- /좌 -->
+
+  <!-- 우: 결과 -->
+  <div>
+
+    <!-- 히어로 결과 -->
+    <div class="gen-hero">
+      <div class="gh-label">🔋 비상발전기 필요 용량</div>
+      <div>
+        <span class="gh-kva" id="res-kva">—</span>
+        <span class="gh-unit">kVA</span>
+      </div>
+      <div class="gh-sub" id="res-kva-sub">용량 산정 전</div>
+    </div>
+
+    <!-- 유지시간 판정 배너 -->
+    <div id="time-banner" class="time-banner t20">
+      <div class="time-banner-icon">⏱️</div>
+      <div style="flex:1;">
+        <div class="time-banner-main" id="tb-main">비상전원 유지시간</div>
+        <div class="time-banner-sub" id="tb-sub">산정 후 표시됩니다</div>
+      </div>
+      <div id="tb-badge"></div>
+    </div>
+
+    <!-- 4개 개요 카드 -->
+    <div class="ov-grid" style="grid-template-columns:repeat(2,1fr);">
+      <div class="ov-card">
+        <div class="ov-icon">🔋</div>
+        <div class="ov-val" id="ov-kva">—</div>
+        <div class="ov-lbl">필요 용량 (kVA)</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-icon">🔌</div>
+        <div class="ov-val" id="ov-kw">—</div>
+        <div class="ov-lbl">총 소방부하 (kW)</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-icon">📊</div>
+        <div class="ov-val" id="ov-ratio">—</div>
+        <div class="ov-lbl">부하율 (%)</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-icon">✅</div>
+        <div class="ov-val" id="ov-margin">—</div>
+        <div class="ov-lbl">여유용량 (kVA)</div>
+      </div>
+    </div>
+
+    <!-- 상세 결과 -->
+    <div class="box">
+      <div class="box-hd bh-navy">
+        산정 상세
+      </div>
+      <div class="box-bd">
+        <div class="result-box">
+          <div class="result-row"><span class="rl">① 소화전 부하</span><span class="rv" id="rd-hyd">— kW</span></div>
+          <div class="result-row"><span class="rl">② 스프링클러 부하</span><span class="rv" id="rd-spr">— kW</span></div>
+          <div class="result-row"><span class="rl">③ 제연설비 부하</span><span class="rv" id="rd-smk">— kW</span></div>
+          <div class="result-row"><span class="rl">④ 기타 소방부하</span><span class="rv" id="rd-oth">— kW</span></div>
+          <hr class="r-divider"/>
+          <div class="result-row"><span class="rl">합계 소방부하 (ΣP)</span><span class="rv" id="rd-sum">— kW</span></div>
+          <div class="result-row"><span class="rl">수용률 × 여유율</span><span class="rv" id="rd-adj">—</span></div>
+          <div class="result-row"><span class="rl">유효 소방부하</span><span class="rv" id="rd-eff">— kW</span></div>
+          <hr class="r-divider"/>
+          <div class="result-row"><span class="rl">역률 (PF)</span><span class="rv" id="rd-pf">—</span></div>
+          <div class="result-row"><span class="rl">S = ΣP × DF × MF ÷ PF</span><span class="rv lg" id="rd-kva">— kVA</span></div>
+          <hr class="r-divider"/>
+          <div class="result-row"><span class="rl">설치 용량</span><span class="rv" id="rd-inst">미입력</span></div>
+          <div class="result-row"><span class="rl">판  정</span><span class="rv" id="rd-judge">—</span></div>
+        </div>
+        <div style="margin-top:12px;">
+          <div style="font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">산정식</div>
+          <code class="fml navy">S[kVA] = ΣP[kW] × 수용률(DF) × 여유율(MF) ÷ 역률(PF)</code>
+          <code class="fml" id="fml-calc">산정 전</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- 부하 구성비 -->
+    <div class="box">
+      <div class="box-hd bh-slate">
+        부하 구성비
+      </div>
+      <div class="box-bd" id="load-bars">
+        <div style="text-align:center;color:#9ca3af;font-size:12px;padding:16px;">부하 입력 후 표시됩니다</div>
+      </div>
+    </div>
+
+  </div><!-- /우 -->
+  </div><!-- /g-2 -->
+</div><!-- /t-calc -->
+
+
+<!-- ════════════ ② 부하 목록 ════════════ -->
+<div id="t-load" class="tab-panel">
+  <div class="box">
+    <div class="box-hd bh-navy">
+      소방부하 목록표
+      <button onclick="addLoadRow()" style="margin-left:auto;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:white;padding:5px 13px;border-radius:7px;font-size:11px;font-weight:700;">+ 행 추가</button>
+    </div>
+    <div class="box-bd">
+      <div class="tbl-wrap">
+        <table class="dt" id="load-table">
+          <thead>
+            <tr>
+              <th style="width:32px">No</th>
+              <th>설비명</th>
+              <th>규격</th>
+              <th style="width:60px">수량</th>
+              <th style="width:80px">단위kW</th>
+              <th style="width:80px">합계kW</th>
+              <th>비고</th>
+              <th style="width:44px">삭제</th>
+            </tr>
+          </thead>
+          <tbody id="load-tbody"></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="5" style="font-weight:800;color:var(--c-primary);background:#fefce8;">합  계</td>
+              <td style="font-weight:900;color:#92400e;font-family:'Noto Sans Mono',monospace;background:#fefce8;" id="load-total">0.00</td>
+              <td colspan="2" style="background:#fefce8;"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="tbl-note" style="margin-top:10px;">
+        ▸ 합계kW는 수량 × 단위kW 자동 계산 · 계산서 출력 시 이 목록이 포함됩니다<br/>
+        ▸ 이 표의 합계는 [① 용량 산정] 탭과 별개의 참고용 목록입니다
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════ ③ 유지시간 판정 ════════════ -->
+<div id="t-judge" class="tab-panel">
+  <div class="law-banner">
+    <span class="lbk">③ 유지시간 판정</span>
+    <div class="lbi"><span class="lbi-k">근거</span><span class="lbi-v">NFPC 602 / 각 설비별 기준</span></div>
+    <div class="lbi"><span class="lbi-k">시행</span><span class="lbi-v">2022.12.01</span></div>
+  </div>
+  <div class="g-2">
+    <div>
+      <div class="box">
+        <div class="box-hd bh-navy">
+          건물 조건 입력
+        </div>
+        <div class="box-bd">
+          <div style="margin-bottom:14px;">
+            <label class="lbl">층수 (지상)</label>
+            <div class="inp-wrap">
+              <input class="inp" id="j-floors" type="number" min="1" value="5" oninput="onFloorChange()" inputmode="decimal"/>
+              <span class="inp-unit">층</span>
+            </div>
+          </div>
+          <div style="margin-bottom:14px;">
+            <label class="lbl">지하층 바닥면적 합계</label>
+            <div class="inp-wrap">
+              <input class="inp" id="j-bsmt" type="number" min="0" step="10" value="0" oninput="judgeTime()" inputmode="decimal"/>
+              <span class="inp-unit">㎡</span>
+            </div>
+          </div>
+          <div>
+            <label class="lbl">특수 조건</label>
+            <div style="margin-top:6px;">
+              <div class="chk-row"><input type="checkbox" id="j-tunnel" onchange="judgeTime()"/><label for="j-tunnel">지하가(터널) 해당</label></div>
+              <div class="chk-row"><input type="checkbox" id="j-highrise" onchange="onHighriseChange()"/><label for="j-highrise">고층건축물 (30층 이상 또는 높이 120m↑)</label></div>
+              <div class="chk-row">
+                <input type="checkbox" id="j-ultra" onchange="onUltraChange()"/>
+                <label for="j-ultra">초고층 (50층 이상 또는 높이 200m↑)
+                  <span style="font-size:10px;color:#92400e;margin-left:4px;">※ 고층 조건 자동 포함</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="box">
+        <div class="box-hd bh-teal">
+          판정 결과
+        </div>
+        <div class="box-bd" id="judge-result-area">
+          <div style="text-align:center;padding:30px 0;color:#94a3b8;font-size:13px;">조건 입력 후 자동 판정됩니다</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-hd bh-slate">
+          판정 기준표
+        </div>
+        <div class="box-bd">
+          <div class="tbl-wrap">
+            <table class="dt">
+              <thead><tr><th>건물 구분</th><th>최소 유지시간</th><th>근거</th></tr></thead>
+              <tbody>
+                <tr><td class="L">일반 소방대상물</td><td><b>20분</b></td><td>NFPC 각 설비별</td></tr>
+                <tr><td class="L">지하층 바닥면적 1,000㎡ 이상</td><td><b>40분</b></td><td>NFPC 각 설비별</td></tr>
+                <tr><td class="L">지하가 · 터널</td><td><b>40분</b></td><td>NFPC 607 등</td></tr>
+                <tr><td class="L">고층건축물 (30층↑)</td><td><b>40분</b></td><td>NFPC 각 설비별</td></tr>
+                <tr><td class="L">초고층 (50층↑ 또는 200m↑)</td><td><b>60분</b></td><td>초고층 건축물법</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="tbl-note">※ 설비별로 상이할 수 있으니 각 설비 개별 기준 확인 필수</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════ ④ 기준 요약 ════════════ -->
+<div id="t-std" class="tab-panel">
+  <div class="law-banner">
+    <span class="lbk">④ 적용 기준</span>
+    <div class="lbi"><span class="lbi-k">NFTC 602</span><span class="lbi-v">소방청공고 제2022-240호</span></div>
+    <div class="lbi"><span class="lbi-k">NFPC 602</span><span class="lbi-v">소방청고시 제2022-63호</span></div>
+    <div class="lbi"><span class="lbi-k">KDS 31 60 20</span><span class="lbi-v">예비전원설비 건설기준</span></div>
+  </div>
+  <div class="g-2">
+    <div>
+      <div class="box">
+        <div class="box-hd bh-navy">
+          NFTC 602 핵심 기술기준
+        </div>
+        <div class="box-bd">
+          <div class="info-card" style="margin-bottom:12px;">
+            <div class="info-title">§2.1 인입선 및 인입구 배선</div>
+            <ul class="info-list">
+              <li>인입선: 화재 발생 시에도 손상 받지 않도록 설치</li>
+              <li>인입구 배선: NFTC 102의 내화배선 기준 적용</li>
+            </ul>
+          </div>
+          <div class="info-card" style="margin-bottom:12px;">
+            <div class="info-title">§2.2 특별고압·고압 수전 (방화구획형·옥외개방형·큐비클형)</div>
+            <ul class="info-list">
+              <li>전용 방화구획 내 설치 (§2.2.1.1)</li>
+              <li>소방회로배선: 불연성 격벽으로 일반회로와 구획 (§2.2.1.2)</li>
+              <li>큐비클 외함: 두께 2.3 mm 이상 강판 (§2.2.3.2)</li>
+              <li>방화문: 60분+ / 60분 / 30분 방화문 설치</li>
+            </ul>
+          </div>
+          <div class="info-card">
+            <div class="info-title">§2.3 저압 수전 (제1종·제2종 배전반·분전반)</div>
+            <ul class="info-list">
+              <li>제1종: 외함 1.6 mm (전면판·문 2.3 mm) 이상, 내열·단열</li>
+              <li>제2종: 배선용 불연전용실 내 설치</li>
+              <li>소방회로용 개폐기: "소방시설용" 표시 의무</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-hd bh-amber">
+          발전기 용량 산정 기준 (KDS 31 60 20)
+        </div>
+        <div class="box-bd">
+          <div class="law-box" style="margin-bottom:10px;">
+            <div class="law-ref">산정식</div>
+            <div class="law-text">S[kVA] = ΣP[kW] × 수용률(DF) × 여유율(MF) ÷ 역률(PF)</div>
+          </div>
+          <code class="fml">S = 소방부하 합계 × 1.0 × 1.2 ÷ 0.8 (기본값 기준)</code>
+          <div class="info-card" style="margin-top:10px;">
+            <div class="info-title">설계 계수 표준값</div>
+            <ul class="info-list">
+              <li>역률(PF): 0.8 (유도전동기 평균값)</li>
+              <li>수용률(DF): 1.0 (소방부하 동시 기동 가정)</li>
+              <li>여유율(MF): 1.2 ~ 1.3 (기동전류 등 여유 반영)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="box">
+        <div class="box-hd bh-green">
+          관련 설비별 비상전원 기준
+        </div>
+        <div class="box-bd">
+          <div class="tbl-wrap">
+            <table class="dt">
+              <thead><tr><th>설비명</th><th>기준번호</th><th>비상전원 시간</th></tr></thead>
+              <tbody>
+                <tr><td class="L">옥내소화전</td><td>NFTC 102</td><td>20분 (특수 40분)</td></tr>
+                <tr><td class="L">스프링클러</td><td>NFTC 103</td><td>20분 (특수 60분)</td></tr>
+                <tr><td class="L">물분무소화</td><td>NFTC 104</td><td>20분</td></tr>
+                <tr><td class="L">포소화설비</td><td>NFTC 105</td><td>20분</td></tr>
+                <tr><td class="L">제연설비</td><td>NFTC 501</td><td>20분 (특수 40분)</td></tr>
+                <tr><td class="L">비상조명등</td><td>NFTC 304</td><td>20분 (특수 60분)</td></tr>
+                <tr><td class="L">비상콘센트</td><td>NFTC 504</td><td>20분</td></tr>
+                <tr><td class="L">무선통신보조</td><td>NFTC 505</td><td>20분</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-hd bh-violet">
+          비상전원 유지시간 판정 흐름
+        </div>
+        <div class="box-bd">
+          <div style="font-size:11px;color:#374151;line-height:2.2;">
+            <div style="padding:9px 12px;background:#f0fdf4;border-radius:8px;margin-bottom:6px;border-left:3px solid #16a34a;">
+              <b style="color:#15803d;">20분 이상</b> — 일반 소방대상물
+            </div>
+            <div style="padding:9px 12px;background:#fefce8;border-radius:8px;margin-bottom:6px;border-left:3px solid #f59e0b;">
+              <b style="color:#92400e;">40분 이상</b> — ① 지하층 바닥면적 1,000㎡↑<br/>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;② 지하가·터널 &nbsp;&nbsp;③ 고층건축물(30층↑)
+            </div>
+            <div style="padding:9px 12px;background:#fef2f2;border-radius:8px;margin-bottom:6px;border-left:3px solid #ef4444;">
+              <b style="color:#b91c1c;">60분 이상</b> — 초고층(50층↑ 또는 200m↑)
+            </div>
+          </div>
+          <div class="tbl-note" style="margin-top:8px;">※ 위 기준은 최소값 · 설비별 더 긴 시간 요구 시 그에 따름</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════ ⑤ 계산서 출력 ════════════ -->
+<div id="t-print" class="tab-panel">
+  <!-- 5번: 상단 인쇄/PDF 버튼 바 -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center;">
+    <button onclick="doPrint()" style="
+      display:flex;align-items:center;gap:7px;
+      background:linear-gradient(135deg,var(--c-primary),var(--c-primary3));
+      color:white;border:1px solid rgba(245,158,11,.3);border-radius:10px;
+      padding:10px 22px;font-size:13px;font-weight:800;letter-spacing:.03em;
+      box-shadow:0 3px 12px rgba(15,39,68,.4);transition:all .14s;cursor:pointer;">
+      <span style="font-size:16px;">🖨️</span> 인쇄 / A4 출력
+    </button>
+    <button onclick="doPdfSave()" style="
+      display:flex;align-items:center;gap:7px;
+      background:linear-gradient(135deg,#92400e,#b45309);
+      color:white;border:1px solid rgba(245,158,11,.25);border-radius:10px;
+      padding:10px 22px;font-size:13px;font-weight:800;letter-spacing:.03em;
+      box-shadow:0 3px 12px rgba(146,64,14,.4);transition:all .14s;cursor:pointer;">
+      <span style="font-size:16px;">📄</span> PDF 저장
+    </button>
+    <button onclick="buildReport()" style="
+      display:flex;align-items:center;gap:7px;
+      background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);
+      color:#94a3b8;border-radius:10px;
+      padding:10px 18px;font-size:12px;font-weight:700;
+      transition:all .14s;cursor:pointer;">
+      <span style="font-size:14px;">🔄</span> 계산서 갱신
+    </button>
+  </div>
+  <div class="rpt-hint">📱 화면을 좌우로 스크롤하거나 PC에서 확인하세요</div>
+  <div class="rpt-outer" id="rpt-outer">
+    <div class="rpt-inner" id="rpt-inner">
+      <div id="report-zone">
+        <div style="text-align:center;padding:70px 20px;color:#94a3b8;">
+          <div style="font-size:44px;margin-bottom:14px;">🖨️</div>
+          <div style="font-size:14px;font-weight:700;color:#64748b;margin-bottom:8px;">계산서 미리보기</div>
+          <div style="font-size:12px;color:#94a3b8;line-height:1.9;">
+            <b style="color:var(--c-primary);">① 용량 산정</b> 탭에서 [필요 용량 산정] 버튼을 누른 후<br/>
+            이 탭으로 이동하면 A4 계산서가 자동 생성됩니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main-outer -->
+
+<!-- ══ FAB ══ -->
+<button class="help-fab" id="help-fab-btn" onclick="openHelp()">
+  <span class="fab-icon" style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;">
+    <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="11,1 21,19 1,19" fill="white" stroke="white" stroke-width=".8" stroke-linejoin="round"/>
+      <line x1="11" y1="7" x2="11" y2="14" stroke="#0f2744" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="11" cy="16.2" r="1.1" fill="#0f2744"/>
+    </svg>
+  </span>
+  <span class="fab-lbl">이용안내</span>
+</button>
+
+<!-- ══ 모달 오버레이 + 중앙 배치 ══ -->
+<div class="help-overlay" id="help-overlay" onclick="closeHelpOverlay(event)">
+  <div class="help-modal-wrap">
+<!-- ══ 이용안내/법규자료 모달 ══ -->
+<div class="help-modal" id="help-modal">
+  <div class="help-modal-hd">
+    <div class="hm-drag"></div>
+    <div class="hm-hd-row">
+      <div>
+        <div class="hm-title" style="display:flex;align-items:center;gap:9px;">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#f59e0b,#d97706);flex-shrink:0;">
+            <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><polygon points="6,1 11,11 1,11" fill="white" stroke="white" stroke-width=".5" stroke-linejoin="round"/></svg>
+          </span>
+          이용안내 / 법규자료
+        </div>
+        <div class="hm-sub">MANMIN-Ver3.0 · NFTC 602 · NFPC 602</div>
+      </div>
+      <button class="hm-close" onclick="closeHelp()">✕</button>
+    </div>
+    <div class="hm-tabs">
+      <button class="hm-tab on" onclick="helpTab('hm-usage',this)">이용안내</button>
+      <button class="hm-tab" onclick="helpTab('hm-formula',this)">산정식</button>
+      <button class="hm-tab" onclick="helpTab('hm-link',this)">연동 계산기</button>
+      <button class="hm-tab" onclick="helpTab('hm-law',this)">법규자료</button>
+    </div>
+  </div>
+  <div class="help-modal-body">
+
+    <!-- 이용안내 -->
+    <div class="hm-panel on" id="hm-usage">
+      <div class="hm-sec">
+        <!-- ▌ MANMIN 홈페이지 배너 -->
+        <a href="https://manminkim-eng.github.io/KIMMANMIN/" target="_blank" rel="noopener"
+           style="
+             display:flex;align-items:center;gap:13px;
+             background:linear-gradient(135deg,#0d1f33 0%,#1e3a5f 60%,#1a3050 100%);
+             border-radius:12px;padding:14px 16px;margin-bottom:14px;
+             text-decoration:none;color:white;
+             border:1.5px solid rgba(245,158,11,.35);
+             box-shadow:0 3px 14px rgba(15,39,68,.45);
+             transition:transform .14s,box-shadow .14s;
+             -webkit-tap-highlight-color:transparent;
+           "
+           onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(15,39,68,.6)'"
+           onmouseout="this.style.transform='';this.style.boxShadow='0 3px 14px rgba(15,39,68,.45)'">
+          <!-- 로고 아이콘 -->
+          <div style="
+            width:44px;height:44px;border-radius:10px;flex-shrink:0;
+            background:linear-gradient(135deg,#f59e0b,#d97706);
+            display:flex;align-items:center;justify-content:center;
+            box-shadow:0 2px 8px rgba(245,158,11,.4);
+          ">
+            <svg width="24" height="22" viewBox="0 0 24 22" fill="none">
+              <polygon points="12,1 23,21 1,21" fill="white" stroke="white" stroke-width=".5" stroke-linejoin="round"/>
+              <line x1="12" y1="8" x2="12" y2="15" stroke="#d97706" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="12" cy="17.5" r="1.3" fill="#d97706"/>
+            </svg>
+          </div>
+          <!-- 텍스트 -->
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:8px;font-weight:600;color:rgba(245,158,11,.8);letter-spacing:.14em;text-transform:uppercase;margin-bottom:3px;">MANMIN Engineering</div>
+            <div style="font-size:13.5px;font-weight:900;color:white;letter-spacing:.02em;line-height:1.2;">만민 소방설계 홈페이지</div>
+            <div style="font-size:10px;color:#94a3b8;margin-top:3px;">소방·전기 설계계산 통합 플랫폼 · 전체 계산기 모음</div>
+          </div>
+          <!-- 화살표 -->
+          <div style="
+            flex-shrink:0;
+            width:30px;height:30px;border-radius:50%;
+            background:rgba(245,158,11,.18);border:1.5px solid rgba(245,158,11,.4);
+            display:flex;align-items:center;justify-content:center;
+            font-size:14px;font-weight:700;color:#f59e0b;
+          ">↗</div>
+        </a>
+
+        <div class="hm-sec-title">탭 구성 및 사용 순서</div>
+        <div class="hm-card">
+          <div class="hm-card-title"><span style="background:var(--c-accent);color:var(--c-primary);border-radius:50%;display:inline-flex;width:18px;height:18px;align-items:center;justify-content:center;font-size:10px;font-weight:900;margin-right:5px;">①</span>용량 산정 — 핵심 계산 탭</div>
+          <div class="hm-item">프로젝트 정보(건물명·용도·설계자) 입력</div>
+          <div class="hm-item">소화전·스프링클러·제연·기타 부하[kW] 입력</div>
+          <div class="hm-item">역률·수용률·여유율·유지시간·설치용량 설정</div>
+          <div class="hm-item">[필요 용량 산정] 클릭 → 결과 자동 표시</div>
+        </div>
+        <div class="hm-card">
+          <div class="hm-card-title"><span style="background:var(--c-accent);color:var(--c-primary);border-radius:50%;display:inline-flex;width:18px;height:18px;align-items:center;justify-content:center;font-size:10px;font-weight:900;margin-right:5px;">②</span>부하 목록 — 상세 부하 내역</div>
+          <div class="hm-item">설비명·규격·수량·단위kW 입력 → 합계 자동 계산</div>
+          <div class="hm-item">계산서 출력 시 이 목록이 첨부됩니다</div>
+        </div>
+        <div class="hm-card">
+          <div class="hm-card-title"><span style="background:var(--c-accent);color:var(--c-primary);border-radius:50%;display:inline-flex;width:18px;height:18px;align-items:center;justify-content:center;font-size:10px;font-weight:900;margin-right:5px;">③</span>유지시간 판정</div>
+          <div class="hm-item">층수·지하층 면적·특수 조건 입력 → 20/40/60분 자동 판정</div>
+        </div>
+        <div class="hm-card">
+          <div class="hm-card-title"><span style="background:var(--c-accent);color:var(--c-primary);border-radius:50%;display:inline-flex;width:18px;height:18px;align-items:center;justify-content:center;font-size:10px;font-weight:900;margin-right:5px;">⑤</span>계산서 출력</div>
+          <div class="hm-item">A4 계산서 자동 생성 → 브라우저 인쇄 또는 PDF 저장</div>
+          <div class="hm-item">계산서 디자인은 제연설비 계산서와 동일한 포맷</div>
+        </div>
+      </div>
+      <div class="hm-sec">
+        <div class="hm-sec-title">타 계산기 연동 방법</div>
+        <div class="hm-card">
+          <div class="hm-card-title">URL 파라미터 자동 연동</div>
+          <div class="hm-item">소화전·스프링클러·제연 계산기에서 이 페이지로 URL 파라미터를 전달합니다</div>
+          <div class="hm-item">연동 파라미터 예시:</div>
+          <code style="display:block;background:#f1f5f9;padding:8px 10px;border-radius:6px;font-size:10px;margin:6px 0;word-break:break-all;font-family:monospace;color:#374151;">?hyd_pump=15&amp;hyd_charge=2.2&amp;spr_pump=22&amp;smk_supply=18.5</code>
+          <div class="hm-item">연동 성공 시 상단 배너에 초록 점(●)과 함께 수신 안내가 표시됩니다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 산정식 -->
+    <div class="hm-panel" id="hm-formula">
+      <div class="hm-sec">
+        <div class="hm-sec-title">발전기 필요 용량 산정식</div>
+        <div class="hm-card">
+          <div class="hm-card-title">기본 공식 (KDS 31 60 20 기준)</div>
+          <code class="hm-eq">S [kVA] = ΣP [kW] × DF × MF ÷ PF</code>
+          <div class="hm-item">S : 발전기 필요 용량 [kVA]</div>
+          <div class="hm-item">ΣP : 소방부하 합계 [kW]</div>
+          <div class="hm-item">DF : 수용률 (Demand Factor) — 기본값 1.0</div>
+          <div class="hm-item">MF : 여유율 (Margin Factor) — 기본값 1.2</div>
+          <div class="hm-item">PF : 역률 (Power Factor) — 기본값 0.8</div>
+        </div>
+        <div class="hm-card">
+          <div class="hm-card-title">계산 예시</div>
+          <code class="hm-eq">ΣP = 15 + 22 + 18.5 + 3 = 58.5 kW</code>
+          <code class="hm-eq">S = 58.5 × 1.0 × 1.2 ÷ 0.8 = 87.75 kVA</code>
+          <div class="hm-item" style="color:#92400e;font-weight:700;">→ 100 kVA 발전기 선정 권장 (표준 용량)</div>
+        </div>
+      </div>
+      <div class="hm-sec">
+        <div class="hm-sec-title">표준 발전기 용량 (참고)</div>
+        <table class="hm-table">
+          <thead><tr><th>계산값 범위</th><th>권장 선정 용량</th></tr></thead>
+          <tbody>
+            <tr><td>~ 40 kVA</td><td>50 kVA</td></tr>
+            <tr><td>40 ~ 60 kVA</td><td>75 kVA</td></tr>
+            <tr><td>60 ~ 90 kVA</td><td>100 kVA</td></tr>
+            <tr><td>90 ~ 125 kVA</td><td>150 kVA</td></tr>
+            <tr><td>125 ~ 175 kVA</td><td>200 kVA</td></tr>
+            <tr><td>175 ~ 275 kVA</td><td>300 kVA</td></tr>
+            <tr><td>275 ~ 400 kVA</td><td>400 kVA</td></tr>
+          </tbody>
+        </table>
+        <div style="font-size:10px;color:#9ca3af;margin-top:4px;">※ 제조사별 표준 용량 확인 필요</div>
+      </div>
+    </div>
+
+    <!-- 연동 계산기 -->
+    <div class="hm-panel" id="hm-link">
+      <div class="hm-sec">
+        <!-- ▌ MANMIN 홈페이지 배너 -->
+        <a href="https://manminkim-eng.github.io/KIMMANMIN/" target="_blank" rel="noopener"
+           style="
+             display:flex;align-items:center;gap:13px;
+             background:linear-gradient(135deg,#0d1f33 0%,#1e3a5f 60%,#1a3050 100%);
+             border-radius:12px;padding:14px 16px;margin-bottom:14px;
+             text-decoration:none;color:white;
+             border:1.5px solid rgba(245,158,11,.35);
+             box-shadow:0 3px 14px rgba(15,39,68,.45);
+             transition:transform .14s,box-shadow .14s;
+             -webkit-tap-highlight-color:transparent;
+           "
+           onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(15,39,68,.6)'"
+           onmouseout="this.style.transform='';this.style.boxShadow='0 3px 14px rgba(15,39,68,.45)'">
+          <!-- 로고 아이콘 -->
+          <div style="
+            width:44px;height:44px;border-radius:10px;flex-shrink:0;
+            background:linear-gradient(135deg,#f59e0b,#d97706);
+            display:flex;align-items:center;justify-content:center;
+            box-shadow:0 2px 8px rgba(245,158,11,.4);
+          ">
+            <svg width="24" height="22" viewBox="0 0 24 22" fill="none">
+              <polygon points="12,1 23,21 1,21" fill="white" stroke="white" stroke-width=".5" stroke-linejoin="round"/>
+              <line x1="12" y1="8" x2="12" y2="15" stroke="#d97706" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="12" cy="17.5" r="1.3" fill="#d97706"/>
+            </svg>
+          </div>
+          <!-- 텍스트 -->
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:8px;font-weight:600;color:rgba(245,158,11,.8);letter-spacing:.14em;text-transform:uppercase;margin-bottom:3px;">MANMIN Engineering</div>
+            <div style="font-size:13.5px;font-weight:900;color:white;letter-spacing:.02em;line-height:1.2;">만민 소방설계 홈페이지</div>
+            <div style="font-size:10px;color:#94a3b8;margin-top:3px;">소방·전기 설계계산 통합 플랫폼 · 전체 계산기 모음</div>
+          </div>
+          <!-- 화살표 -->
+          <div style="
+            flex-shrink:0;
+            width:30px;height:30px;border-radius:50%;
+            background:rgba(245,158,11,.18);border:1.5px solid rgba(245,158,11,.4);
+            display:flex;align-items:center;justify-content:center;
+            font-size:14px;font-weight:700;color:#f59e0b;
+          ">↗</div>
+        </a>
+
+        <div class="hm-sec-title">MANMIN 소방설계 계산기 시리즈</div>
+
+        <!-- ① 옥내소화전 -->
+        <a class="link-card" href="https://manminkim-eng.github.io/fire-hydrant-calc/" target="_blank" rel="noopener">
+          <div class="link-card-icon">🚒</div>
+          <div class="link-card-body">
+            <div class="link-card-name">옥내소화전 계산기</div>
+            <div class="link-card-desc">펌프 동력·방수압·배관 구경 산정 — NFTC 102</div>
+            <span class="link-card-badge">hyd_pump · hyd_charge 연동</span>
+          </div>
+          <div class="link-card-arr">↗</div>
+        </a>
+
+        <!-- ② 옥외소화전 -->
+        <a class="link-card" href="https://manminkim-eng.github.io/outdoor-hydrant-calc/" target="_blank" rel="noopener">
+          <div class="link-card-icon">🏗️</div>
+          <div class="link-card-body">
+            <div class="link-card-name">옥외소화전 계산기</div>
+            <div class="link-card-desc">방수량·펌프 동력·배관 구경 산정 — NFTC 109</div>
+            <span class="link-card-badge">hyd_pump · hyd_charge 연동</span>
+          </div>
+          <div class="link-card-arr">↗</div>
+        </a>
+
+        <!-- ③ 스프링클러 -->
+        <a class="link-card" href="https://manminkim-eng.github.io/fire-sprinkler-calc/" target="_blank" rel="noopener">
+          <div class="link-card-icon">💧</div>
+          <div class="link-card-body">
+            <div class="link-card-name">스프링클러설비 계산기</div>
+            <div class="link-card-desc">헤드 수·유량·펌프 동력 산정 — NFTC 103</div>
+            <span class="link-card-badge">spr_pump · spr_charge 연동</span>
+          </div>
+          <div class="link-card-arr">↗</div>
+        </a>
+
+        <!-- ④ 간이스프링클러 -->
+        <a class="link-card" href="https://manminkim-eng.github.io/simple-sprinkler-calc/" target="_blank" rel="noopener">
+          <div class="link-card-icon">🌧️</div>
+          <div class="link-card-body">
+            <div class="link-card-name">간이스프링클러 계산기</div>
+            <div class="link-card-desc">간이헤드·유량·펌프 동력 산정 — NFTC 103A</div>
+            <span class="link-card-badge">spr_pump · spr_charge 연동</span>
+          </div>
+          <div class="link-card-arr">↗</div>
+        </a>
+
+        <!-- ⑤ 겸용 [옥내+스프링클러] -->
+        <a class="link-card" href="https://manminkim-eng.github.io/combo-pump-calc/" target="_blank" rel="noopener">
+          <div class="link-card-icon">🔀</div>
+          <div class="link-card-body">
+            <div class="link-card-name">겸용 계산기 [옥내소화전 + 스프링클러]</div>
+            <div class="link-card-desc">겸용 펌프 동력·유량 통합 산정</div>
+            <span class="link-card-badge">hyd_pump · spr_pump 연동</span>
+          </div>
+          <div class="link-card-arr">↗</div>
+        </a>
+
+        <!-- ⑥ 겸용 [간이스프링클러+옥내소화전] -->
+        <a class="link-card" href="https://manminkim-eng.github.io/combo-easy-fire-calc/" target="_blank" rel="noopener">
+          <div class="link-card-icon">🔁</div>
+          <div class="link-card-body">
+            <div class="link-card-name">겸용 계산기 [간이스프링클러 + 옥내소화전]</div>
+            <div class="link-card-desc">간이+소화전 겸용 펌프 동력 통합 산정</div>
+            <span class="link-card-badge">hyd_pump · spr_pump 연동</span>
+          </div>
+          <div class="link-card-arr">↗</div>
+        </a>
+
+        <!-- ⑦ 겸용 [옥내+옥외소화전] -->
+        <a class="link-card" href="https://manminkim-eng.github.io/combo-indoor-outdoor-calc/" target="_blank" rel="noopener">
+          <div class="link-card-icon">🚒</div>
+          <div class="link-card-body">
+            <div class="link-card-name">겸용 계산기 [옥내소화전 + 옥외소화전]</div>
+            <div class="link-card-desc">옥내·옥외 겸용 펌프 동력 통합 산정</div>
+            <span class="link-card-badge">hyd_pump · hyd_charge 연동</span>
+          </div>
+          <div class="link-card-arr">↗</div>
+        </a>
+
+        <!-- ⑧ 제연설비 -->
+        <a class="link-card" href="https://manminkim-eng.github.io/Smoke-Control-System/" target="_blank" rel="noopener">
+          <div class="link-card-icon">💨</div>
+          <div class="link-card-body">
+            <div class="link-card-name">제연설비 계산기</div>
+            <div class="link-card-desc">배출량·풍도 단면·팬 동력 산정 — NFTC 501</div>
+            <span class="link-card-badge">smk_supply · smk_exhaust 연동</span>
+          </div>
+          <div class="link-card-arr">↗</div>
+        </a>
+
+        <div class="hm-card" style="margin-top:6px;background:#fefce8;border-color:#fde68a;">
+          <div class="hm-card-title" style="color:#92400e;">URL 파라미터 자동 연동 방법</div>
+          <div class="hm-item">각 계산기 결과 페이지에서 <b>비상발전기 연동</b> 버튼 클릭 → 이 페이지 자동 오픈 + 데이터 입력</div>
+          <div class="hm-item">또는 직접 주소창에 파라미터 추가: <code style="background:white;padding:1px 5px;border-radius:3px;font-size:10px;color:#374151;">?hyd_pump=15&amp;spr_pump=22&amp;smk_supply=18.5</code></div>
+          <div class="hm-item">연동 성공 시 상단 배너에 <span style="color:#15803d;font-weight:700;">● 연동 완료</span> 표시</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 법규자료 -->
+    <div class="hm-panel" id="hm-law">
+      <div class="hm-sec">
+        <div class="hm-sec-title">적용 기준 및 법령</div>
+        <div class="hm-card">
+          <div class="hm-card-title">📋 NFTC 602 (화재안전기술기준)</div>
+          <div class="hm-item">소방청공고 제2022-240호 · 2022년 12월 1일 시행</div>
+          <div class="hm-item">비상전원수전설비의 설치 및 관리 기준</div>
+          <div class="hm-item">인입선 / 배전반 / 큐비클 설치 기준 포함</div>
+        </div>
+        <div class="hm-card">
+          <div class="hm-card-title">📋 NFPC 602 (화재안전성능기준)</div>
+          <div class="hm-item">소방청고시 제2022-63호 · 2022년 11월 25일 제정, 12월 1일 시행</div>
+          <div class="hm-item">NFTC 602 충족 시 이를 충족한 것으로 봄 (1.2.2)</div>
+          <div class="hm-item">재검토 기한: 2023.1.1 기준 매 3년</div>
+        </div>
+        <div class="hm-card">
+          <div class="hm-card-title">📋 KDS 31 60 20 예비전원설비 건설기준</div>
+          <div class="hm-item">국토교통부 건설기준 — 발전기 용량 산정식 근거</div>
+          <div class="hm-item">DF·MF·PF 설계 계수 기준</div>
+        </div>
+      </div>
+      <div class="hm-sec">
+        <div class="hm-sec-title">법령 검색 링크</div>
+        <div class="hm-card">
+          <div class="hm-item"><b>국가법령정보센터</b> — <a href="https://www.law.go.kr" target="_blank" style="color:var(--c-primary3);">www.law.go.kr</a></div>
+          <div class="hm-item"><b>국가건설기준센터</b> — <a href="https://www.kcsc.re.kr" target="_blank" style="color:var(--c-primary3);">www.kcsc.re.kr</a></div>
+          <div class="hm-item"><b>소방청 법령정보</b> — <a href="https://www.nfa.go.kr" target="_blank" style="color:var(--c-primary3);">www.nfa.go.kr</a></div>
+        </div>
+        <div class="hm-card">
+          <div class="hm-card-title">큐비클 설치 기준 요약 (NFTC 602 §2.2.3)</div>
+          <table class="hm-table">
+            <thead><tr><th>항목</th><th>기준</th></tr></thead>
+            <tbody>
+              <tr><td>외함 강판 두께</td><td>2.3 mm 이상</td></tr>
+              <tr><td>방화문 등급</td><td>60분+ / 60분 / 30분</td></tr>
+              <tr><td>바닥 이격</td><td>10 cm 이상</td></tr>
+              <tr><td>충전부 이격</td><td>15 cm 이상</td></tr>
+              <tr><td>환기구 개구율</td><td>한 면의 1/3 이하</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /help-modal -->
+  </div><!-- /help-modal-wrap -->
+</div><!-- /help-overlay -->
+
+<!-- ══ SW 업데이트 바 ══ -->
+<div id="sw-update-bar">
+  <span>🔄 새 버전이 준비되었습니다</span>
+  <button class="sw-upd-btn" onclick="swDoUpdate()">지금 업데이트</button>
+</div>
+
+<!-- ══ 인쇄 전용 구역 ══ -->
+<div id="print-zone"><div id="rpt-print-doc"></div></div>
+
+<script>
+'use strict';
+/* ════════════════════════════════════════════════
+   MANMIN-Ver3.0 · 비상발전기 용량 산정
+   NFTC 602 / NFPC 602 · KDS 31 60 20
+════════════════════════════════════════════════ */
+
+var _calc = {};   /* 전역 계산 결과 저장 */
+var _calcDone = false; /* 최초 계산 완료 플래그 */
+var loadRows = [], loadRowId = 0;
+
+/* ── 탭 전환 ── */
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  var el = document.getElementById(id);
+  if (el) el.classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (id === 't-print') buildReport();
+  if (id === 't-judge') judgeTime();
+}
+
+/* ── 숫자 파싱 ── */
+function nv(id) {
+  var v = parseFloat(document.getElementById(id).value);
+  return isNaN(v) || v < 0 ? 0 : v;
+}
+function setText(id, v) { var e = document.getElementById(id); if(e) e.textContent = v; }
+function setHTML(id, v) { var e = document.getElementById(id); if(e) e.innerHTML = v; }
+
+/* ── 메인 계산 ── */
+function calcAll() {
+  var hydSum = nv('hyd-pump') + nv('hyd-charge') + nv('hyd-etc');
+  var sprSum = nv('spr-pump') + nv('spr-charge') + nv('spr-etc');
+  var smkSum = nv('smk-supply') + nv('smk-exhaust') + nv('smk-etc');
+  var othSum = nv('oth-detect') + nv('oth-light') + nv('oth-sign') + nv('oth-misc');
+  var total  = hydSum + sprSum + smkSum + othSum;
+
+  var pf   = Math.max(0.1,  nv('pf')  || 0.8);  /* 역률: 최소 0.1 */
+  var df   = Math.max(0.01, nv('df')  || 1.0);  /* 수용률: 0이면 1.0으로 */
+  var mf   = Math.max(1.0,  nv('mf')  || 1.2);  /* 여유율: 최소 1.0 */
+  /* df=0 입력(빈칸) 방어 */
+  if (nv('df') === 0) { document.getElementById('df').value = 1.0; df = 1.0; }
+  var time = parseInt(document.getElementById('hold-time').value) || 20;
+  var inst = nv('inst-kva');
+
+  var effLoad = total * df * mf;
+  var reqKva  = effLoad / pf;
+
+  /* 소계 */
+  setText('fml-hyd', hydSum.toFixed(2));
+  setText('fml-spr', sprSum.toFixed(2));
+  setText('fml-smk', smkSum.toFixed(2));
+  setText('fml-oth', othSum.toFixed(2));
+
+  /* 상세 결과 */
+  setText('rd-hyd', hydSum.toFixed(2) + ' kW');
+  setText('rd-spr', sprSum.toFixed(2) + ' kW');
+  setText('rd-smk', smkSum.toFixed(2) + ' kW');
+  setText('rd-oth', othSum.toFixed(2) + ' kW');
+  setText('rd-sum', total.toFixed(2) + ' kW');
+  setText('rd-adj', 'DF ' + df.toFixed(2) + ' × MF ' + mf.toFixed(2));
+  setText('rd-eff', effLoad.toFixed(2) + ' kW');
+  setText('rd-pf',  pf.toFixed(2));
+  setText('rd-kva', reqKva.toFixed(1) + ' kVA');
+  setText('rd-inst', inst > 0 ? inst.toFixed(0) + ' kVA' : '미입력');
+
+  /* 판정 */
+  var judgeHtml = '';
+  if (inst <= 0) {
+    judgeHtml = '<span class="badge badge-warn">⚠ 설치용량 미입력</span>';
+  } else if (inst >= reqKva) {
+    judgeHtml = '<span class="badge badge-ok">✅ 적정 (여유 ' + (inst - reqKva).toFixed(1) + ' kVA)</span>';
+  } else {
+    judgeHtml = '<span class="badge badge-ng">❌ 부족 (' + (reqKva - inst).toFixed(1) + ' kVA 부족)</span>';
+  }
+  setHTML('rd-judge', judgeHtml);
+
+  /* Hero */
+  setText('res-kva', reqKva.toFixed(1));
+  setText('res-kva-sub', 'S = ' + total.toFixed(2) + ' × ' + df.toFixed(2) + ' × ' + mf.toFixed(2) + ' ÷ ' + pf.toFixed(2));
+
+  /* 개요 카드 */
+  setText('ov-kva',   reqKva.toFixed(1));
+  setText('ov-kw',    total.toFixed(2));
+  var ratio  = inst > 0 ? (reqKva / inst * 100).toFixed(1) + '%' : '—';
+  var margin = inst > 0 ? (inst - reqKva).toFixed(1) : '—';
+  setText('ov-ratio',  ratio);
+  setText('ov-margin', margin !== '—' ? margin : '—');
+
+  /* 산정식 */
+  setText('fml-calc',
+    'S = ' + total.toFixed(2) + ' × ' + df.toFixed(2) + ' × ' + mf.toFixed(2) +
+    ' ÷ ' + pf.toFixed(2) + ' = ' + reqKva.toFixed(1) + ' kVA'
+  );
+
+  /* 요약 바 */
+  setText('sv-kva',  reqKva.toFixed(1));
+  setText('sv-inst', inst > 0 ? inst.toFixed(0) : '—');
+  setText('sv-load', total.toFixed(2));
+  setText('sv-time', time + '분');
+
+  /* 유지시간 배너 */
+  updateTimeBanner(time);
+
+  /* 부하 구성비 */
+  buildLoadBars(hydSum, sprSum, smkSum, othSum, total);
+
+  /* 전역 저장 */
+  _calc = { hydSum:hydSum, sprSum:sprSum, smkSum:smkSum, othSum:othSum,
+            total:total, pf:pf, df:df, mf:mf, effLoad:effLoad,
+            reqKva:reqKva, inst:inst, time:time };
+  _calcDone = true;
+}
+
+/* ── 유지시간 배너 갱신 ── */
+function updateTimeBanner(time) {
+  var box  = document.getElementById('time-banner');
+  var main = document.getElementById('tb-main');
+  var sub  = document.getElementById('tb-sub');
+  var bdg  = document.getElementById('tb-badge');
+  box.className = 'time-banner';
+  if (time >= 60) {
+    box.classList.add('t60');
+    main.textContent = '🔴 비상전원 유지시간 60분 이상';
+    sub.textContent  = '초고층건축물 적용 — 엄격한 기준';
+    bdg.innerHTML    = '<span class="badge badge-ng">60분↑</span>';
+  } else if (time >= 40) {
+    box.classList.add('t40');
+    main.textContent = '🟠 비상전원 유지시간 40분 이상';
+    sub.textContent  = '고층건축물 / 지하가·터널 적용';
+    bdg.innerHTML    = '<span class="badge badge-warn">40분↑</span>';
+  } else if (time >= 30) {
+    box.classList.add('t30');
+    main.textContent = '🟡 비상전원 유지시간 30분 이상';
+    sub.textContent  = '특수 건물 적용';
+    bdg.innerHTML    = '<span class="badge badge-amber">30분↑</span>';
+  } else {
+    box.classList.add('t20');
+    main.textContent = '🟢 비상전원 유지시간 20분 이상';
+    sub.textContent  = '일반 소방대상물 기준 충족';
+    bdg.innerHTML    = '<span class="badge badge-ok">20분</span>';
+  }
+}
+
+/* ── 부하 구성비 ── */
+function buildLoadBars(hyd, spr, smk, oth, total) {
+  var zone = document.getElementById('load-bars');
+  if (!zone) return;
+  if (total <= 0) {
+    zone.innerHTML = '<div style="text-align:center;color:#9ca3af;font-size:12px;padding:16px;">부하 입력 후 표시됩니다</div>';
+    return;
+  }
+  var items = [
+    { label:'소화전',     val:hyd, color:'#3730a3' },
+    { label:'스프링클러', val:spr, color:'#15803d' },
+    { label:'제연설비',   val:smk, color:'#b45309' },
+    { label:'기타',       val:oth, color:'#b91c1c'  }
+  ];
+  var html = '';
+  items.forEach(function(item) {
+    var pct = total > 0 ? (item.val / total * 100) : 0;
+    html += '<div style="margin-bottom:12px;">';
+    html += '<div class="prog-row"><span>' + item.label + '</span><span>' + item.val.toFixed(2) + ' kW (' + pct.toFixed(1) + '%)</span></div>';
+    html += '<div class="prog-bar"><div class="prog-fill" style="width:' + pct.toFixed(1) + '%;background:' + item.color + '"></div></div>';
+    html += '</div>';
+  });
+  zone.innerHTML = html;
+}
+
+/* ══════════════════════════════════════════════
+   건물 조건 특수 체크박스 — 상호 연동 로직
+   규칙:
+     ① 층수 30↑ → 고층 자동 체크  (해제는 수동)
+     ② 층수 50↑ → 초고층 자동 체크 + 고층 잠금
+     ③ 층수 30 미만으로 변경 → 자동 해제
+     ④ 초고층 체크 → 고층 자동 체크+잠금
+     ⑤ 초고층 해제 → 고층 잠금 해제 (고층 상태 유지)
+     ⑥ 고층 해제 → 초고층도 자동 해제
+══════════════════════════════════════════════ */
+function onFloorChange() {
+  var floors  = parseInt(document.getElementById('j-floors').value) || 0;
+  var highEl  = document.getElementById('j-highrise');
+  var ultraEl = document.getElementById('j-ultra');
+
+  if (floors >= 50) {
+    /* 50층↑: 초고층 + 고층 모두 자동 체크 + 고층 잠금 */
+    ultraEl.checked  = true;
+    highEl.checked   = true;
+    highEl.disabled  = true;
+    highEl.closest('.chk-row').style.opacity = '.5';
+    ultraEl.closest('.chk-row').querySelector('label').style.color = '#92400e';
+  } else if (floors >= 30) {
+    /* 30~49층: 고층만 자동 체크 (초고층 해제) */
+    if (ultraEl.checked) {
+      ultraEl.checked = false;
+      ultraEl.closest('.chk-row').querySelector('label').style.color = '';
+    }
+    highEl.checked  = true;
+    highEl.disabled = false;
+    highEl.closest('.chk-row').style.opacity = '1';
+  } else {
+    /* 30층 미만: 층수로 자동 체크된 것만 해제 (수동 체크는 유지) */
+    ultraEl.checked = false;
+    ultraEl.closest('.chk-row').querySelector('label').style.color = '';
+    highEl.disabled = false;
+    highEl.closest('.chk-row').style.opacity = '1';
+    /* 수동 체크가 아닌 경우 자동 해제 — 층수로만 자동 설정된 경우만 */
+    if (!highEl._manualCheck) highEl.checked = false;
+  }
+  judgeTime();
+}
+
+function onHighriseChange() {
+  var highEl  = document.getElementById('j-highrise');
+  var ultraEl = document.getElementById('j-ultra');
+  /* 고층 해제 시 → 초고층도 자동 해제 */
+  if (!highEl.checked && ultraEl.checked) {
+    ultraEl.checked = false;
+    ultraEl.closest('.chk-row').querySelector('label').style.color = '';
+  }
+  /* 수동 체크 여부 기록 */
+  highEl._manualCheck = highEl.checked;
+  judgeTime();
+}
+
+/* ── 초고층 체크 상호연동: 초고층 ⊃ 고층 자동 포함 ── */
+function onUltraChange() {
+  var ultraEl = document.getElementById('j-ultra');
+  var highEl  = document.getElementById('j-highrise');
+  if (ultraEl.checked) {
+    /* 초고층 체크 → 고층도 자동 체크 + 비활성(잠금) */
+    highEl.checked  = true;
+    highEl.disabled = true;
+    highEl.parentElement.style.opacity = '.5';
+  } else {
+    /* 초고층 해제 → 고층 다시 활성 */
+    highEl.disabled = false;
+    highEl.parentElement.style.opacity = '1';
+  }
+  judgeTime();
+}
+
+/* ── 유지시간 판정 (탭③) — 중복 없는 정확한 로직 ── */
+function judgeTime() {
+  var floors   = parseInt(document.getElementById('j-floors').value) || 1;
+  var bsmt     = parseFloat(document.getElementById('j-bsmt').value) || 0;
+  var isTunnel = document.getElementById('j-tunnel').checked;
+  var isHigh   = document.getElementById('j-highrise').checked;
+  var isUltra  = document.getElementById('j-ultra').checked;
+
+  var req = 20;
+  var reasons = [];
+
+  /* ① 초고층 판정 (60분) — 가장 우선 */
+  if (isUltra || floors >= 50) {
+    req = 60;
+    if (isUltra)      reasons.push('초고층 체크 선택 → 60분');
+    else              reasons.push('층수 ' + floors + '층 (50층↑) — 초고층 → 60분');
+    /* 초고층이면 고층 조건 별도 표시 불필요 */
+  } else {
+    /* ② 고층 판정 (40분) */
+    if (isHigh || floors >= 30) {
+      req = Math.max(req, 40);
+      if (isHigh && floors >= 30)
+        reasons.push('고층건축물 체크 + 층수 ' + floors + '층 (30층↑) → 40분');
+      else if (isHigh)
+        reasons.push('고층건축물 체크 선택 → 40분');
+      else
+        reasons.push('층수 ' + floors + '층 (30층↑) — 고층건축물 → 40분');
+    }
+    /* ③ 터널 판정 (40분) */
+    if (isTunnel) {
+      req = Math.max(req, 40);
+      reasons.push('지하가(터널) 체크 선택 → 40분');
+    }
+    /* ④ 지하층 면적 판정 (40분) */
+    if (bsmt >= 1000) {
+      req = Math.max(req, 40);
+      reasons.push('지하층 바닥면적 ' + bsmt.toFixed(0) + ' ㎡ (1,000㎡↑) → 40분');
+    }
+  }
+
+  var cls    = req >= 60 ? 't60' : req >= 40 ? 't40' : 't20';
+  var bdgCls = req >= 60 ? 'badge-ng' : req >= 40 ? 'badge-warn' : 'badge-ok';
+  var icon   = req >= 60 ? '🔴' : req >= 40 ? '🟠' : '🟢';
+
+  var reasonHtml = reasons.length > 0
+    ? reasons.map(function(r){
+        return '<div class="hm-item" style="margin-top:4px;">' + r + '</div>';
+      }).join('')
+    : '<div class="hm-item" style="margin-top:4px;">특별 조건 없음 — 일반 기준 20분 적용</div>';
+
+  var html = '<div class="time-banner ' + cls + '">';
+  html += '<div class="time-banner-icon">' + icon + '</div>';
+  html += '<div style="flex:1;">';
+  html += '<div class="time-banner-main">비상전원 유지시간 최소 <b>' + req + '분</b> 이상</div>';
+  html += '<div class="time-banner-sub" style="margin-bottom:4px;">판정 근거</div>';
+  html += reasonHtml;
+  html += '</div>';
+  html += '<div><span class="badge ' + bdgCls + '">' + req + '분↑</span></div>';
+  html += '</div>';
+  document.getElementById('judge-result-area').innerHTML = html;
+}
+
+/* ── 부하 목록 ── */
+function addLoadRow(name, spec, qty, kw, remark) {
+  var id = ++loadRowId;
+  loadRows.push({ id:id, name:name||'', spec:spec||'', qty:qty||1, kw:kw||0, remark:remark||'' });
+  renderLoadTable();
+}
+function removeLoadRow(id) {
+  loadRows = loadRows.filter(function(r){ return r.id !== id; });
+  renderLoadTable();
+}
+function updateLoadRow(id, field, val) {
+  var row = loadRows.find(function(r){ return r.id === id; });
+  if (!row) return;
+  row[field] = val;
+  /* 수치 필드(qty/kw)면 해당 행 합계 셀 + 총합만 갱신 → 포커스 유지 */
+  if (field === 'qty' || field === 'kw') {
+    updateRowSum(id);
+    updateTotalSum();
+  }
+}
+
+/* 특정 행의 합계 셀만 갱신 */
+function updateRowSum(id) {
+  var row = loadRows.find(function(r){ return r.id === id; });
+  if (!row) return;
+  var sum = (parseFloat(row.qty)||0) * (parseFloat(row.kw)||0);
+  var cell = document.getElementById('rowsum-' + id);
+  if (cell) cell.textContent = sum.toFixed(2);
+}
+
+/* 총합 셀만 갱신 */
+function updateTotalSum() {
+  var total = loadRows.reduce(function(acc, row) {
+    return acc + (parseFloat(row.qty)||0) * (parseFloat(row.kw)||0);
+  }, 0);
+  var tot = document.getElementById('load-total');
+  if (tot) tot.textContent = total.toFixed(2);
+}
+
+/* 전체 테이블 재렌더링 — 행 추가/삭제 시만 호출 */
+function renderLoadTable() {
+  var tbody = document.getElementById('load-tbody');
+  if (!tbody) return;
+  var total = 0;
+  /* 인라인 이벤트에서 작은따옴표 충돌 방지: data-rid 속성 + 위임 방식 */
+  var IS = 'border:none;background:transparent;font-size:11px;outline:none;width:100%;padding:2px 4px;font-family:Noto Sans KR,sans-serif;';
+  var NS = 'border:none;background:transparent;font-size:11px;outline:none;text-align:center;font-family:Noto Sans KR,sans-serif;';
+  tbody.innerHTML = loadRows.map(function(row, idx) {
+    var sum = (parseFloat(row.qty)||0) * (parseFloat(row.kw)||0);
+    total += sum;
+    var bg  = idx%2===0 ? 'white' : '#fffbf0';
+    var rid = row.id;
+    return '<tr style="background:' + bg + ';" data-rid="' + rid + '">' +
+      '<td style="font-size:11px;text-align:center;color:#64748b;font-weight:700;">' + (idx+1) + '</td>' +
+      /* 설비명 */
+      '<td><input class="lr-name" data-rid="' + rid + '" style="' + IS + '" value="' + esc(row.name) + '" placeholder="설비명"/></td>' +
+      /* 규격 */
+      '<td><input class="lr-spec" data-rid="' + rid + '" style="' + IS + '" value="' + esc(row.spec) + '" placeholder="규격"/></td>' +
+      /* 수량 */
+      '<td><input type="number" class="lr-qty" data-rid="' + rid + '" min="0" step="1" style="width:54px;' + NS + '" value="' + (parseFloat(row.qty)||1) + '" inputmode="decimal"/></td>' +
+      /* 단위kW */
+      '<td><input type="number" class="lr-kw" data-rid="' + rid + '" min="0" step="0.01" style="width:64px;' + NS + '" value="' + (parseFloat(row.kw)||0) + '" inputmode="decimal"/></td>' +
+      /* 합계 */
+      '<td id="rowsum-' + rid + '" style="font-weight:800;color:#1E3A5F;font-size:11px;text-align:center;">' + sum.toFixed(2) + '</td>' +
+      /* 비고 */
+      '<td><input class="lr-rmk" data-rid="' + rid + '" style="' + IS + '" value="' + esc(row.remark) + '" placeholder="비고"/></td>' +
+      /* 삭제 */
+      '<td style="text-align:center;">' +
+        '<button data-del="' + rid + '" style="background:#fef2f2;border:1px solid #fca5a5;color:#b91c1c;border-radius:5px;padding:3px 8px;font-size:10px;font-weight:700;cursor:pointer;">삭제</button>' +
+      '</td></tr>';
+  }).join('');
+  var tot = document.getElementById('load-total');
+  if (tot) tot.textContent = total.toFixed(2);
+  /* 이벤트 위임 재등록 */
+  attachLoadTableEvents();
+}
+
+/* 이벤트 위임 — tbody 한 곳에만 등록, input/blur/click 처리 */
+function attachLoadTableEvents() {
+  var tbody = document.getElementById('load-tbody');
+  if (!tbody || tbody._evtAttached) return;
+  tbody._evtAttached = true;
+
+  /* 수치 입력: oninput → 즉시 합계 갱신 */
+  tbody.addEventListener('input', function(e) {
+    var el  = e.target;
+    var rid = parseInt(el.getAttribute('data-rid'));
+    if (!rid) return;
+    var row = loadRows.find(function(r){ return r.id === rid; });
+    if (!row) return;
+    if (el.classList.contains('lr-qty')) { row.qty = el.value; updateRowSum(rid); updateTotalSum(); }
+    if (el.classList.contains('lr-kw'))  { row.kw  = el.value; updateRowSum(rid); updateTotalSum(); }
+  });
+
+  /* 텍스트 blur → 저장 */
+  tbody.addEventListener('change', function(e) {
+    var el  = e.target;
+    var rid = parseInt(el.getAttribute('data-rid'));
+    if (!rid) return;
+    var row = loadRows.find(function(r){ return r.id === rid; });
+    if (!row) return;
+    if (el.classList.contains('lr-name')) row.name   = el.value;
+    if (el.classList.contains('lr-spec')) row.spec   = el.value;
+    if (el.classList.contains('lr-rmk'))  row.remark = el.value;
+    if (el.classList.contains('lr-qty'))  { row.qty  = el.value; updateRowSum(rid); updateTotalSum(); }
+    if (el.classList.contains('lr-kw'))   { row.kw   = el.value; updateRowSum(rid); updateTotalSum(); }
+  });
+
+  /* 삭제 버튼 */
+  tbody.addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-del]');
+    if (!btn) return;
+    var rid = parseInt(btn.getAttribute('data-del'));
+    loadRows = loadRows.filter(function(r){ return r.id !== rid; });
+    tbody._evtAttached = false;  /* 재렌더링 후 재등록 허용 */
+    renderLoadTable();
+  });
+
+  /* Enter 키 → 다음 셀 이동 */
+  tbody.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      var inputs = Array.from(tbody.querySelectorAll('input'));
+      var idx = inputs.indexOf(e.target);
+      if (idx >= 0 && idx < inputs.length - 1) inputs[idx+1].focus();
+    }
+  });
+}
+function esc(s) { return (s+'').replace(/"/g,'&quot;'); }
+
+/* ── A4 계산서 생성 (제연설비 포맷 동일) ── */
+function buildReport() {
+  var r = _calc;
+  if (!_calcDone) { calcAll(); }
+  var name  = document.getElementById('bld-name').value  || '—';
+  var dsn   = document.getElementById('designer').value   || '—';
+  var pdate = document.getElementById('proj-date').value;
+  var today = pdate
+    ? new Date(pdate).toLocaleDateString('ko-KR', {year:'numeric',month:'2-digit',day:'2-digit'})
+    : new Date().toLocaleDateString('ko-KR', {year:'numeric',month:'2-digit',day:'2-digit'});
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     폰트/색상 상수 — 업로드 PDF 정밀 측정값 기준
+     본문:        Noto Sans KR  7.9pt(≈10.5px 96dpi환산)  Regular
+     항목명/레이블: Noto Sans KR  5.6pt                    Bold
+     섹션제목:     Noto Sans KR  8.2pt                    ExtraBold
+     정보값(굵게): Noto Sans KR  9.0pt                    ExtraBold
+     TH헤더:       Noto Sans KR  7.5pt                    Bold
+     TD 수치:      Noto Sans KR  7.9pt                    Bold
+     작성일값:     Noto Sans KR  8.2pt                    Bold
+     서브타이틀:   Noto Sans KR  6.7pt                    Regular
+     푸터:         Orbitron      7.5pt                    Bold
+     TH배경:       #1E3A5F
+     정보셀배경:   #EEF4FB
+     테두리:       #CBD5E1
+     섹션 헤더배경: 그라데이션 (PDF 상단: linear-gradient 네이비계열)
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  var F   = "'Noto Sans KR',sans-serif";
+  var FOR = "'Orbitron',sans-serif";
+  var B   = '1px solid #CBD5E1';
+  var TH_BG = '#1E3A5F';       /* 테이블 헤더 배경 */
+  var INFO_BG = '#EEF4FB';     /* 정보셀 연파랑 배경 */
+  var SEC_BG  = '#1E3A5F';     /* 섹션 헤더 단색 */
+  var SEC_BG2 = '#2D5282';
+
+  var judgeStr = r.inst >= r.reqKva && r.inst > 0
+    ? '적정  (설치 ' + r.inst.toFixed(0) + ' kVA ≥ 필요 ' + r.reqKva.toFixed(1) + ' kVA)'
+    : r.inst <= 0 ? '설치용량 미입력' : '부족  (설치 ' + r.inst.toFixed(0) + ' kVA < 필요 ' + r.reqKva.toFixed(1) + ' kVA)';
+  var judgeColor = r.inst >= r.reqKva && r.inst > 0 ? '#15803d' : r.inst <= 0 ? '#92400e' : '#b91c1c';
+
+  /* ── 섹션 헤더: PDF 동일 단색 네이비 ── */
+  function SecHd(txt) {
+    return '<div style="' +
+      'padding:6px 11px;' +
+      'font-size:8.2pt;' +
+      'font-weight:800;' +
+      'font-family:'+F+';' +
+      'color:white;' +
+      'margin-top:14px;' +
+      'background:'+SEC_BG+';' +
+      '-webkit-print-color-adjust:exact;print-color-adjust:exact;' +
+      '">' + txt + '</div>';
+  }
+  /* ── TH: 네이비 배경 7.5pt Bold ── */
+  function TH(t, w, align) {
+    return '<th style="' +
+      'border:'+B+';' +
+      'padding:5px 9px;' +
+      'background:'+TH_BG+';' +
+      'color:white;' +
+      'font-weight:700;' +
+      'font-family:'+F+';' +
+      'font-size:7.5pt;' +
+      'text-align:'+(align||'center')+';' +
+      'white-space:nowrap;' +
+      (w?'width:'+w+';':'') +
+      '-webkit-print-color-adjust:exact;print-color-adjust:exact;' +
+      '">' + t + '</th>';
+  }
+  /* ── TD 기본: 7.9pt Regular ── */
+  function TD(t, align, bold, even, color) {
+    return '<td style="' +
+      'border:'+B+';' +
+      'padding:5px 9px;' +
+      'font-size:7.9pt;' +
+      'font-family:'+F+';' +
+      'font-weight:'+(bold?'700':'400')+';' +
+      'text-align:'+(align||'center')+';' +
+      'color:'+(color||'#111')+';' +
+      (even?'background:#f8fafc;':'') +
+      '">' + t + '</td>';
+  }
+
+  /* 부하 테이블 행 */
+  var loadItems = [
+    ['①', '옥내소화전설비', nv('hyd-pump').toFixed(2), nv('hyd-charge').toFixed(2), nv('hyd-etc').toFixed(2), r.hydSum.toFixed(2), false],
+    ['②', '스프링클러설비', nv('spr-pump').toFixed(2), nv('spr-charge').toFixed(2), nv('spr-etc').toFixed(2), r.sprSum.toFixed(2), true],
+    ['③', '제연설비',       nv('smk-supply').toFixed(2), nv('smk-exhaust').toFixed(2), nv('smk-etc').toFixed(2), r.smkSum.toFixed(2), false],
+    ['④', '기타 소방부하', '—', '—', '—', r.othSum.toFixed(2), true],
+  ];
+  var loadRowsHtml = loadItems.map(function(row) {
+    var even = row[6];
+    var ebg = even ? 'background:#f8fafc;' : '';
+    return '<tr>' +
+      '<td style="border:'+B+';padding:5px 9px;text-align:center;font-size:7.9pt;font-weight:700;font-family:\'Noto Sans KR\',sans-serif;color:#1E3A5F;'+ebg+'">' + row[0] + '</td>' +
+      '<td style="border:'+B+';padding:5px 9px;text-align:left;font-size:7.9pt;font-weight:700;font-family:\'Noto Sans KR\',sans-serif;'+ebg+'">' + row[1] + '</td>' +
+      '<td style="border:'+B+';padding:5px 9px;text-align:center;font-size:7.9pt;font-family:\'Noto Sans KR\',sans-serif;'+ebg+'">' + row[2] + '</td>' +
+      '<td style="border:'+B+';padding:5px 9px;text-align:center;font-size:7.9pt;font-family:\'Noto Sans KR\',sans-serif;'+ebg+'">' + row[3] + '</td>' +
+      '<td style="border:'+B+';padding:5px 9px;text-align:center;font-size:7.9pt;font-family:\'Noto Sans KR\',sans-serif;'+ebg+'">' + row[4] + '</td>' +
+      '<td style="border:'+B+';padding:5px 9px;text-align:center;font-size:8.2pt;font-weight:800;font-family:\'Noto Sans KR\',sans-serif;color:#1E3A5F;'+ebg+'">' + row[5] + '</td>' +
+      '</tr>';
+  }).join('');
+  loadRowsHtml += '<tr style="background:#EEF4FB;-webkit-print-color-adjust:exact;print-color-adjust:exact;">' +
+    '<td colspan="5" style="border:'+B+';padding:6px 9px;text-align:right;font-size:7.9pt;font-weight:800;font-family:\'Noto Sans KR\',sans-serif;color:#1E3A5F;background:#EEF4FB;">합  계 (ΣP)</td>' +
+    '<td style="border:'+B+';padding:6px 9px;text-align:center;font-size:8.2pt;font-weight:900;font-family:\'Noto Sans KR\',sans-serif;color:#1E3A5F;background:#EEF4FB;">' + r.total.toFixed(2) + ' kW</td></tr>';
+
+  /* 부하 목록표 HTML */
+  var listHtml = '';
+  if (loadRows.length > 0) {
+    var ltot = 0;
+    listHtml = SecHd('Ⅱ. 소방부하 목록표');
+    listHtml += '<table style="width:100%;border-collapse:collapse;">';
+    listHtml += '<thead><tr>' + ['No','설비명','규격','수량','단위kW','합계kW','비고'].map(function(h){ return TH(h); }).join('') + '</tr></thead>';
+    listHtml += '<tbody>';
+    loadRows.forEach(function(row, i) {
+      var sum = (parseFloat(row.qty)||0)*(parseFloat(row.kw)||0);
+      ltot += sum;
+      var even = i%2===1;
+      var bg = even ? 'background:#f8fafc;' : '';
+      listHtml += '<tr>' +
+        '<td style="border:'+B+';padding:5px 9px;text-align:center;font-size:7.9pt;font-weight:700;font-family:\'Noto Sans KR\',sans-serif;color:#1E3A5F;'+bg+'">' + (i+1) + '</td>' +
+        '<td style="border:'+B+';padding:5px 9px;text-align:left;font-size:7.9pt;font-family:\'Noto Sans KR\',sans-serif;'+bg+'">' + esc(row.name) + '</td>' +
+        '<td style="border:'+B+';padding:5px 9px;text-align:left;font-size:7.9pt;font-family:\'Noto Sans KR\',sans-serif;'+bg+'">' + esc(row.spec) + '</td>' +
+        '<td style="border:'+B+';padding:5px 9px;text-align:center;font-size:7.9pt;font-family:\'Noto Sans KR\',sans-serif;'+bg+'">' + row.qty + '</td>' +
+        '<td style="border:'+B+';padding:5px 9px;text-align:center;font-size:7.9pt;font-weight:700;font-family:\'Noto Sans KR\',sans-serif;'+bg+'">' + (parseFloat(row.kw)||0).toFixed(2) + '</td>' +
+        '<td style="border:'+B+';padding:5px 9px;text-align:center;font-size:8.2pt;font-weight:800;font-family:\'Noto Sans KR\',sans-serif;color:#1E3A5F;'+bg+'">' + sum.toFixed(2) + '</td>' +
+        '<td style="border:'+B+';padding:5px 9px;text-align:left;font-size:7.9pt;font-family:\'Noto Sans KR\',sans-serif;'+bg+'">' + esc(row.remark) + '</td>' +
+        '</tr>';
+    });
+    listHtml += '<tr style="background:#EEF4FB;-webkit-print-color-adjust:exact;print-color-adjust:exact;">' +
+      '<td colspan="5" style="border:'+B+';padding:6px 9px;text-align:right;font-size:7.9pt;font-weight:800;font-family:\'Noto Sans KR\',sans-serif;color:#1E3A5F;background:#EEF4FB;">합  계</td>' +
+      '<td style="border:'+B+';padding:6px 9px;text-align:center;font-size:8.2pt;font-weight:900;font-family:\'Noto Sans KR\',sans-serif;color:#1E3A5F;background:#EEF4FB;">' + ltot.toFixed(2) + '</td>' +
+      '<td style="border:'+B+';background:#EEF4FB;"></td></tr>';
+    listHtml += '</tbody></table>';
+  }
+
+  /* ══ 계산서 HTML 본문 — PDF 완전 동일 포맷 ══ */
+  var html = `
+<div style="padding:6px 11px;display:flex;align-items:center;justify-content:space-between;background:#1E3A5F;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+  <span style="font-size:8.2pt;font-weight:800;font-family:'Noto Sans KR',sans-serif;color:white;letter-spacing:.02em;">비상발전기 용량 산정 계산서</span>
+  <span style="font-family:'Orbitron',sans-serif;font-size:6.7pt;font-weight:700;color:white;letter-spacing:.1em;">MANMIN-Ver3.0</span>
+</div>
+<div style="padding:10px 11px 8px;background:#EEF4FB;border:${B};border-top:none;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+  <div style="font-size:12pt;font-weight:900;font-family:'Noto Sans KR',sans-serif;color:#111827;letter-spacing:.01em;margin-bottom:3px;">비상발전기 용량 산정 계산서</div>
+  <div style="font-size:6.7pt;font-family:'Noto Sans KR',sans-serif;color:#374151;">소방시설용 비상전원수전설비 화재안전기술기준(NFTC 602) · 화재안전성능기준(NFPC 602) 적용</div>
+</div>
+<div style="display:flex;border:${B};border-top:none;margin-bottom:0;">
+  <div style="flex:2.2;padding:5px 11px 6px;border-right:${B};background:white;">
+    <div style="font-size:5.6pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#64748b;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px;">공사명</div>
+    <div style="font-size:9pt;font-weight:800;font-family:'Noto Sans KR',sans-serif;color:#111827;">${esc(name)}</div>
+  </div>
+  <div style="flex:1;padding:5px 11px 6px;border-right:${B};background:white;">
+    <div style="font-size:5.6pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#64748b;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px;">설계자</div>
+    <div style="font-size:9pt;font-weight:800;font-family:'Noto Sans KR',sans-serif;color:#111827;">${esc(dsn)}</div>
+  </div>
+  <div style="flex:1.1;padding:5px 11px 6px;border-right:${B};background:white;">
+    <div style="font-size:5.6pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#64748b;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px;">작성일</div>
+    <div style="font-size:8.2pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#111827;">${today}</div>
+  </div>
+  <div style="flex:1.3;padding:5px 11px 6px;background:white;">
+    <div style="font-size:5.6pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#64748b;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px;">적용기준</div>
+    <div style="font-size:7.5pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#1E3A5F;">NFTC 602 (2022.12.01)</div>
+  </div>
+</div>
+<div style="height:10px;"></div>
+<div style="break-inside:avoid;page-break-inside:avoid;">
+${SecHd('Ⅰ-1. 소방 부하 집계 (KDS 31 60 20)')}
+<table style="width:100%;border-collapse:collapse;">
+  <thead><tr>${TH('구분','32px','center')}${TH('설비명','','left')}${TH('주펌프/팬 (kW)','82px','center')}${TH('충압/보조 (kW)','82px','center')}${TH('기타 (kW)','68px','center')}${TH('소계 (kW)','74px','center')}</tr></thead>
+  <tbody>${loadRowsHtml}</tbody>
+</table>
+</div>
+<div style="break-inside:avoid;page-break-inside:avoid;">
+${SecHd('Ⅰ-2. 발전기 용량 산정식 (KDS 31 60 20)')}
+<table style="width:100%;border-collapse:collapse;border:${B};border-top:none;">
+  <tbody>
+    <tr>
+      <td style="border-right:${B};border-bottom:${B};padding:6px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;width:32%;vertical-align:top;">산정식</td>
+      <td style="border-bottom:${B};padding:6px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#1E3A5F;">S [kVA] = ΣP [kW] × 수용률(DF) × 여유율(MF) ÷ 역률(PF)</td>
+    </tr>
+    <tr style="background:#f8fafc;"><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;">ΣP 소방부하 합계</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#111;">${r.total.toFixed(2)} kW</td></tr>
+    <tr><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;">수용률 DF</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;color:#111;">${r.df.toFixed(2)}</td></tr>
+    <tr style="background:#f8fafc;"><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;">여유율 MF</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;color:#111;">${r.mf.toFixed(2)}</td></tr>
+    <tr><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;">역률 PF</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;color:#111;">${r.pf.toFixed(2)}</td></tr>
+    <tr style="background:#f8fafc;"><td style="border-right:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;">유효 소방부하 (ΣP×DF×MF)</td><td style="padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#111;">${r.effLoad.toFixed(2)} kW</td></tr>
+  </tbody>
+</table>
+</div>
+<div style="break-inside:avoid;page-break-inside:avoid;">
+${SecHd('Ⅰ-3. 발전기 필요 용량 산정 결과')}
+<table style="width:100%;border-collapse:collapse;border:${B};border-top:none;">
+  <tbody>
+    <tr style="background:#EEF4FB;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+      <td style="border-right:${B};border-bottom:${B};padding:8px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#1E3A5F;width:32%;background:#EEF4FB;">필요 용량 S</td>
+      <td style="border-right:${B};border-bottom:${B};padding:8px 10px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;background:#EEF4FB;">${r.total.toFixed(2)} × ${r.df.toFixed(2)} × ${r.mf.toFixed(2)} ÷ ${r.pf.toFixed(2)}</td>
+      <td style="border-bottom:${B};padding:8px 10px;text-align:center;font-size:12pt;font-weight:900;font-family:'Noto Sans KR',sans-serif;color:#92400e;background:#EEF4FB;white-space:nowrap;">${r.reqKva.toFixed(1)} kVA</td>
+    </tr>
+    <tr>
+      <td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#1E3A5F;">설치(선정) 용량</td>
+      <td colspan="2" style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;">${r.inst > 0 ? r.inst.toFixed(0) + ' kVA' : '미입력'}</td>
+    </tr>
+    <tr style="background:#f8fafc;">
+      <td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#1E3A5F;background:#f8fafc;">판&nbsp;&nbsp;&nbsp;정</td>
+      <td colspan="2" style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:800;font-family:'Noto Sans KR',sans-serif;color:${judgeColor};background:#f8fafc;">${judgeStr}</td>
+    </tr>
+    <tr>
+      <td style="border-right:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#1E3A5F;">비상전원 유지시간</td>
+      <td colspan="2" style="padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;">${r.time}분 이상</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+${listHtml ? '<div style="break-inside:avoid;page-break-inside:avoid;margin-top:0;">' + listHtml + '</div>' : ''}
+<div style="break-inside:avoid;page-break-inside:avoid;">
+${SecHd('▣ 적용 법령 및 기준')}
+<div style="border:${B};border-top:none;padding:9px 11px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;color:#374151;line-height:1.95;">
+  ① 소방시설용 비상전원수전설비의 화재안전기술기준 (NFTC 602) — 소방청공고 제2022-240호, 2022.12.1 시행<br/>
+  &nbsp;&nbsp;&nbsp;- §2.1 인입구 배선: 내화배선 적용 (NFTC 102 §2.7.2 기준)<br/>
+  &nbsp;&nbsp;&nbsp;- §2.2 고압 수전: 방화구획형·옥외개방형·큐비클형 중 선택, 소방회로 격벽 구획<br/>
+  &nbsp;&nbsp;&nbsp;- §2.3 저압 수전: 제1·2종 배전반·분전반, 소방시설용 개폐기 표시 의무<br/>
+  ② 소방시설용 비상전원수전설비의 화재안전성능기준 (NFPC 602) — 소방청고시 제2022-63호<br/>
+  ③ KDS 31 60 20 예비전원설비 건설기준 (국토교통부) — 발전기 용량 산정식 근거<br/>
+  ④ 소방시설 설치 및 관리에 관한 법률 시행령 별표 4
+</div>
+</div>
+<div style="display:flex;align-items:center;justify-content:flex-end;margin-top:18px;padding-top:8px;border-top:1.5px solid #CBD5E1;-webkit-print-color-adjust:exact;">
+  <span style="font-size:6.7pt;font-family:'Noto Sans KR',sans-serif;color:#9ca3af;letter-spacing:.04em;margin-right:10px;">NFTC 602 · NFPC 602 · 2022.12.01 기준</span>
+  <span style="font-family:'Orbitron',sans-serif;font-size:7.5pt;font-weight:700;color:#374151;letter-spacing:.1em;border-left:2px solid #CBD5E1;padding-left:10px;">MANMIN-Ver3.0</span>
+</div>
+`;
+
+  document.getElementById('report-zone').innerHTML   = html;
+  document.getElementById('rpt-print-doc').innerHTML = html;
+  scaleReport();
+}
+
+/* ── 인쇄 미리보기 스케일 ── */
+function scaleReport() {
+  var outer = document.getElementById('rpt-outer');
+  var inner = document.getElementById('rpt-inner');
+  if (!outer || !inner) return;
+  var A4W    = 794;
+  var outerW = outer.getBoundingClientRect().width;
+  var scale  = Math.min(1, (outerW - 8) / A4W);
+  var offset = Math.max(0, (outerW - A4W * scale) / 2);
+  inner.style.cssText = 'width:794px;box-sizing:border-box;transform-origin:top left;transform:translateX(' + offset + 'px) scale(' + scale + ');';
+  if (scale < 1) {
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        outer.style.height = (inner.scrollHeight * scale + 40) + 'px';
+      });
+    });
+  } else {
+    outer.style.height = 'auto';
+  }
+}
+(function() {
+  var _t = null;
+  window.addEventListener('resize', function() {
+    clearTimeout(_t);
+    _t = setTimeout(function() {
+      /* 계산서 탭이 활성 상태일 때만 스케일 갱신 */
+      var printPanel = document.getElementById('t-print');
+      if (printPanel && printPanel.classList.contains('active')) {
+        scaleReport();
+      }
+    }, 80);
+  });
+})();
+
+/* ── URL 파라미터 연동 ── */
+function loadFromUrl() {
+  var params = new URLSearchParams(window.location.search);
+  var linked = [];
+  function setLinked(id, key) {
+    var v = params.get(key);
+    if (v !== null && v !== '') {
+      var el = document.getElementById(id);
+      if (el) { el.value = v; el.classList.add('inp-linked'); linked.push(key); }
+    }
+  }
+  setLinked('hyd-pump',   'hyd_pump');
+  setLinked('hyd-charge', 'hyd_charge');
+  setLinked('hyd-etc',    'hyd_etc');
+  setLinked('spr-pump',   'spr_pump');
+  setLinked('spr-charge', 'spr_charge');
+  setLinked('spr-etc',    'spr_etc');
+  setLinked('smk-supply', 'smk_supply');
+  setLinked('smk-exhaust','smk_exhaust');
+  setLinked('smk-etc',    'smk_etc');
+  if (linked.length > 0) {
+    var dot  = document.getElementById('link-dot');
+    var text = document.getElementById('link-text');
+    if (dot)  dot.classList.remove('off');
+    if (text) text.innerHTML = '🔗 <b>연동 데이터 수신 완료</b> — ' + linked.length + '개 항목 자동 입력 (파란 필드)';
+    calcAll();
+  }
+}
+
+/* ── 도움말 모달 ── */
+function openHelp() {
+  document.getElementById('help-overlay').classList.add('open');
+}
+function closeHelp() {
+  document.getElementById('help-overlay').classList.remove('open');
+}
+function closeHelpOverlay(e) {
+  /* 오버레이 배경 클릭 시만 닫힘 (모달 내부 클릭은 통과) */
+  if (e.target === document.getElementById('help-overlay') ||
+      e.target === document.querySelector('.help-modal-wrap')) {
+    closeHelp();
+  }
+}
+function helpTab(id, btn) {
+  document.querySelectorAll('.hm-panel').forEach(function(p){ p.classList.remove('on'); });
+  document.querySelectorAll('.hm-tab').forEach(function(b){ b.classList.remove('on'); });
+  var el = document.getElementById(id);
+  if (el) el.classList.add('on');
+  if (btn) btn.classList.add('on');
+}
+
+/* ── 인쇄 / PDF 저장 ── */
+function doPrint() {
+  buildReport();
+  setTimeout(function(){ window.print(); }, 150);
+}
+function doPdfSave() {
+  buildReport();
+  setTimeout(function(){ window.print(); }, 150);
+}
+
+/* ── 초기화 ── */
+(function init() {
+  /* 오늘 날짜 설정 */
+  var d  = new Date();
+  var ds = d.getFullYear() + '-'
+    + String(d.getMonth()+1).padStart(2,'0') + '-'
+    + String(d.getDate()).padStart(2,'0');
+  var pd = document.getElementById('proj-date');
+  if (pd) pd.value = ds;
+
+  /* 기본 부하 목록 */
+  addLoadRow('옥내소화전 주펌프',  '5.5kW × 2P', 1, 5.5,  '');
+  addLoadRow('충압펌프',           '0.75kW',      1, 0.75, '');
+  addLoadRow('스프링클러 주펌프',  '11kW × 2P',   1, 11,   '');
+  addLoadRow('제연팬 급기',        '15kW',         1, 15,   '');
+  addLoadRow('비상조명등',         '2.0kW',        1, 2.0,  '비상전원 회로');
+
+  /* URL 연동 */
+  loadFromUrl();
+
+  /* 초기 계산 */
+  calcAll();
+  judgeTime();
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════
+     PWA 하단 설치 배너
+═══════════════════════════════════════════ -->
+<div id="pwa-banner" style="
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:9998;
+  background:linear-gradient(135deg,#07192e 0%,#0f2744 55%,#1a3050 100%);
+  border-top:2px solid rgba(245,158,11,.4);
+  padding:13px 18px;box-shadow:0 -6px 28px rgba(0,0,0,.55);
+  transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);">
+  <div style="max-width:700px;margin:0 auto;display:flex;align-items:center;gap:13px;flex-wrap:wrap;">
+    <img src="./icons/icon-96x96.png" alt="발전설비"
+      style="width:50px;height:50px;border-radius:13px;object-fit:cover;
+             flex-shrink:0;box-shadow:0 3px 12px rgba(0,0,0,.45);"/>
+    <div style="flex:1;min-width:140px;">
+      <div style="font-size:13.5px;font-weight:900;color:#fff;margin-bottom:3px;">
+        📲 <b>발전설비</b> — 홈화면에 설치
+      </div>
+      <div style="font-size:10.5px;color:rgba(245,158,11,.85);">
+        오프라인 사용 가능 · NFTC 602 계산기 · 바로가기: <b>"발전설비"</b>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-shrink:0;">
+      <button onclick="pwaTrigger('banner')" style="
+        background:linear-gradient(135deg,#d97706,#f59e0b);color:#0f2744;
+        border:none;padding:10px 22px;border-radius:9px;
+        font-size:13px;font-weight:900;cursor:pointer;
+        box-shadow:0 3px 14px rgba(245,158,11,.45);">설치</button>
+      <button onclick="pwaDismiss()" style="
+        background:rgba(255,255,255,.1);color:rgba(255,255,255,.65);
+        border:1px solid rgba(255,255,255,.2);padding:10px 14px;
+        border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PWA 스크립트
+═══════════════════════════════════════════ -->
+<script>
+(function(){
+'use strict';
+var _p=null;
+function $id(id){return document.getElementById(id);}
+function isInstalled(){
+  return window.matchMedia('(display-mode:standalone)').matches||navigator.standalone===true;
+}
+function hdrShow(){var b=$id('pwa-hdr-btn');if(b)b.style.display='flex';}
+function hdrHide(){var b=$id('pwa-hdr-btn');if(b)b.style.display='none';}
+function bannerShow(){
+  var el=$id('pwa-banner');if(!el)return;
+  el.style.display='block';
+  requestAnimationFrame(function(){requestAnimationFrame(function(){el.style.transform='translateY(0)';});});
+}
+function bannerHide(){
+  var el=$id('pwa-banner');if(!el)return;
+  el.style.transform='translateY(100%)';
+  setTimeout(function(){el.style.display='none';},370);
+}
+
+/* ── Service Worker 등록 ── */
+if('serviceWorker'in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('./sw.js')
+      .then(function(reg){
+        console.log('[SW] 등록:',reg.scope);
+        reg.addEventListener('updatefound',function(){
+          var nw=reg.installing;if(!nw)return;
+          nw.addEventListener('statechange',function(){
+            if(nw.state==='installed'&&navigator.serviceWorker.controller){
+              var bar=$id('sw-update-bar');if(bar)bar.classList.add('visible');
+            }
+          });
+        });
+      }).catch(function(e){console.warn('[SW] 실패:',e);});
+  });
+}
+
+/* ── beforeinstallprompt ── */
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();_p=e;hdrShow();
+  if(!sessionStorage.getItem('pwa-no-banner'))setTimeout(bannerShow,3000);
+});
+
+/* ── 설치 실행 ── */
+window.pwaTrigger=function(src){
+  bannerHide();
+  if(!_p){
+    if(isInstalled()){alert('✅ 이미 [발전설비] 앱으로 설치되어 있습니다.');}
+    else{alert('📲 발전설비 설치 방법
+
+• Android Chrome : 주소창 ⋮ → [앱 설치]
+• iPhone Safari  : 공유 ↑ → [홈 화면에 추가]
+• PC Chrome/Edge : 주소창 ⊞ 설치 아이콘
+
+바로가기 이름: "발전설비"');}
+    return;
+  }
+  _p.prompt();
+  _p.userChoice.then(function(r){if(r.outcome==='accepted')hdrHide();_p=null;});
+};
+
+/* ── 배너 닫기 ── */
+window.pwaDismiss=function(){
+  bannerHide();try{sessionStorage.setItem('pwa-no-banner','1');}catch(e){}
+};
+
+/* ── SW 업데이트 적용 ── */
+window.swDoUpdate=function(){
+  var bar=$id('sw-update-bar');if(bar)bar.classList.remove('visible');
+  if('serviceWorker'in navigator){
+    navigator.serviceWorker.ready.then(function(reg){
+      if(reg.waiting)reg.waiting.postMessage({type:'SKIP_WAITING'});
+    });
+    navigator.serviceWorker.addEventListener('controllerchange',function(){location.reload();});
+  }else{location.reload();}
+};
+
+/* ── 설치 완료 ── */
+window.addEventListener('appinstalled',function(){hdrHide();bannerHide();_p=null;});
+if(isInstalled())document.addEventListener('DOMContentLoaded',hdrHide);
+})();
+</script>
+
+</body>
+</html>
