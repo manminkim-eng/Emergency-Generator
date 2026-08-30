@@ -1,72 +1,122 @@
-# ⚡ 발전설비 — 비상발전기 용량 산정 PWA
-**MANMIN-Ver3.0 · NFTC 602 / NFPC 602 · KDS 31 60 20**
+# 🔴 비상발전기 용량 산정 계산서 PWA — **Ver 5.0**
 
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-blue?logo=github)](https://manminkim-eng.github.io/generator-calc/)
-[![PWA Ready](https://img.shields.io/badge/PWA-설치가능-brightgreen)](https://manminkim-eng.github.io/generator-calc/)
-
----
-
-## 🚀 바로가기
-
-**[⚡ 발전설비 열기 →](https://manminkim-eng.github.io/generator-calc/)**
-
-홈 화면 바로가기 이름: **"발전설비"**
+> **Developer MANMIN** | ㈜대성건축사사무소
+> MANMIN WAP 디자인 통일 · 소방 계열 10. 바닐라 JS + `#print-zone` 구조.
 
 ---
 
-## 📱 PWA 설치 방법
+## 🆕 Ver 5.0 — 디자인 통일 + 출력물 정합
 
-| 기기 | 방법 |
-|------|------|
-| **Android Chrome** | 주소창 `⋮` → **앱 설치** 또는 하단 설치 배너 |
-| **iPhone / iPad Safari** | 공유 `↑` → **홈 화면에 추가** |
-| **PC Chrome** | 주소창 우측 `⊞` 설치 아이콘 |
-| **PC Edge** | 주소창 우측 `...` → **앱으로 설치** |
+소방웹이 **MANMIN WAP 39종 디자인 통일의 마스터**로 확정되었고, 이 도구는 그 기준을 적용한 결과다.
 
-> 설치 후 홈 화면 바로가기 이름: **발전설비**
+> **계산 로직은 1바이트도 변경하지 않았다.** 수식·상수·검증식·법령 인용문 모두 이전 버전과 동일하다.
+> 변경 범위는 `<style>` 블록 · 출력 래퍼 · 폰트 토큰 · 버전 문자열뿐이며,
+> **수치 토큰 다중집합 대조로 무변경을 검증**했다.
 
----
+### 조정 내역 — v5.0
 
-## 📁 파일 구조
+| # | 항목 | 기존 | 변경 (v5.0) |
+|---|------|------|------------|
+| ① | **A4 좌우 초과** | `@page` 좌우여백 26mm + `.rpt-inner{width:794px}` = 필요폭 236mm > 용지 210mm → 우측 잘림 | 인쇄 시 `width:auto` 해제 → 유효폭 **184mm** 정합 |
+| ② | **하단 버전 각인** | `@page{@bottom-right{content:…}}` — Chrome 미구현이라 **인쇄물에 안 찍힘** | `#dev-stamp` 를 `position:fixed` 로 전환 → **매 페이지 출력** |
+| ③ | **모바일 JPG 저장** | 없음 | `🖼️ JPG 저장` 버튼 — 인쇄와 **동일 DOM** 캡처 |
+| ④ | **고정폭 폰트** | `Noto Sans Mono` | `JetBrains Mono` + `Noto Sans KR` 폴백 (39종 공통) |
+| ⑤ | **출력 버튼 규격** | 도구별 상이 | `.mm-btn` 통일 — 남색 `#1E3A5F` 주/보조 2버튼 |
+| ⑥ | **버전 체계** | Ver3.0 | **Ver-5.0 / CACHE v5.0** (전 39종 5.0 재출발) |
+
+### MANMIN A4 규격 (전 39종 공통)
+
+| 항목 | 값 |
+|------|-----|
+| 용지 | A4 portrait 210 × 297mm |
+| 여백 | 상 14 · 우 12 · 하 22 · 좌 14mm |
+| 유효 영역 | **184 × 261mm** |
+| 하단 각인 | `MANMIN-Ver5.0` · Orbitron 8pt · `#9CA3AF` · 우측 하단 |
+| 쪽번호 | **2매 이상일 때만** 좌측 하단 `n / 총장수` |
+
+### JPG 저장 동작
+
+쪽나눔 경계를 인쇄와 **공유**하므로 PDF와 JPG의 페이지 구성이 일치한다.
 
 ```
-generator-calc/
-├── index.html          ← 메인 앱 (반응형 · 모든 수정 완료)
-├── manifest.json       ← PWA 매니페스트 ("발전설비" 바로가기)
-├── sw.js               ← Service Worker (오프라인 캐시)
-├── 404.html            ← GitHub Pages SPA 라우팅
-├── .nojekyll           ← Jekyll 빌드 차단
+발전설비_{공사명}_{YYYYMMDD}[_n].jpg     페이지당 1588 × 2246px (scale 2)
+```
+
+| 단계 | 처리 |
+|---|---|
+| 배율 해제 | `rpt-inner` 의 `transform` 초기화 — 모바일 축소배율이 이미지에 박히는 것 방지 |
+| 폰트 대기 | `document.fonts.ready` — 웹폰트 로딩 전 캡처 시 시스템 폰트로 굳음 |
+| 글자 농도 | `inkOf()` — 밝기 0.55 초과 글자색을 `#111827` 로 보정 |
+| 배경 | `backgroundColor:'#FFFFFF'` 고정 |
+| 제외 | `.no-print` (버튼·힌트) |
+| 2매 이상 | **저장 시트** 표시 — 브라우저가 연속 자동 다운로드를 차단하므로 페이지별 버튼 제공 |
+
+`html2canvas` 는 CDN 로드이나 Service Worker(Network-First)가 첫 온라인 실행 시 캐시하므로
+이후 오프라인에서도 저장이 동작한다. **첫 실행은 온라인에서 할 것.**
+
+### 이 도구의 구조적 특이점
+
+바닐라 JS이며 계산서를 `buildReport()` 가 생성하므로 JPG 설정에 `prepare:'buildReport'` 를 지정했다.
+구 다크테마 잔재(`body{color:#E2E8F0}`)로 캡처 글자가 옅던 문제는 `inkOf()` 보정으로 해결했다.
+
+### 법령 근거
+
+| 기준 | 적용 | 계산 조항 |
+|---|---|---|
+| **NFPC / NFTC 602** 비상전원수전설비 | **2026.5.4 시행** | — |
+| NFTC 102 · 103 · 103A · 104 · 105 · 109 · NFPC 607 | 소방부하 집계 근거 | 설비별 비상전원 대상 |
+
+> **개정 영향 없음.** 602 개정은 **제2종 배전반·분전반 외함 두께의 면적별 차등화**
+> (1.6㎜ 고정 → 1㎜ / 1,000㎠ 초과~2,000㎠ 이하 1.2㎜ / 2,000㎠ 초과 1.6㎜)와 조문 재배열이다.
+>
+> 이 도구는 **소방부하 집계 → 수용률·여유율·역률 → 필요 kVA** 산정이 전부이며,
+> 배전반 외함 두께는 이 계산과 무관하다.
+
+---
+
+## 📦 파일 구성
+
+```
+Emergency-Generator/
+├── index.html          ← 메인 앱 (Ver 5.0)
+├── manifest.json       ← PWA 매니페스트
+├── sw.js               ← 서비스 워커 (CACHE_VER = 'v5.0')
 ├── README.md
-└── icons/
-    ├── favicon.ico
-    ├── icon-16x16.png ~ icon-512x512.png  (12종)
-    ├── apple-touch-icon.png
-    └── splash-*.png  (4종)
+└── icons/              ← 아이콘 세트
 ```
 
----
+## 🚀 배포
 
-## ⚙️ GitHub Pages 배포
+1. 폴더 내용물을 GitHub 저장소 루트에 업로드
+2. `Settings` → `Pages` → `Source: main branch / (root)`
+3. 배포 후 **Ctrl+Shift+R** (강력 새로고침) — SW 캐시 갱신
+4. 화면 하단 각인이 `Ver-5.0` 인지 확인
 
-```bash
-# 1. 저장소 생성 (예: generator-calc)
-# 2. 이 폴더의 모든 파일 업로드
-# 3. Settings → Pages → Source: main / (root)
-# 4. 접속: https://<username>.github.io/generator-calc/
+## 🛠️ 캐시 문제 시
+
+브라우저 콘솔(`F12`):
+```javascript
+clearPwaCache()   // 전체 캐시 초기화 → 자동 새로고침
 ```
 
----
-
-## 🔗 MANMIN 소방설계 계산기 시리즈
-
-| 계산기 | 링크 |
-|--------|------|
-| 🏠 홈페이지 | [manminkim-eng.github.io/KIMMANMIN](https://manminkim-eng.github.io/KIMMANMIN/) |
-| 🚒 옥내소화전 | [fire-hydrant-calc](https://manminkim-eng.github.io/fire-hydrant-calc/) |
-| 💧 스프링클러 | [fire-sprinkler-calc](https://manminkim-eng.github.io/fire-sprinkler-calc/) |
-| 💨 제연설비 | [Smoke-Control-System](https://manminkim-eng.github.io/Smoke-Control-System/) |
-| ⚡ **발전설비** | **현재 저장소** |
+다음 배포 시에는 `sw.js` 의 `CACHE_VER` 한 줄만 올리면 된다.
 
 ---
 
-© MANMIN Engineering (김만민) · MIT License
+## ⏳ 이번 버전에 포함되지 않은 것
+
+| 항목 | 상태 |
+|---|---|
+| 분야색 이관 (소방 = `#B91C1C` 계열 통일) | **대기** — 화면 테마색은 아직 기존색 유지. 의미색(안내·판정)과 얽혀 도구별 육안 확인 필요 |
+| PWA 아이콘 통일 | 대기 — 형태 통일 + 심볼 구분 방식으로 결론, 시안 미착수 |
+| JetBrains Mono 로컬 woff2 | 대기 — 현재 Google Fonts 의존 (SW가 첫 로드 시 캐시) |
+
+---
+
+## 📚 이전 이력
+
+Ver3.0 이하의 상세 이력은 각 도구 폴더의 구버전 백업본에 보존되어 있다.
+`index_백업_2026-08-30_원본.html` 및 구버전 폴더는 **전부 무변경 보존** 상태다.
+
+---
+*MANMIN · ㈜대성건축사사무소 · Ver 5.0 · 2026-08-30*
