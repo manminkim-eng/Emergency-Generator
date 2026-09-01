@@ -1,12 +1,18 @@
 /* ════════════════════════════════════════════════
    sw.js — 발전설비 PWA Service Worker
-   MANMIN-Ver3.0  ·  NFTC 602 / NFPC 602
+   MANMIN-Ver5.0  ·  NFTC 602 / NFPC 602
    Cache-First (정적) + Network-First (Navigate)
+
+   2026-08-31 — 캐시 버전 v3.1 → v5.0
+   앱은 v5.0 인데 캐시명이 v3.1 로 남아 있어, activate 의
+   "현재 캐시명과 다른 것만 삭제" 로직이 옛 캐시를 지우지 못했다.
+   그 결과 기존 사용자에게 구버전 index.html 이 계속 제공됐다.
+   캐시명을 올리면 activate 가 옛 캐시를 자동으로 정리한다.
 ════════════════════════════════════════════════ */
 'use strict';
 
-const CACHE_S = 'genset-static-v3.1';   /* 정적 캐시 */
-const CACHE_F = 'genset-fonts-v3.1';    /* 폰트 캐시 */
+const CACHE_S = 'genset-static-v5.0';   /* 정적 캐시 */
+const CACHE_F = 'genset-fonts-v5.0';    /* 폰트 캐시 */
 
 const PRECACHE = [
   './',
