@@ -13,8 +13,8 @@
 
 /* §17-1 (2026-09-02) — 도구 고유 접두어. 종전 필터는 같은 origin 의 39종 캐시를 전부 지웠다 */
 const PREFIX  = 'genset-';
-const CACHE_S = 'genset-static-v5.0.1';   /* 정적 캐시 */
-const CACHE_F = 'genset-fonts-v5.0.1';    /* 폰트 캐시 */
+const CACHE_S = 'genset-static-v5.0.2';   /* 정적 캐시 */
+const CACHE_F = 'genset-fonts-v5.0.2';    /* 폰트 캐시 */
 
 const PRECACHE = [
   './',
@@ -59,19 +59,24 @@ self.addEventListener('fetch', e => {
     e.respondWith(cacheFirst(e.request, CACHE_F));
     return;
   }
+  /* ⛔ 2026-09-03 — HTML 내비게이션을 정적 자산보다 **먼저** 판정한다.
+     종전에는 isStatic 이 먼저였고 그 정규식에 html 이 있어,
+     `.../index.html` 로 열면 Cache-First 에 걸려 배포해도 구버전 화면이 계속 나왔다.
+     (`/Emergency-Generator/` 슬래시 접근만 우연히 최신이 나왔다) */
+  if (e.request.mode === 'navigate' || e.request.destination === 'document') {
+    e.respondWith(networkFirst(e.request));
+    return;
+  }
   /* 정적 자산 → Cache-First */
   if (isStatic(url.pathname)) {
     e.respondWith(cacheFirst(e.request, CACHE_S));
     return;
   }
-  /* HTML 내비게이션 → Network-First */
-  if (e.request.mode === 'navigate') {
-    e.respondWith(networkFirst(e.request));
-  }
 });
 
 function isStatic(p) {
-  return /\.(png|ico|jpg|jpeg|svg|webp|gif|js|css|html|json|woff2?|ttf)(\?.*)?$/.test(p);
+  /* html 제거 — 이중 안전장치. 문서는 위 navigate 분기가 처리한다 */
+  return /\.(png|ico|jpg|jpeg|svg|webp|gif|js|css|json|woff2?|ttf)(\?.*)?$/.test(p);
 }
 
 async function cacheFirst(req, cacheName) {
