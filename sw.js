@@ -11,8 +11,10 @@
 ════════════════════════════════════════════════ */
 'use strict';
 
-const CACHE_S = 'genset-static-v5.0';   /* 정적 캐시 */
-const CACHE_F = 'genset-fonts-v5.0';    /* 폰트 캐시 */
+/* §17-1 (2026-09-02) — 도구 고유 접두어. 종전 필터는 같은 origin 의 39종 캐시를 전부 지웠다 */
+const PREFIX  = 'genset-';
+const CACHE_S = 'genset-static-v5.0.1';   /* 정적 캐시 */
+const CACHE_F = 'genset-fonts-v5.0.1';    /* 폰트 캐시 */
 
 const PRECACHE = [
   './',
@@ -41,7 +43,7 @@ self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
-        keys.filter(k => k !== CACHE_S && k !== CACHE_F)
+        keys.filter(k => k !== CACHE_S && k !== CACHE_F && k.indexOf(PREFIX) === 0)
             .map(k => caches.delete(k))
       )
     ).then(() => self.clients.claim())

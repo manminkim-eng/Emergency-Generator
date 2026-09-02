@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
-<title>발전설비 — 비상발전기 용량 산정 · MANMIN-Ver5.0</title>
+<title>비상발전기 용량 산정 계산서 · MANMIN Ver-5.0</title>
 <meta name="description" content="NFTC 602 / NFPC 602 비상발전기 필요 용량(kVA) 자동 산정 — MANMIN-Ver5.0"/>
 <meta name="keywords" content="비상발전기,발전설비,비상전원,NFTC602,소방설계"/>
 <meta property="og:title" content="발전설비 — 비상발전기 용량 산정"/>
@@ -140,13 +140,14 @@ button{cursor:pointer;}
   /* 옥내소화전 동일 구조: 135deg 딥 네이비 그라데이션 */
   background:linear-gradient(135deg,#0d1f33 0%,#1e3a5f 55%,#1a3050 100%);
   color:white;padding:20px 0 0;
-  box-shadow:0 4px 24px rgba(0,0,0,.55);
+  box-shadow:0 2px 20px rgba(30,58,95,.35);   /* v5.0-HDR — §3-8 형식(주도색 .35) */
 }
 .hdr-inner{max-width:1300px;margin:0 auto;padding:0 24px;}
-.hdr-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
-.hdr-eng{font-size:11px;font-weight:600;opacity:.65;letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;color:#94a3b8;}
-.hdr-h1{font-size:26px;font-weight:900;letter-spacing:.03em;line-height:1.2;color:white;}
-.hdr-desc{font-size:11px;margin-top:8px;opacity:.85;letter-spacing:.02em;color:#cbd5e1;}
+.hdr-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;}   /* v5.0-HDR */
+/* v5.0-HDR — 클래스명 §3-1 규격(hdr-eyebrow · hdr-sub) · 문구는 흰색 계열(§3-8) */
+.hdr-eyebrow{font-size:11px;font-weight:600;opacity:.7;letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;color:#fff;}
+.hdr-h1{font-size:26px;font-weight:900;letter-spacing:.04em;line-height:1.2;color:white;}
+.hdr-sub{font-size:11px;margin-top:8px;opacity:.85;letter-spacing:.02em;color:#fff;line-height:normal;}
 .hdr-manmin{
   font-family:'Orbitron',sans-serif !important;
   font-weight:900;font-size:12px;color:var(--c-accent);
@@ -158,30 +159,29 @@ button{cursor:pointer;}
 
 /* ── 탭 바 ── */
 .tab-bar-wrap{
-  display:flex;overflow-x:auto;white-space:nowrap;
+  display:flex;gap:4px;padding-top:4px;overflow-x:auto;white-space:nowrap;   /* v5.0-HDR — 마스터 gap4 · pt4 → 162.2 · mask 페이드 폐지 */
   scrollbar-width:none;-webkit-overflow-scrolling:touch;
-  /* 모바일 스크롤 힌트 페이드 */
-  -webkit-mask-image:linear-gradient(to right,transparent 0,black 8px,black calc(100% - 20px),transparent 100%);
-  mask-image:linear-gradient(to right,transparent 0,black 8px,black calc(100% - 20px),transparent 100%);
 }
 .tab-bar-wrap::-webkit-scrollbar{display:none;}
 .tab-btn{
-  padding:11px 20px;border:none;font-weight:700;font-size:13px;
-  letter-spacing:.01em;flex-shrink:0;transition:all .15s;
-  background:transparent;color:rgba(255,255,255,.65);
+  padding:11px 16px;border:none;font-weight:700;font-size:13px;line-height:normal;   /* v5.0-HDR — 44px */
+  letter-spacing:.02em;flex-shrink:0;transition:all .15s;
+  background:transparent;color:rgba(255,255,255,.75);
   border-bottom:3px solid transparent;
+  display:flex;align-items:center;gap:5px;   /* v5.0-HDR — 번호 pill 이 줄높이를 키우지 않게(45.5→44) */
 }
 .tab-btn .tab-num{
   display:inline-flex;align-items:center;justify-content:center;
   width:18px;height:18px;border-radius:50%;
   background:rgba(255,255,255,.15);
-  font-size:10px;font-weight:900;margin-right:5px;
+  font-size:10px;font-weight:900;
   vertical-align:middle;line-height:1;
   transition:background .15s;
 }
 .tab-btn:hover:not(.active){color:white;background:rgba(255,255,255,.06);}
 .tab-btn:hover:not(.active) .tab-num{background:rgba(255,255,255,.25);}
-.tab-btn.active{color:white;background:rgba(245,158,11,.18);border-bottom-color:var(--c-accent);}
+/* v5.0-HDR (2026-09-02 확정) — 활성 탭 단색 배경 + 강조색 바 */
+.tab-btn.active{color:white;background:#d97706;border-bottom-color:#fbbf24;}
 .tab-btn.active .tab-num{background:var(--c-accent);color:#0f2744;}
 .tab-btn.print-tab{color:#fbbf24 !important;}
 .tab-btn.print-tab.active{background:rgba(251,191,36,.15) !important;border-bottom-color:#fbbf24 !important;}
@@ -190,12 +190,11 @@ button{cursor:pointer;}
 
 /* ── 요약 바 ── */
 .sum-bar-wrap{
-  background:#0a1628;
-  padding:9px 0;
-  border-bottom:1px solid rgba(49,130,206,.15);
+  background:#0f172a;
+  padding:10px 0;   /* v5.0-HDR — 마스터 38px · 하단선 폐지 */
 }
-.sum-bar{max-width:1300px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;}
-.sum-item{font-size:12px;color:#64748b;white-space:nowrap;}
+.sum-bar{max-width:1300px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;gap:14px;}
+.sum-item{font-size:12px;color:#94a3b8;white-space:nowrap;}
 .sum-val{color:var(--c-sky);font-family:'JetBrains Mono','Noto Sans KR',monospace !important;font-weight:700;}
 
 /* ════════════════════════════════════════════════
@@ -763,21 +762,15 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
 
 /* ── 태블릿 세로 / 폰 가로 (≤768px) ── */
 @media(max-width:768px){
-  .site-header{padding:12px 0 0;}
-  .hdr-inner{padding:0 14px;}
-  .hdr-h1{font-size:19px !important;}
+  /* v5.0-HDR — 헤더·탭 축소 규칙 폐지. 마스터는 768 에서 우측 근거 블록만 접는다 */
   .hdr-right{display:none;}
-  .hdr-eng{font-size:10px;}
-  .tab-btn{padding:10px 13px;font-size:12px;}
   .main-outer{padding:14px 12px 90px;}
   /* 핵심: 2열 레이아웃 → 1열 (입력/결과 세로 배치) */
   .g-2{grid-template-columns:1fr;}
   .g-proj{grid-template-columns:1fr 1fr;}
   .g-3{grid-template-columns:repeat(3,1fr);}   /* 3열 유지 */
   .box-bd{padding:14px 12px;}
-  /* 요약바: 2행 배치 */
-  .sum-bar{padding:0 14px;gap:8px 16px;}
-  .sum-item{font-size:11px;}
+  /* 요약바 축소는 640 블록(v5.0-HDR) */
   /* 결과 카드 2열 유지 */
   .ov-grid{grid-template-columns:repeat(2,1fr);}
   /* gen-hero 컴팩트 */
@@ -790,13 +783,6 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
 
 /* ── 스마트폰 세로 (≤540px) ── */
 @media(max-width:540px){
-  .site-header{padding:10px 0 0;}
-  .hdr-inner{padding:0 12px;}
-  .hdr-h1{font-size:16px !important;letter-spacing:.01em;}
-  .hdr-eng{display:none;}
-  .hdr-desc{font-size:10px;}
-  .tab-btn{padding:9px 10px;font-size:10.5px;letter-spacing:0;}
-  .tab-btn .tab-num{width:15px;height:15px;font-size:8px;margin-right:2px;}
   .main-outer{padding:12px 10px 80px;}
   /* 입력 필드 2열 */
   .g-3{grid-template-columns:1fr 1fr;}
@@ -829,10 +815,16 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
   .time-banner-main{font-size:13px;}
 }
 
+/* v5.0-HDR — 모바일 헤더 (01 마스터 640 실측) : h1 18 · 좌우 14 · eyebrow/sub/각인/탭 불변 */
+@media(max-width:640px){
+  .hdr-inner{padding:0 14px;}
+  .hdr-h1{font-size:18px;}
+  .sum-bar{padding:0 14px;}
+  .sum-item{font-size:11px;}
+}
+
 /* ── 소형 폰 (≤380px) ── */
 @media(max-width:380px){
-  .hdr-h1{font-size:14px !important;}
-  .tab-btn{padding:8px 8px;font-size:10px;}
   .g-4,.ov-grid{grid-template-columns:1fr 1fr;}
   .g-3{grid-template-columns:1fr 1fr;}
   .ov-val{font-size:15px;}
@@ -842,8 +834,6 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
 
 /* ── 가로모드 스마트폰 ── */
 @media(max-width:768px) and (orientation:landscape){
-  .site-header{padding:6px 0 0;}
-  .hdr-row{margin-bottom:8px;}
   .main-outer{padding:10px 12px 60px;}
   .gen-hero{padding:12px;}
   .gen-hero .gh-kva{font-size:36px;}
@@ -889,11 +879,12 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
   <div class="hdr-inner">
     <div class="hdr-row">
       <div>
-        <div class="hdr-eng">Emergency Generator Capacity · NFTC 602 / NFPC 602</div>
+        <div class="hdr-eyebrow">Emergency Generator Capacity · NFTC 602</div>
         <h1 class="hdr-h1">비상발전기 용량 산정 계산서</h1>
-        <div class="hdr-desc">
-          소방시설용 비상전원수전설비 화재안전기술기준 NFTC 602 (소방청 고시 [2026.05.04 시행]) ·
-          <span class="hdr-manmin">MANMIN-Ver5.0</span>
+        <!-- v5.0-HDR — 부제는 영문 부제·기준(마스터형). 고시·시행일은 우측 근거블록에 있다 -->
+        <div class="hdr-sub">
+          Emergency Generator Capacity Calculator · NFTC 602 적용&nbsp;
+          <span class="hdr-manmin">MANMIN · Ver-5.0</span>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;">
