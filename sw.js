@@ -1,4 +1,5 @@
 /* ════════════════════════════════════════════════
+   R25 회차 2026-09-04 — 자기 접두어 캐시 조회 · cors 프리캐시 · opaque 가드 · 캐시명 v5.0.3 (S10)
    sw.js — 발전설비 PWA Service Worker
    MANMIN-Ver5.0  ·  NFTC 602 / NFPC 602
    Cache-First (정적) + Network-First (Navigate)
@@ -13,8 +14,21 @@
 
 /* §17-1 (2026-09-02) — 도구 고유 접두어. 종전 필터는 같은 origin 의 39종 캐시를 전부 지웠다 */
 const PREFIX  = 'genset-';
-const CACHE_S = 'genset-static-v5.0.2';   /* 정적 캐시 */
-const CACHE_F = 'genset-fonts-v5.0.2';    /* 폰트 캐시 */
+/* ═ R25 (2026-09-04) — SW 캐시 origin 오염 차단 (S10 · 지시서 §21-1 R25)
+   전역 caches 의 match 는 origin 전체를 검색한다. manminkim-eng.github.io 는 34종이 한 origin 이라
+   다른 도구 캐시의 opaque 응답이 <script crossorigin>(cors) 요청에 돌아가 스크립트가 폐기됐다
+   (30 #root 빈 화면 · 40 html2canvas undefined). 자기 접두어 캐시만 조회하고, cross-origin
+   프리캐시는 cors 로 받으며, opaque↔cors 불일치 시 캐시를 쓰지 않는다. */
+const MM_EXCLUDE = [];   /* 내 접두어로 시작하지만 남의 캐시인 이름 (§17-1 충돌) */
+const mmOwn   = (k) => k.indexOf(PREFIX) === 0 && !MM_EXCLUDE.some((x) => k.indexOf(x) === 0);
+const mmReq   = (u) => (typeof u === 'string' && u.indexOf('http') === 0) ? new Request(u, { mode: 'cors' }) : u;
+const mmMatch = (req, opt) => caches.keys()
+  .then((ks) => ks.filter(mmOwn))
+  .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
+  .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
+
+const CACHE_S = 'genset-static-v5.0.3';   /* 정적 캐시 */
+const CACHE_F = 'genset-fonts-v5.0.3';    /* 폰트 캐시 */
 
 const PRECACHE = [
   './',
@@ -33,7 +47,7 @@ const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE_S)
-      .then(c => c.addAll(PRECACHE))
+      .then(c => Promise.allSettled(PRECACHE.map((u) => c.add(mmReq(u)).catch((e) => console.warn('[SW] precache skip:', u, e)))))
       .then(() => self.skipWaiting())
   );
 });
@@ -43,7 +57,7 @@ self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
-        keys.filter(k => k !== CACHE_S && k !== CACHE_F && k.indexOf(PREFIX) === 0)
+        keys.filter(k => k !== CACHE_S && k !== CACHE_F && mmOwn(k))
             .map(k => caches.delete(k))
       )
     ).then(() => self.clients.claim())
@@ -97,7 +111,7 @@ async function networkFirst(req) {
     }
     return res;
   } catch {
-    return (await caches.match('./index.html')) || (await caches.match('./'));
+    return (await mmMatch('./index.html')) || (await mmMatch('./'));
   }
 }
 
