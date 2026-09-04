@@ -1,4 +1,6 @@
 /* ════════════════════════════════════════════════
+   S4 회차 2026-09-04 — R1b #mm-print-stamp 인쇄 비표시 동반 캐시명 v5.0.6
+   S3-0 회차 2026-09-04 — R27 html2canvas 클론 정화 동반 캐시명 v5.0.5
    S2 회차 2026-09-04 — index 소급(R1·R21·R26 등) 동반 캐시명 v5.0.4
    R25 회차 2026-09-04 — 자기 접두어 캐시 조회 · cors 프리캐시 · opaque 가드 · 캐시명 v5.0.3 (S10)
    sw.js — 발전설비 PWA Service Worker
@@ -28,8 +30,8 @@ const mmMatch = (req, opt) => caches.keys()
   .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
   .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
 
-const CACHE_S = 'genset-static-v5.0.4';   /* 정적 캐시 */
-const CACHE_F = 'genset-fonts-v5.0.4';    /* 폰트 캐시 */
+const CACHE_S = 'genset-static-v5.0.6';   /* 정적 캐시 */
+const CACHE_F = 'genset-fonts-v5.0.6';    /* 폰트 캐시 */
 
 const PRECACHE = [
   './',
