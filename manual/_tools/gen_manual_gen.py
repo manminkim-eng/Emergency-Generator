@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """비상발전기 용량 산정 계산서 사용자 매뉴얼 생성기 (MANMIN 매뉴얼 공통 엔진 사용)
    실행: MANUAL_DIR=<manual 폴더> python gen_manual_gen.py  →  <manual>/index.html
-   근거: KDS 31 60 20:2021 비상발전설비 설계기준 4.1(6)(국가건설기준센터 kcsc.re.kr · 사용자 보유 원문 PDF 대조) ·
+   근거: KDS 31 60 20:2021 예비전원설비 설계기준 4.1(6)(국가건설기준센터 kcsc.re.kr · 사용자 보유 원문 PDF 대조) ·
    NFTC 102 · 103 · 304 · 501 · 501A · 504 · 505 · 602 · 603 · 604 및 NFPC 602 — LawMCP(국가법령정보센터) 원문 대조 2026-10-16
    예제 값은 capture_gen.js 가 앱 엔진(GENENG)에서 읽은 <raw>/_example.json"""
 import os, sys, json
@@ -22,7 +22,7 @@ def F(sid, cap, legend=None, **kw):
     return fig(sid, cap, legend, **kw)
 K = lambda t: '<div class="k1">' + t + '</div>'
 BR = lambda t: '<div class="brk">' + t + '</div>'
-LAW = 'KDS 31 60 20 : 2021 비상발전설비 설계기준 4.1(6) · NFTC 103 2.9.3 · NFTC 602 소방청공고 제2022-240호(2022. 12. 1.) · NFPC 602 소방청고시 제2026-21호(2026. 5. 4.)'
+LAW = 'KDS 31 60 20 : 2021 예비전원설비 설계기준 4.1(6) · NFTC 103 2.9.3 · NFTC 602 소방청공고 제2022-240호(2022. 12. 1.) · NFPC 602 소방청고시 제2026-21호(2026. 5. 4.)'
 EXTRA_CSS = """<style>
 #fig-s16_help_use,#fig-s17_help_fml,#fig-s18_help_law{max-width:620px}
 #fig-s15_a4page{max-width:620px}
@@ -53,7 +53,7 @@ TOC = [
 ]
 S_ = []
 S_.append(f"""{EXTRA_CSS}<section class="ch" id="ch0"><h2><span class="n">00</span>이 매뉴얼에 대하여</h2>
-<p class="lead">{APP}는 옥내소화전 · 스프링클러 · 제연설비의 전동기 부하와 그 밖의 소방부하로 소방용 비상발전기의 필요 용량(kVA)을 비상발전설비 설계기준(KDS 31 60 20) 식 (4.1-1)로 산정하고, 설비별 비상전원 작동시간과 비상전원수전설비 기준(NFTC 602)을 확인해 A4 계산서로 정리하는 웹도구입니다.</p>
+<p class="lead">{APP}는 옥내소화전 · 스프링클러 · 제연설비의 전동기 부하와 그 밖의 소방부하로 소방용 비상발전기의 필요 용량(kVA)을 예비전원설비 설계기준(KDS 31 60 20) 식 (4.1-1)로 산정하고, 설비별 비상전원 작동시간과 비상전원수전설비 기준(NFTC 602)을 확인해 A4 계산서로 정리하는 웹도구입니다.</p>
 {K(T([
  ['대상 프로그램', f'{APP} <b>MANMIN {VER}</b>({REL})'],
  ['접속 주소', f'<a href="{APP_URL}" target="_blank" rel="noopener">manminkim-eng.github.io/Emergency-Generator</a>'],
@@ -139,7 +139,7 @@ S_.append(f"""<section class="ch" id="ch3"><h2><span class="n">03</span>화면�
 S_.append(f"""<section class="ch" id="ch4"><h2><span class="n">04</span>기준 해설</h2>
 <h3 id="s4-1">4-1. 근거 체계</h3>
 {K(T([
- ['KDS 31 60 20 : 2021', '비상발전설비 설계기준 — 4.1(6) 발전기 용량 산정식 (4.1-1) ~ (4.1-4) · 표 4.1-1(국가건설기준센터 kcsc.re.kr)'],
+ ['KDS 31 60 20 : 2021', '예비전원설비 설계기준 — 4.1(6) 발전기 용량 산정식 (4.1-1) ~ (4.1-4) · 표 4.1-1(국가건설기준센터 kcsc.re.kr)'],
  ['NFTC 103 2.9.3', '스프링클러설비의 화재안전기술기준 — 자가발전설비 용량(2.9.3.7) · 형식(2.9.3.8) · 비상전원 20분(2.9.3.2)'],
  ['NFTC 602', '소방시설용 비상전원수전설비의 화재안전기술기준 — 소방청공고 제2022-240호 · 2022. 12. 1. 시행'],
  ['NFPC 602', '소방시설용 비상전원수전설비의 화재안전성능기준 — 소방청고시 제2026-21호 · 2026. 5. 4. 시행'],
