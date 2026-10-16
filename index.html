@@ -1676,7 +1676,7 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
           <div class="hm-card-title"><span style="background:var(--c-accent);color:var(--c-primary);border-radius:50%;display:inline-flex;width:18px;height:18px;align-items:center;justify-content:center;font-size:10px;font-weight:900;margin-right:5px;">①</span>용량 산정 — 핵심 계산 탭</div>
           <div class="hm-item">프로젝트 정보(건물명·용도·설계자) 입력</div>
           <div class="hm-item">소화전·스프링클러·제연·기타 부하[kW] 입력</div>
-          <div class="hm-item">역률·수용률·여유율·유지시간·설치용량 설정</div>
+          <div class="hm-item">KDS 계수 a · c · k · PL · 효율 × 역률, 발전기 형식 · 유지시간 · 설치용량 설정 (간이식 PF · DF · MF는 참고)</div>
           <div class="hm-item">[필요 용량 산정] 클릭 → 결과 자동 표시</div>
         </div>
         <div class="hm-card">
@@ -1686,7 +1686,7 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
         </div>
         <div class="hm-card">
           <div class="hm-card-title"><span style="background:var(--c-accent);color:var(--c-primary);border-radius:50%;display:inline-flex;width:18px;height:18px;align-items:center;justify-content:center;font-size:10px;font-weight:900;margin-right:5px;">③</span>유지시간 판정</div>
-          <div class="hm-item">층수·지하층 면적·특수 조건 입력 → 20/40/60분 자동 판정</div>
+          <div class="hm-item">층수 · 도로터널 · 고층 · 50층 이상 입력 → 설비별 20 / 30 / 40 / 60분 판정 (지하층 면적은 설치대상 참고)</div>
         </div>
         <div class="hm-card">
           <div class="hm-card-title"><span style="background:var(--c-accent);color:var(--c-primary);border-radius:50%;display:inline-flex;width:18px;height:18px;align-items:center;justify-content:center;font-size:10px;font-weight:900;margin-right:5px;">⑤</span>계산서 출력</div>
@@ -2261,7 +2261,7 @@ function judgeTime() {
   var bdgCls = req >= 60 ? 'badge-ng' : req >= 40 ? 'badge-warn' : 'badge-ok';
   var icon   = req >= 60 ? '🔴' : req >= 40 ? '🟠' : '🟢';
   var tb = '<div class="tbl-wrap" style="margin-top:8px;"><table class="dt"><thead><tr><th>설비</th><th>시간</th><th>근거</th></tr></thead><tbody>';
-  H.rows.forEach(function (r) { tb += '<tr><td class="L">' + r[0] + '</td><td><b>' + r[1] + '분</b></td><td class="L">' + r[2] + '</td></tr>'; });
+  H.rows.forEach(function (r) { tb += '<tr><td class="L">' + r[0] + '</td><td style="white-space:nowrap;"><b>' + r[1] + '분</b></td><td class="L">' + r[2] + '</td></tr>'; });
   tb += '</tbody></table></div>';
   var note = '<div class="hm-item" style="margin-top:6px;">발전기 연료 기준 — 발전기 부하 설비 중 최댓값 <b>' + req + '분</b> (옥내 · SP · 제연 · 부속실 · 연결송수관 · 비상조명등 · 무선통신 증폭기를 발전기로 공급하면 그 시간도 포함)</div>';
   if (bsmt >= 3000) note += '<div class="hm-item" style="margin-top:4px;">지하층 바닥면적 합계 ' + bsmt.toFixed(0) + ' ㎡ (3,000 ㎡ 이상) → 옥내소화전 비상전원 설치 대상 (NFTC 102 2.5.2.2) · 유지시간은 위 표</div>';
