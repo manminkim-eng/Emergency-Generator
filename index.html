@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
-<title>비상발전기 용량 산정 계산서 · MANMIN Ver-5.0</title>
-<meta name="description" content="NFTC 602 / NFPC 602 비상발전기 필요 용량(kVA) 자동 산정 — MANMIN-Ver5.0"/>
+<title>비상발전기 용량 산정 계산서 · MANMIN Ver-5.1</title>
+<meta name="description" content="KDS 31 60 20 식 (4.1-1) · NFTC 602 / NFPC 602 비상발전기 필요 용량(kVA) 자동 산정 — MANMIN-Ver5.1"/>
 <meta name="keywords" content="비상발전기,발전설비,비상전원,NFTC602,소방설계"/>
 <meta property="og:title" content="발전설비 — 비상발전기 용량 산정"/>
-<meta property="og:description" content="NFTC 602 비상발전기 용량 자동 산정 · MANMIN-Ver5.0"/>
+<meta property="og:description" content="NFTC 602 비상발전기 용량 자동 산정 · MANMIN-Ver5.1"/>
 <meta property="og:image" content="./icons/icon-512x512.png"/>
 <meta property="og:type" content="website"/>
 <link rel="manifest" href="./manifest.json"/>
@@ -153,6 +153,10 @@ button{cursor:pointer;}
   font-weight:900;font-size:12px;color:var(--c-accent);
   letter-spacing:.08em;text-shadow:0 0 8px rgba(245,158,11,.5);
 }
+.mm-manual-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;border:1.5px solid rgba(255,255,255,.45);
+  background:rgba(255,255,255,.12);color:#fff;font-size:12px;font-weight:800;font-family:'Noto Sans KR',sans-serif;text-decoration:none;white-space:nowrap;flex-shrink:0;}
+.mm-manual-btn:hover{background:rgba(255,255,255,.22);}
+@media print{.mm-manual-btn{display:none!important;}}
 .hdr-right{text-align:right;opacity:.75;font-size:11px;flex-shrink:0;margin-left:12px;color:#cbd5e1;}
 .hdr-right b{font-size:13px;font-weight:700;display:block;color:white;}
 .hdr-right .accent{color:var(--c-accent);font-size:10px;margin-top:4px;}
@@ -848,7 +852,7 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
 .chk-row label{font-size:12px;font-weight:600;color:#374151;cursor:pointer;flex:1;}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<style id="mm-r1">/* R1 (2026-09-04 · 지시서 §20-1 · S10 소급) — 인쇄 PDF 하단 각인 MANMIN · Ver 비표시. 버전은 A4 푸터 [MANMIN-Ver5.0] 이 담당 */
+<style id="mm-r1">/* R1 (2026-09-04 · 지시서 §20-1 · S10 소급) — 인쇄 PDF 하단 각인 MANMIN · Ver 비표시. 버전은 A4 푸터 [MANMIN-Ver5.1] 이 담당 */
 #dev-stamp,#dev-stamp-print,#mm-print-stamp,.dev-stamp{display:none!important;}
 @media print{#dev-stamp,#dev-stamp-print,#mm-print-stamp,.dev-stamp{display:none!important;}}</style>
 </head>
@@ -859,15 +863,16 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
   <div class="hdr-inner">
     <div class="hdr-row">
       <div>
-        <div class="hdr-eyebrow">Emergency Generator Capacity · NFTC 602</div>
+        <div class="hdr-eyebrow">Emergency Generator Capacity · KDS 31 60 20 · NFTC 103 2.9 · NFPC 602</div>
         <h1 class="hdr-h1">비상발전기 용량 산정 계산서</h1>
         <!-- v5.0-HDR — 부제는 영문 부제·기준(마스터형). 고시·시행일은 우측 근거블록에 있다 -->
         <div class="hdr-sub">
-          Emergency Generator Capacity Calculator · NFTC 602 적용&nbsp;
-          <span class="hdr-manmin">MANMIN · Ver-5.0</span>
+          Emergency Generator Capacity Calculator · KDS 31 60 20 적용&nbsp;
+          <span class="hdr-manmin">MANMIN · Ver-5.1</span>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;">
+        <a id="mm-manual-btn" class="mm-manual-btn" href="./manual/" target="_blank" rel="noopener" title="비상발전기 용량 산정 계산서 사용자 매뉴얼 (새 창)">📘 매뉴얼</a>
         <button id="pwa-hdr-btn" title="발전설비 앱 설치" onclick="pwaTrigger('hdr')"
           style="display:none;align-items:center;gap:6px;
                  background:linear-gradient(135deg,rgba(245,158,11,.18),rgba(217,119,6,.12));
@@ -879,10 +884,10 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
           <span class="pwa-txt">앱 설치</span>
         </button>
         <div class="hdr-right">
-          <b>NFTC 602</b>
-          <div>비상전원수전설비</div>
-          <div>화재안전기술기준</div>
-          <div class="accent">시행 2026.05.04</div>
+          <b>KDS 31 60 20</b>
+          <div>비상발전설비 설계기준</div>
+          <div>NFTC 103 2.9 · NFTC 602</div>
+          <div class="accent">NFPC 602 시행 2026.05.04</div>
         </div>
       </div>
     </div>
@@ -1101,43 +1106,100 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
       </div>
     </div>
 
-    <!-- Ⅲ 설계 계수 -->
+    <!-- Ⅲ 설계 계수 — v5.1.0: KDS 31 60 20:2021 4.1(6) 식 (4.1-1) 주 산정식 + MANMIN 간이식(참고) -->
     <div class="box">
       <div class="box-hd bh-teal">
-        발전기 설계 계수
+        발전기 설계 계수 — KDS 31 60 20 식 (4.1-1)
       </div>
       <div class="box-bd">
+        <code class="fml navy" style="margin-bottom:10px;">GP = [ΣP + (ΣPm − PL) × a + (PL × a × c)] × k</code>
         <div class="g-3">
           <div>
-            <label class="lbl">역률 (PF)</label>
-            <div class="inp-wrap">
-              <input class="inp" id="pf" type="number" min="0.5" max="1" step="0.01" value="0.8" oninput="calcAll()" inputmode="decimal"/>
-              <span class="inp-unit">—</span>
-            </div>
+            <label class="lbl">a — 전동기 kW당 입력용량 계수</label>
+            <select class="inp" id="gp-a" onchange="calcAll()">
+              <option value="1.45">1.45 (표준형 추천값)</option>
+              <option value="1.38">1.38 (고효율 추천값)</option>
+            </select>
           </div>
           <div>
-            <label class="lbl">수용률 (DF)</label>
-            <div class="inp-wrap">
-              <input class="inp" id="df" type="number" min="0.1" max="1" step="0.01" value="1.0" oninput="calcAll()" inputmode="decimal"/>
-              <span class="inp-unit">—</span>
-            </div>
+            <label class="lbl">c — 전동기 기동계수(PL 기동방식)</label>
+            <select class="inp" id="gp-c" onchange="calcAll()">
+              <option value="6">직입 기동 6 (5 ~ 7)</option>
+              <option value="2" selected>Y-Δ 기동 2 (2 ~ 3)</option>
+              <option value="1.5">VVVF(인버터) 1.5 (1 ~ 1.5)</option>
+              <option value="3">리액터 탭 50 % — 3</option>
+              <option value="3.9">리액터 탭 65 % — 3.9</option>
+              <option value="4.8">리액터 탭 80 % — 4.8</option>
+            </select>
           </div>
           <div>
-            <label class="lbl">여유율 (MF)</label>
+            <label class="lbl">k — 허용전압강하계수</label>
             <div class="inp-wrap">
-              <input class="inp" id="mf" type="number" min="1" max="2" step="0.01" value="1.2" oninput="calcAll()" inputmode="decimal"/>
-              <span class="inp-unit">배</span>
+              <input class="inp" id="gp-k" type="number" min="0.8" max="1.5" step="0.01" value="1.10" oninput="calcAll()" inputmode="decimal"/>
+              <span class="inp-unit">—</span>
             </div>
           </div>
         </div>
         <div class="g-2" style="margin-top:12px;">
           <div>
+            <label class="lbl">PL — 기동용량 최대 전동기 <span style="font-weight:600;color:#94a3b8;">(0 = 입력 전동기 중 최대 자동)</span></label>
+            <div class="inp-wrap">
+              <input class="inp" id="gp-pl" type="number" min="0" step="0.1" value="0" oninput="calcAll()" inputmode="decimal"/>
+              <span class="inp-unit">kW</span>
+            </div>
+          </div>
+          <div>
+            <label class="lbl">전동기 이외 부하 효율 × 역률 <span style="font-weight:600;color:#94a3b8;">(식 4.1-2 · MANMIN 참고값)</span></label>
+            <div class="inp-wrap">
+              <input class="inp" id="gp-ef" type="number" min="0.3" max="1" step="0.01" value="0.85" oninput="calcAll()" inputmode="decimal"/>
+              <span class="inp-unit">—</span>
+            </div>
+          </div>
+        </div>
+        <div class="tbl-note" style="margin-top:8px;">▸ 펌프 · 팬(옥내소화전 · 스프링클러 · 제연 칸)은 전동기 ΣPm, 기타 소방부하(자탐 · 방송 · 비상조명 · 유도등 · 기타)는 전동기 이외 ΣP(kVA = kW ÷ 효율 × 역률)로 계산합니다 · 동시에 기동하는 전동기가 있으면 PL에 그 합을 넣으십시오(KDS 4.1(6)) · k가 명확하지 않으면 1.07 ~ 1.13(표 4.1-1)</div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px dashed #cbd5e1;">
+          <div style="font-size:11px;font-weight:800;color:#64748b;margin-bottom:8px;">MANMIN 간이식(참고) — S = ΣP × DF × MF ÷ PF · KDS에 없는 약식</div>
+          <div class="g-3">
+            <div>
+              <label class="lbl">역률 (PF)</label>
+              <div class="inp-wrap">
+                <input class="inp" id="pf" type="number" min="0.5" max="1" step="0.01" value="0.8" oninput="calcAll()" inputmode="decimal"/>
+                <span class="inp-unit">—</span>
+              </div>
+            </div>
+            <div>
+              <label class="lbl">수용률 (DF)</label>
+              <div class="inp-wrap">
+                <input class="inp" id="df" type="number" min="0.1" max="1" step="0.01" value="1.0" oninput="calcAll()" inputmode="decimal"/>
+                <span class="inp-unit">—</span>
+              </div>
+            </div>
+            <div>
+              <label class="lbl">여유율 (MF)</label>
+              <div class="inp-wrap">
+                <input class="inp" id="mf" type="number" min="1" max="2" step="0.01" value="1.2" oninput="calcAll()" inputmode="decimal"/>
+                <span class="inp-unit">배</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:12px;">
+          <label class="lbl">자가발전설비 형식 <span style="font-weight:600;color:#94a3b8;">(NFTC 103 2.9.3.8 · 안내)</span></label>
+          <select class="inp" id="gen-type" onchange="calcAll()">
+            <option value="fire">소방전용 발전기 — 소방부하용량 기준</option>
+            <option value="combo">소방부하 겸용 발전기 — 소방부하 + 비상부하 합산</option>
+            <option value="keep">소방전원 보존형 발전기 — 소방부하 기준 · 비상부하 차단 제어</option>
+          </select>
+          <div class="tbl-note" id="gen-type-note" style="margin-top:6px;"></div>
+        </div>
+        <div class="g-2" style="margin-top:12px;">
+          <div>
             <label class="lbl">비상전원 유지시간</label>
             <select class="inp" id="hold-time" onchange="calcAll()">
-              <option value="20">20분 이상 (일반 건물)</option>
-              <option value="30">30분 이상</option>
-              <option value="40">40분 이상 (고층·지하가)</option>
-              <option value="60">60분 이상 (초고층)</option>
+              <option value="20">20분 이상 (일반 — NFTC 102 2.5.3.2 · 103 2.9.3.2 · 501 2.9.1.2)</option>
+              <option value="30">30분 이상 (무선통신보조 증폭기 — NFTC 505 2.5.1.3)</option>
+              <option value="40">40분 이상 (고층건축물 — NFTC 604 · 도로터널 옥내소화전 — 603)</option>
+              <option value="60">60분 이상 (50층 이상 — NFTC 604 · 도로터널 제연 · 비상조명 — 603)</option>
             </select>
           </div>
           <div>
@@ -1213,20 +1275,27 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
           <div class="result-row"><span class="rl">③ 제연설비 부하</span><span class="rv" id="rd-smk">— kW</span></div>
           <div class="result-row"><span class="rl">④ 기타 소방부하</span><span class="rv" id="rd-oth">— kW</span></div>
           <hr class="r-divider"/>
-          <div class="result-row"><span class="rl">합계 소방부하 (ΣP)</span><span class="rv" id="rd-sum">— kW</span></div>
-          <div class="result-row"><span class="rl">수용률 × 여유율</span><span class="rv" id="rd-adj">—</span></div>
-          <div class="result-row"><span class="rl">유효 소방부하</span><span class="rv" id="rd-eff">— kW</span></div>
+          <div class="result-row"><span class="rl">합계 소방부하</span><span class="rv" id="rd-sum">— kW</span></div>
           <hr class="r-divider"/>
-          <div class="result-row"><span class="rl">역률 (PF)</span><span class="rv" id="rd-pf">—</span></div>
-          <div class="result-row"><span class="rl">S = ΣP × DF × MF ÷ PF</span><span class="rv lg" id="rd-kva">— kVA</span></div>
+          <div class="result-row"><span class="rl">ΣPm 전동기 부하 합계</span><span class="rv" id="rd-pm">— kW</span></div>
+          <div class="result-row"><span class="rl">PL 기동용량 최대 전동기</span><span class="rv" id="rd-pl">— kW</span></div>
+          <div class="result-row"><span class="rl">ΣP 전동기 이외 입력용량</span><span class="rv" id="rd-p">— kVA</span></div>
+          <div class="result-row"><span class="rl">a · c · k</span><span class="rv" id="rd-ack">—</span></div>
+          <div class="result-row"><span class="rl">GP (KDS 31 60 20 식 4.1-1)</span><span class="rv lg" id="rd-gp">— kVA</span></div>
+          <hr class="r-divider"/>
+          <div class="result-row"><span class="rl">참고 · 간이식 DF × MF ÷ PF</span><span class="rv" id="rd-adj">—</span></div>
+          <div class="result-row"><span class="rl">참고 · 유효 소방부하</span><span class="rv" id="rd-eff">— kW</span></div>
+          <div class="result-row"><span class="rl">참고 · 역률 (PF)</span><span class="rv" id="rd-pf">—</span></div>
+          <div class="result-row"><span class="rl">참고 · S = ΣP × DF × MF ÷ PF</span><span class="rv" id="rd-kva">— kVA</span></div>
           <hr class="r-divider"/>
           <div class="result-row"><span class="rl">설치 용량</span><span class="rv" id="rd-inst">미입력</span></div>
           <div class="result-row"><span class="rl">판  정</span><span class="rv" id="rd-judge">—</span></div>
         </div>
         <div style="margin-top:12px;">
           <div style="font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">산정식</div>
-          <code class="fml navy">S[kVA] = ΣP[kW] × 수용률(DF) × 여유율(MF) ÷ 역률(PF)</code>
+          <code class="fml navy">GP[kVA] = [ΣP + (ΣPm − PL) × a + (PL × a × c)] × k — KDS 31 60 20:2021 식 (4.1-1)</code>
           <code class="fml" id="fml-calc">산정 전</code>
+          <code class="fml" id="fml-simple" style="opacity:.75;">참고 · 간이식 산정 전</code>
         </div>
       </div>
     </div>
@@ -1291,8 +1360,8 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
 <div id="t-judge" class="tab-panel">
   <div class="law-banner">
     <span class="lbk">③ 유지시간 판정</span>
-    <div class="lbi"><span class="lbi-k">근거</span><span class="lbi-v">NFPC 602 / 각 설비별 기준</span></div>
-    <div class="lbi"><span class="lbi-k">시행</span><span class="lbi-v">2026.05.04</span></div>
+    <div class="lbi"><span class="lbi-k">근거</span><span class="lbi-v">설비별 NFTC (102 · 103 · 304 · 501 · 501A · 504 · 505 · 603 · 604)</span></div>
+    <div class="lbi"><span class="lbi-k">대조</span><span class="lbi-v">LawMCP 원문 2026-10-16</span></div>
   </div>
   <div class="g-2">
     <div>
@@ -1309,7 +1378,7 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
             </div>
           </div>
           <div style="margin-bottom:14px;">
-            <label class="lbl">지하층 바닥면적 합계</label>
+            <label class="lbl">지하층 바닥면적 합계 <span style="font-size:10px;color:#64748b;">(유지시간 아님 · 설치대상 참고)</span></label>
             <div class="inp-wrap">
               <input class="inp" id="j-bsmt" type="number" min="0" step="10" value="0" oninput="judgeTime()" inputmode="decimal"/>
               <span class="inp-unit">㎡</span>
@@ -1318,11 +1387,11 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
           <div>
             <label class="lbl">특수 조건</label>
             <div style="margin-top:6px;">
-              <div class="chk-row"><input type="checkbox" id="j-tunnel" onchange="judgeTime()"/><label for="j-tunnel">지하가(터널) 해당</label></div>
-              <div class="chk-row"><input type="checkbox" id="j-highrise" onchange="onHighriseChange()"/><label for="j-highrise">고층건축물 (30층 이상 또는 높이 120m↑)</label></div>
+              <div class="chk-row"><input type="checkbox" id="j-tunnel" onchange="judgeTime()"/><label for="j-tunnel">도로터널 (NFTC 603)</label></div>
+              <div class="chk-row"><input type="checkbox" id="j-highrise" onchange="onHighriseChange()"/><label for="j-highrise">고층건축물 (30층 이상 또는 높이 120 m 이상 · NFTC 604)</label></div>
               <div class="chk-row">
                 <input type="checkbox" id="j-ultra" onchange="onUltraChange()"/>
-                <label for="j-ultra">초고층 (50층 이상 또는 높이 200m↑)
+                <label for="j-ultra">50층 이상 건축물 (NFTC 604 — 60분 항목)
                   <span style="font-size:10px;color:#92400e;margin-left:4px;">※ 고층 조건 자동 포함</span>
                 </label>
               </div>
@@ -1349,15 +1418,16 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
             <table class="dt">
               <thead><tr><th>건물 구분</th><th>최소 유지시간</th><th>근거</th></tr></thead>
               <tbody>
-                <tr><td class="L">일반 소방대상물</td><td><b>20분</b></td><td>NFPC 각 설비별</td></tr>
-                <tr><td class="L">지하층 바닥면적 1,000㎡ 이상</td><td><b>40분</b></td><td>NFPC 각 설비별</td></tr>
-                <tr><td class="L">지하가 · 터널</td><td><b>40분</b></td><td>NFPC 607 등</td></tr>
-                <tr><td class="L">고층건축물 (30층↑)</td><td><b>40분</b></td><td>NFPC 각 설비별</td></tr>
-                <tr><td class="L">초고층 (50층↑ 또는 200m↑)</td><td><b>60분</b></td><td>초고층 건축물법</td></tr>
+                <tr><td class="L">일반 소방대상물</td><td><b>20분</b></td><td>NFTC 102 2.5.3.2 · 103 2.9.3.2 · 501 2.9.1.2</td></tr>
+                <tr><td class="L">도로터널 — 옥내소화전 · 물분무</td><td><b>40분</b></td><td>NFTC 603 2.2.1.7 · 2.3.1.3</td></tr>
+                <tr><td class="L">도로터널 — 비상조명 · 제연</td><td><b>60분</b></td><td>NFTC 603 2.6.1.2 · 2.7.4</td></tr>
+                <tr><td class="L">고층건축물 (30층 이상 또는 120 m 이상)</td><td><b>40분</b></td><td>NFTC 604 2.1.7 · 2.2.9 · 2.5.1 · 2.7.3</td></tr>
+                <tr><td class="L">50층 이상 건축물</td><td><b>60분</b></td><td>NFTC 604 위 각 조항 단서</td></tr>
+                <tr><td class="L">비상조명등 — 지하층 제외 11층 이상</td><td><b>60분</b></td><td>NFTC 304 2.1.1.5</td></tr>
               </tbody>
             </table>
           </div>
-          <div class="tbl-note">※ 설비별로 상이할 수 있으니 각 설비 개별 기준 확인 필수</div>
+          <div class="tbl-note">※ 발전기 연료 용량은 설비별 최댓값 이상 · 지하층 · 무창층 도매 · 소매시장 · 여객자동차터미널 · 지하역사 · 지하상가의 비상조명등도 60분(NFTC 304 2.1.1.5.2) — 해당 시 개별 확인</div>
         </div>
       </div>
     </div>
@@ -1369,9 +1439,9 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
 <div id="t-std" class="tab-panel">
   <div class="law-banner">
     <span class="lbk">④ 적용 기준</span>
-    <div class="lbi"><span class="lbi-k">NFTC 602</span><span class="lbi-v">소방청 고시 [2026.05.04 시행]</span></div>
-    <div class="lbi"><span class="lbi-k">NFPC 602</span><span class="lbi-v">소방청 고시 [2026.05.04 시행]</span></div>
-    <div class="lbi"><span class="lbi-k">KDS 31 60 20</span><span class="lbi-v">예비전원설비 건설기준</span></div>
+    <div class="lbi"><span class="lbi-k">NFTC 602</span><span class="lbi-v">소방청공고 제2022-240호 [2022. 12. 1.]</span></div>
+    <div class="lbi"><span class="lbi-k">NFPC 602</span><span class="lbi-v">소방청고시 제2026-21호 [2026. 5. 4.]</span></div>
+    <div class="lbi"><span class="lbi-k">KDS 31 60 20</span><span class="lbi-v">비상발전설비 설계기준 : 2021</span></div>
   </div>
   <div class="g-2">
     <div>
@@ -1400,7 +1470,7 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
             <div class="info-title">§2.3 저압 수전 (제1종·제2종 배전반·분전반)</div>
             <ul class="info-list">
               <li>제1종: 외함 1.6 mm (전면판·문 2.3 mm) 이상, 내열·단열</li>
-              <li>제2종: 배선용 불연전용실 내 설치</li>
+              <li>제2종: 외함 1.0 mm (전면 면적에 따라 1.2 · 1.6 mm) 이상 강판, 또는 불연재료로 구획된 전용실에 설치</li>
               <li>소방회로용 개폐기: "소방시설용" 표시 의무</li>
             </ul>
           </div>
@@ -1413,15 +1483,24 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
         <div class="box-bd">
           <div class="law-box" style="margin-bottom:10px;">
             <div class="law-ref">산정식</div>
-            <div class="law-text">S[kVA] = ΣP[kW] × 수용률(DF) × 여유율(MF) ÷ 역률(PF)</div>
+            <div class="law-text">GP = [ΣP + (ΣPm − PL) × a + (PL × a × c)] × k [kVA] — 4.1(6) 식 (4.1-1)</div>
           </div>
-          <code class="fml">S = 소방부하 합계 × 1.0 × 1.2 ÷ 0.8 (기본값 기준)</code>
+          <code class="fml">ΣP = 비전동기 부하용량(kW) ÷ (효율 × 역률) — 식 (4.1-2)</code>
           <div class="info-card" style="margin-top:10px;">
-            <div class="info-title">설계 계수 표준값</div>
+            <div class="info-title">계수 (KDS 31 60 20:2021 4.1(6))</div>
             <ul class="info-list">
-              <li>역률(PF): 0.8 (유도전동기 평균값)</li>
-              <li>수용률(DF): 1.0 (소방부하 동시 기동 가정)</li>
-              <li>여유율(MF): 1.2 ~ 1.3 (기동전류 등 여유 반영)</li>
+              <li>a: 전동기 kW당 입력용량 계수 — 고효율 1.38 · 표준형 1.45</li>
+              <li>c: 기동계수 — 직입 6(5 ~ 7) · Y-Δ 2(2 ~ 3) · VVVF 1.5(1 ~ 1.5) · 리액터 탭 50 % 3 · 65 % 3.9 · 80 % 4.8</li>
+              <li>k: 허용전압강하계수 — 표 4.1-1 · 불명확 시 1.07 ~ 1.13</li>
+              <li>PL: 기동용량이 가장 큰 전동기(kW) · 동시 기동이면 그 합</li>
+            </ul>
+          </div>
+          <div class="info-card" style="margin-top:10px;">
+            <div class="info-title">NFTC 103 2.9.3.7 · 2.9.3.8 (발전기 용량 · 형식)</div>
+            <ul class="info-list">
+              <li>동시에 운전될 수 있는 모든 부하의 합계 입력용량 기준으로 정격출력 선정</li>
+              <li>기동전류가 가장 큰 부하 기동 시에도 허용 최저입력전압 이상 유지 · 단시간 과전류 견딤</li>
+              <li>형식: 소방전용 · 소방부하 겸용(비상부하 합산) · 소방전원 보존형</li>
             </ul>
           </div>
         </div>
@@ -1437,14 +1516,15 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
             <table class="dt">
               <thead><tr><th>설비명</th><th>기준번호</th><th>비상전원 시간</th></tr></thead>
               <tbody>
-                <tr><td class="L">옥내소화전</td><td>NFTC 102</td><td>20분 (특수 40분)</td></tr>
-                <tr><td class="L">스프링클러</td><td>NFTC 103</td><td>20분 (특수 60분)</td></tr>
+                <tr><td class="L">옥내소화전</td><td>NFTC 102 · 604 · 603</td><td>20분 (고층 40 · 50층 60 · 도로터널 40)</td></tr>
+                <tr><td class="L">스프링클러</td><td>NFTC 103 · 604</td><td>20분 (고층 40 · 50층 60)</td></tr>
                 <tr><td class="L">물분무소화</td><td>NFTC 104</td><td>20분</td></tr>
                 <tr><td class="L">포소화설비</td><td>NFTC 105</td><td>20분</td></tr>
-                <tr><td class="L">제연설비</td><td>NFTC 501</td><td>20분 (특수 40분)</td></tr>
-                <tr><td class="L">비상조명등</td><td>NFTC 304</td><td>20분 (특수 60분)</td></tr>
+                <tr><td class="L">거실 제연설비</td><td>NFTC 501 · 603</td><td>20분 (도로터널 60)</td></tr>
+                <tr><td class="L">부속실 제연설비</td><td>NFTC 501A · 604</td><td>20분 (고층 40 · 50층 60)</td></tr>
+                <tr><td class="L">비상조명등</td><td>NFTC 304 · 603</td><td>20분 (11층 이상 · 지하상가 등 · 도로터널 60)</td></tr>
                 <tr><td class="L">비상콘센트</td><td>NFTC 504</td><td>20분</td></tr>
-                <tr><td class="L">무선통신보조</td><td>NFTC 505</td><td>20분</td></tr>
+                <tr><td class="L">무선통신보조(증폭기)</td><td>NFTC 505</td><td>30분</td></tr>
               </tbody>
             </table>
           </div>
@@ -1457,14 +1537,13 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
         <div class="box-bd">
           <div style="font-size:11px;color:#374151;line-height:2.2;">
             <div style="padding:9px 12px;background:#f0fdf4;border-radius:8px;margin-bottom:6px;border-left:3px solid #16a34a;">
-              <b style="color:#15803d;">20분 이상</b> — 일반 소방대상물
+              <b style="color:#15803d;">20분 이상</b> — 일반 소방대상물 (무선통신 증폭기 30분)
             </div>
             <div style="padding:9px 12px;background:#fefce8;border-radius:8px;margin-bottom:6px;border-left:3px solid #f59e0b;">
-              <b style="color:#92400e;">40분 이상</b> — ① 지하층 바닥면적 1,000㎡↑<br/>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;② 지하가·터널 &nbsp;&nbsp;③ 고층건축물(30층↑)
+              <b style="color:#92400e;">40분 이상</b> — 고층건축물(30층 이상 · 120 m 이상) · 도로터널 옥내소화전
             </div>
             <div style="padding:9px 12px;background:#fef2f2;border-radius:8px;margin-bottom:6px;border-left:3px solid #ef4444;">
-              <b style="color:#b91c1c;">60분 이상</b> — 초고층(50층↑ 또는 200m↑)
+              <b style="color:#b91c1c;">60분 이상</b> — 50층 이상 · 도로터널 제연 · 비상조명 · 11층 이상 비상조명
             </div>
           </div>
           <div class="tbl-note" style="margin-top:8px;">※ 위 기준은 최소값 · 설비별 더 긴 시간 요구 시 그에 따름</div>
@@ -1533,7 +1612,7 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
           <span style="font-size:16px;">📐</span>
           이용안내 / 법규자료
         </div>
-        <div class="hm-sub">MANMIN-Ver5.0 · NFTC 602 · NFPC 602</div>
+        <div class="hm-sub">MANMIN-Ver5.1 · NFTC 602 · NFPC 602</div>
       </div>
       <button class="hm-close" onclick="closeHelp()">✕</button>
     </div>
@@ -1632,19 +1711,21 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
       <div class="hm-sec">
         <div class="hm-sec-title">발전기 필요 용량 산정식</div>
         <div class="hm-card">
-          <div class="hm-card-title">기본 공식 (KDS 31 60 20 기준)</div>
-          <code class="hm-eq">S [kVA] = ΣP [kW] × DF × MF ÷ PF</code>
-          <div class="hm-item">S : 발전기 필요 용량 [kVA]</div>
-          <div class="hm-item">ΣP : 소방부하 합계 [kW]</div>
-          <div class="hm-item">DF : 수용률 (Demand Factor) — 기본값 1.0</div>
-          <div class="hm-item">MF : 여유율 (Margin Factor) — 기본값 1.2</div>
-          <div class="hm-item">PF : 역률 (Power Factor) — 기본값 0.8</div>
+          <div class="hm-card-title">주 산정식 — KDS 31 60 20:2021 4.1(6) 식 (4.1-1)</div>
+          <code class="hm-eq">GP = [ΣP + (ΣPm − PL) × a + (PL × a × c)] × k [kVA]</code>
+          <div class="hm-item">ΣP : 전동기 이외 부하 입력용량 합계 [kVA] = 부하용량 ÷ (효율 × 역률) — 식 (4.1-2)</div>
+          <div class="hm-item">ΣPm : 전동기 부하용량 합계 [kW] (옥내 · SP · 제연 항목)</div>
+          <div class="hm-item">PL : 기동용량이 가장 큰 전동기 [kW] — 0 입력 시 최대값 자동 · 동시 기동이면 합 입력</div>
+          <div class="hm-item">a : 고효율 1.38 · 표준형 1.45 &nbsp;|&nbsp; c : 직입 6 · Y-Δ 2 · VVVF 1.5 · 리액터 3 / 3.9 / 4.8</div>
+          <div class="hm-item">k : 허용전압강하계수 — 표 4.1-1 · 불명확 시 1.07 ~ 1.13 (기본 1.10)</div>
+          <div class="hm-item">UPS 부하(식 4.1-3) · 고조파 가중(식 4.1-4)은 이 도구에 포함하지 않음 — 해당 시 별도 산정</div>
         </div>
         <div class="hm-card">
-          <div class="hm-card-title">계산 예시</div>
-          <code class="hm-eq">ΣP = 15 + 22 + 18.5 + 3 = 58.5 kW</code>
-          <code class="hm-eq">S = 58.5 × 1.0 × 1.2 ÷ 0.8 = 87.75 kVA</code>
-          <div class="hm-item" style="color:#92400e;font-weight:700;">→ 100 kVA 발전기 선정 권장 (표준 용량)</div>
+          <div class="hm-card-title">계산 예시 (Y-Δ · 표준형 · k 1.10 · 효율 × 역률 0.85)</div>
+          <code class="hm-eq">ΣPm = 15 + 22 + 18.5 = 55.5 kW · PL = 22 kW · ΣP = 3 ÷ 0.85 = 3.53 kVA</code>
+          <code class="hm-eq">GP = [3.53 + 33.5 × 1.45 + 22 × 1.45 × 2] × 1.10 = 127.5 kVA</code>
+          <div class="hm-item">참고 · MANMIN 간이식 S = 58.5 × 1.0 × 1.2 ÷ 0.8 = 87.75 kVA — 기동 계수를 반영하지 않아 작게 산정됨</div>
+          <div class="hm-item" style="color:#92400e;font-weight:700;">→ GP 이상인 표준 용량 발전기 선정 (제조사 표준 용량 확인)</div>
         </div>
       </div>
       <div class="hm-sec">
@@ -1816,20 +1897,25 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
         <div class="hm-sec-title">적용 기준 및 법령</div>
         <div class="hm-card">
           <div class="hm-card-title">📋 NFTC 602 (화재안전기술기준)</div>
-          <div class="hm-item">소방청 고시 · 2026년 5월 4일 시행</div>
+          <div class="hm-item">소방청공고 제2022-240호 · 2022년 12월 1일 시행</div>
           <div class="hm-item">비상전원수전설비의 설치 및 관리 기준</div>
           <div class="hm-item">인입선 / 배전반 / 큐비클 설치 기준 포함</div>
         </div>
         <div class="hm-card">
           <div class="hm-card-title">📋 NFPC 602 (화재안전성능기준)</div>
-          <div class="hm-item">소방청 고시 · 2026년 5월 4일 시행</div>
+          <div class="hm-item">소방청고시 제2026-21호 · 2026년 5월 4일 시행</div>
           <div class="hm-item">NFTC 602 충족 시 이를 충족한 것으로 봄 (1.2.2)</div>
           <div class="hm-item">재검토 기한: 2023.1.1 기준 매 3년</div>
         </div>
         <div class="hm-card">
-          <div class="hm-card-title">📋 KDS 31 60 20 예비전원설비 건설기준</div>
-          <div class="hm-item">국토교통부 건설기준 — 발전기 용량 산정식 근거</div>
-          <div class="hm-item">DF·MF·PF 설계 계수 기준</div>
+          <div class="hm-card-title">📋 KDS 31 60 20 : 2021 비상발전설비 설계기준</div>
+          <div class="hm-item">국가건설기준 — 4.1(6) 발전기 용량 산정식 (4.1-1) ~ (4.1-4) · 출처 kcsc.re.kr</div>
+          <div class="hm-item">계수 a · c · k 기준 (표 4.1-1)</div>
+        </div>
+        <div class="hm-card">
+          <div class="hm-card-title">📋 NFTC 103 2.9.3.7 · 2.9.3.8 (자가발전설비)</div>
+          <div class="hm-item">동시 운전 부하 합계 입력용량 기준 · 최대 기동부하 기동 시 허용 최저입력전압 유지</div>
+          <div class="hm-item">소방전용 · 소방부하 겸용 · 소방전원 보존형 발전기</div>
         </div>
       </div>
       <div class="hm-sec">
@@ -1872,7 +1958,7 @@ table.dt td b{color:var(--c-primary);font-weight:800;}
 <script>
 'use strict';
 /* ════════════════════════════════════════════════
-   MANMIN-Ver5.0 · 비상발전기 용량 산정
+   MANMIN-Ver5.1 · 비상발전기 용량 산정
    NFTC 602 / NFPC 602 · KDS 31 60 20
 ════════════════════════════════════════════════ */
 
@@ -1899,6 +1985,42 @@ function nv(id) {
 function setText(id, v) { var e = document.getElementById(id); if(e) e.textContent = v; }
 function setHTML(id, v) { var e = document.getElementById(id); if(e) e.innerHTML = v; }
 
+/* ── v5.1.0 계산 엔진(순수 함수) — 화면 · A4 · 검증 도구(manual/_tools/verify_gen.py)가 같은 식을 쓴다 ──
+   KDS 31 60 20:2021 4.1(6) 식 (4.1-1)  GP = [ΣP + (ΣPm − PL) × a + (PL × a × c)] × k
+     ΣP  : 전동기 이외 부하의 입력용량 합계(kVA) — 식 (4.1-2) 부하용량(kW) ÷ (효율 × 역률)
+     ΣPm : 전동기 부하용량 합계(kW) · PL : 기동용량이 가장 큰 전동기(kW, 동시 기동이면 합)
+     a   : 전동기 kW당 입력용량 계수(고효율 1.38 · 표준형 1.45) · c : 기동계수 · k : 허용전압강하계수(표 4.1-1, 불명확 시 1.07 ~ 1.13)
+   간이식 S = ΣP × DF × MF ÷ PF 는 KDS에 없는 MANMIN 약식(참고)으로만 표시 */
+window.GENENG = {
+  kds: function (motors, nonMotorKw, ef, a, c, k, plIn) {
+    var sumPm = motors.reduce(function (t, v) { return t + v; }, 0);
+    var plAuto = motors.reduce(function (m, v) { return Math.max(m, v); }, 0);
+    var PL = plIn > 0 ? Math.min(plIn, sumPm) : plAuto;
+    var sumP = ef > 0 ? nonMotorKw / ef : 0;
+    var GP = (sumP + (sumPm - PL) * a + PL * a * c) * k;
+    return { sumPm: sumPm, PL: PL, plAuto: plAuto, sumP: sumP, GP: GP, plClamped: plIn > sumPm && sumPm > 0 };
+  },
+  simple: function (total, df, mf, pf) { return { eff: total * df * mf, S: total * df * mf / pf }; },
+  /* 비상전원 작동시간 — 설비별 (LawMCP 원문 대조 2026-10-16) */
+  hold: function (floors, height, manualHigh, manual50, tunnel) {
+    var is50 = floors >= 50 || manual50;
+    var isHigh = is50 || floors >= 30 || height >= 120 || manualHigh;
+    var rows = [
+      ['옥내소화전설비', is50 ? 60 : isHigh ? 40 : tunnel ? 40 : 20, is50 ? 'NFTC 604 2.1.7 (50층 이상)' : isHigh ? 'NFTC 604 2.1.7 (고층건축물)' : tunnel ? 'NFTC 603 2.2.1.7 (도로터널)' : 'NFTC 102 2.5.3.2'],
+      ['스프링클러설비', is50 ? 60 : isHigh ? 40 : 20, is50 ? 'NFTC 604 2.2.9 (50층 이상)' : isHigh ? 'NFTC 604 2.2.9 (고층건축물)' : 'NFTC 103 2.9.3.2'],
+      ['제연설비(거실 제연)', tunnel ? 60 : 20, tunnel ? 'NFTC 603 2.7.4 (도로터널)' : 'NFTC 501 2.9.1.2'],
+      ['부속실 제연설비', is50 ? 60 : isHigh ? 40 : 20, is50 ? 'NFTC 604 2.5.1 (50층 이상)' : isHigh ? 'NFTC 604 2.5.1 (고층건축물)' : 'NFTC 501A 2.21.1.2'],
+      ['비상조명등', tunnel ? 60 : floors >= 11 ? 60 : 20, tunnel ? 'NFTC 603 2.6.1.2 (도로터널)' : floors >= 11 ? 'NFTC 304 2.1.1.5.1 (지하층 제외 11층 이상의 층 → 피난층까지)' : 'NFTC 304 2.1.1.5'],
+      ['비상콘센트설비', 20, 'NFTC 504 2.1.1.3.2'],
+      ['무선통신보조설비(증폭기)', 30, 'NFTC 505 2.5.1.3 — 증폭기 부착 비상전원'],
+    ];
+    if (isHigh) rows.push(['연결송수관설비(가압펌프)', is50 ? 60 : 40, 'NFTC 604 2.7.3']);
+    /* 발전기 연료 기준: 펌프 · 송풍기 계열(옥내 · SP · 거실 제연 · 부속실 제연 · 연결송수관 가압) — 비상조명 · 무선통신은 축전지 내장형이 일반적이므로 제외(해당 시 개별 확인) */
+    var gen = Math.max(rows[0][1], rows[1][1], rows[2][1], rows[3][1], isHigh ? rows[7][1] : 20);
+    return { rows: rows, gen: gen, isHigh: isHigh, is50: is50 };
+  }
+};
+
 /* ── 메인 계산 ── */
 function calcAll() {
   var hydSum = nv('hyd-pump') + nv('hyd-charge') + nv('hyd-etc');
@@ -1910,13 +2032,20 @@ function calcAll() {
   var pf   = Math.max(0.1,  nv('pf')  || 0.8);  /* 역률: 최소 0.1 */
   var df   = Math.max(0.01, nv('df')  || 1.0);  /* 수용률: 0이면 1.0으로 */
   var mf   = Math.max(1.0,  nv('mf')  || 1.2);  /* 여유율: 최소 1.0 */
-  /* df=0 입력(빈칸) 방어 */
   if (nv('df') === 0) { document.getElementById('df').value = 1.0; df = 1.0; }
   var time = parseInt(document.getElementById('hold-time').value) || 20;
   var inst = nv('inst-kva');
 
-  var effLoad = total * df * mf;
-  var reqKva  = effLoad / pf;
+  var motors = ['hyd-pump','hyd-charge','hyd-etc','spr-pump','spr-charge','spr-etc','smk-supply','smk-exhaust','smk-etc'].map(nv);
+  var ga = parseFloat(document.getElementById('gp-a').value) || 1.45;
+  var gc = parseFloat(document.getElementById('gp-c').value) || 2;
+  var gk = nv('gp-k') || 1.10;
+  var gef = nv('gp-ef') || 0.85;
+  var K = GENENG.kds(motors, othSum, gef, ga, gc, gk, nv('gp-pl'));
+  var SM = GENENG.simple(total, df, mf, pf);
+  var effLoad = SM.eff;
+  var simpleKva = SM.S;
+  var reqKva  = K.GP;
 
   /* 소계 */
   setText('fml-hyd', hydSum.toFixed(2));
@@ -1930,26 +2059,31 @@ function calcAll() {
   setText('rd-smk', smkSum.toFixed(2) + ' kW');
   setText('rd-oth', othSum.toFixed(2) + ' kW');
   setText('rd-sum', total.toFixed(2) + ' kW');
-  setText('rd-adj', 'DF ' + df.toFixed(2) + ' × MF ' + mf.toFixed(2));
+  setText('rd-pm', K.sumPm.toFixed(2) + ' kW');
+  setText('rd-pl', K.PL.toFixed(2) + ' kW' + (nv('gp-pl') > 0 ? (K.plClamped ? ' (ΣPm으로 제한)' : ' (직접 입력)') : ' (최대 자동)'));
+  setText('rd-p', K.sumP.toFixed(2) + ' kVA');
+  setText('rd-ack', 'a ' + ga.toFixed(2) + ' · c ' + gc + ' · k ' + gk.toFixed(2));
+  setText('rd-gp', reqKva.toFixed(1) + ' kVA');
+  setText('rd-adj', 'DF ' + df.toFixed(2) + ' × MF ' + mf.toFixed(2) + ' ÷ PF ' + pf.toFixed(2));
   setText('rd-eff', effLoad.toFixed(2) + ' kW');
   setText('rd-pf',  pf.toFixed(2));
-  setText('rd-kva', reqKva.toFixed(1) + ' kVA');
+  setText('rd-kva', simpleKva.toFixed(1) + ' kVA');
   setText('rd-inst', inst > 0 ? inst.toFixed(0) + ' kVA' : '미입력');
 
-  /* 판정 */
+  /* 판정 — KDS 식 GP 기준 */
   var judgeHtml = '';
   if (inst <= 0) {
     judgeHtml = '<span class="badge badge-warn">⚠ 설치용량 미입력</span>';
   } else if (inst >= reqKva) {
-    judgeHtml = '<span class="badge badge-ok">✅ 적정 (여유 ' + (inst - reqKva).toFixed(1) + ' kVA)</span>';
+    judgeHtml = '<span class="badge badge-ok">✅ 적정 (GP 대비 여유 ' + (inst - reqKva).toFixed(1) + ' kVA)</span>';
   } else {
-    judgeHtml = '<span class="badge badge-ng">❌ 부족 (' + (reqKva - inst).toFixed(1) + ' kVA 부족)</span>';
+    judgeHtml = '<span class="badge badge-ng">❌ 부족 (GP 대비 ' + (reqKva - inst).toFixed(1) + ' kVA 부족)</span>';
   }
   setHTML('rd-judge', judgeHtml);
 
   /* Hero */
   setText('res-kva', reqKva.toFixed(1));
-  setText('res-kva-sub', 'S = ' + total.toFixed(2) + ' × ' + df.toFixed(2) + ' × ' + mf.toFixed(2) + ' ÷ ' + pf.toFixed(2));
+  setText('res-kva-sub', 'GP = [' + K.sumP.toFixed(2) + ' + (' + K.sumPm.toFixed(2) + ' − ' + K.PL.toFixed(2) + ') × ' + ga.toFixed(2) + ' + ' + K.PL.toFixed(2) + ' × ' + ga.toFixed(2) + ' × ' + gc + '] × ' + gk.toFixed(2));
 
   /* 개요 카드 */
   setText('ov-kva',   reqKva.toFixed(1));
@@ -1960,10 +2094,16 @@ function calcAll() {
   setText('ov-margin', margin !== '—' ? margin : '—');
 
   /* 산정식 */
-  setText('fml-calc',
-    'S = ' + total.toFixed(2) + ' × ' + df.toFixed(2) + ' × ' + mf.toFixed(2) +
-    ' ÷ ' + pf.toFixed(2) + ' = ' + reqKva.toFixed(1) + ' kVA'
-  );
+  setText('fml-calc', 'GP = [' + K.sumP.toFixed(2) + ' + (' + K.sumPm.toFixed(2) + ' − ' + K.PL.toFixed(2) + ') × ' + ga.toFixed(2) + ' + (' + K.PL.toFixed(2) + ' × ' + ga.toFixed(2) + ' × ' + gc + ')] × ' + gk.toFixed(2) + ' = ' + reqKva.toFixed(1) + ' kVA');
+  setText('fml-simple', '참고 · 간이식 S = ' + total.toFixed(2) + ' × ' + df.toFixed(2) + ' × ' + mf.toFixed(2) + ' ÷ ' + pf.toFixed(2) + ' = ' + simpleKva.toFixed(1) + ' kVA (KDS 식 아님)');
+
+  /* 발전기 형식 안내 (NFTC 103 2.9.3.8) */
+  var gt = document.getElementById('gen-type').value;
+  setText('gen-type-note', gt === 'combo'
+    ? '▸ 소방부하 겸용: 소방부하와 비상부하의 전원용량을 합산해 정격출력을 산정 — 비상부하는 「건축전기설비설계기준」 수용률 범위 중 최대값 이상(2.9.3.8 단서) · 이 도구는 소방부하만 계산하므로 비상부하를 별도로 더하십시오'
+    : gt === 'keep'
+    ? '▸ 소방전원 보존형: 소방 · 비상부하 겸용이나 소방부하 전원용량을 기준으로 산정(2.9.3.8.3) — 2.9.3.7.1(동시 운전 부하 합계 기준)의 예외'
+    : '▸ 소방전용: 소방부하용량을 기준으로 정격출력 산정(2.9.3.8.1) · 동시 운전 부하 합계 입력용량 · 최대 기동부하 시 허용 최저입력전압 유지(2.9.3.7)');
 
   /* 요약 바 */
   setText('sv-kva',  reqKva.toFixed(1));
@@ -1971,16 +2111,12 @@ function calcAll() {
   setText('sv-load', total.toFixed(2));
   setText('sv-time', time + '분');
 
-  /* 유지시간 배너 */
   updateTimeBanner(time);
-
-  /* 부하 구성비 */
   buildLoadBars(hydSum, sprSum, smkSum, othSum, total);
 
-  /* 전역 저장 */
   _calc = { hydSum:hydSum, sprSum:sprSum, smkSum:smkSum, othSum:othSum,
-            total:total, pf:pf, df:df, mf:mf, effLoad:effLoad,
-            reqKva:reqKva, inst:inst, time:time };
+            total:total, pf:pf, df:df, mf:mf, effLoad:effLoad, simpleKva:simpleKva,
+            reqKva:reqKva, inst:inst, time:time, K:K, a:ga, c:gc, k:gk, ef:gef, genType:gt };
   _calcDone = true;
 }
 
@@ -1994,22 +2130,22 @@ function updateTimeBanner(time) {
   if (time >= 60) {
     box.classList.add('t60');
     main.textContent = '🔴 비상전원 유지시간 60분 이상';
-    sub.textContent  = '초고층건축물 적용 — 엄격한 기준';
+    sub.textContent  = '50층 이상(NFTC 604) · 도로터널 제연 · 비상조명(NFTC 603)';
     bdg.innerHTML    = '<span class="badge badge-ng">60분↑</span>';
   } else if (time >= 40) {
     box.classList.add('t40');
     main.textContent = '🟠 비상전원 유지시간 40분 이상';
-    sub.textContent  = '고층건축물 / 지하가·터널 적용';
+    sub.textContent  = '고층건축물(NFTC 604) · 도로터널 옥내소화전(NFTC 603)';
     bdg.innerHTML    = '<span class="badge badge-warn">40분↑</span>';
   } else if (time >= 30) {
     box.classList.add('t30');
     main.textContent = '🟡 비상전원 유지시간 30분 이상';
-    sub.textContent  = '특수 건물 적용';
+    sub.textContent  = '무선통신보조설비 증폭기(NFTC 505 2.5.1.3) 등';
     bdg.innerHTML    = '<span class="badge badge-amber">30분↑</span>';
   } else {
     box.classList.add('t20');
     main.textContent = '🟢 비상전원 유지시간 20분 이상';
-    sub.textContent  = '일반 소방대상물 기준 충족';
+    sub.textContent  = '일반 — NFTC 102 · 103 · 501 비상전원 20분';
     bdg.innerHTML    = '<span class="badge badge-ok">20분</span>';
   }
 }
@@ -2112,65 +2248,32 @@ function onUltraChange() {
   judgeTime();
 }
 
-/* ── 유지시간 판정 (탭③) — 중복 없는 정확한 로직 ── */
+/* ── 유지시간 판정 (탭③) — v5.1.0 설비별 판정 (GENENG.hold) ── */
 function judgeTime() {
   var floors   = parseInt(document.getElementById('j-floors').value) || 1;
   var bsmt     = parseFloat(document.getElementById('j-bsmt').value) || 0;
   var isTunnel = document.getElementById('j-tunnel').checked;
   var isHigh   = document.getElementById('j-highrise').checked;
   var isUltra  = document.getElementById('j-ultra').checked;
-
-  var req = 20;
-  var reasons = [];
-
-  /* ① 초고층 판정 (60분) — 가장 우선 */
-  if (isUltra || floors >= 50) {
-    req = 60;
-    if (isUltra)      reasons.push('초고층 체크 선택 → 60분');
-    else              reasons.push('층수 ' + floors + '층 (50층↑) — 초고층 → 60분');
-    /* 초고층이면 고층 조건 별도 표시 불필요 */
-  } else {
-    /* ② 고층 판정 (40분) */
-    if (isHigh || floors >= 30) {
-      req = Math.max(req, 40);
-      if (isHigh && floors >= 30)
-        reasons.push('고층건축물 체크 + 층수 ' + floors + '층 (30층↑) → 40분');
-      else if (isHigh)
-        reasons.push('고층건축물 체크 선택 → 40분');
-      else
-        reasons.push('층수 ' + floors + '층 (30층↑) — 고층건축물 → 40분');
-    }
-    /* ③ 터널 판정 (40분) */
-    if (isTunnel) {
-      req = Math.max(req, 40);
-      reasons.push('지하가(터널) 체크 선택 → 40분');
-    }
-    /* ④ 지하층 면적 판정 (40분) */
-    if (bsmt >= 1000) {
-      req = Math.max(req, 40);
-      reasons.push('지하층 바닥면적 ' + bsmt.toFixed(0) + ' ㎡ (1,000㎡↑) → 40분');
-    }
-  }
-
+  var H = GENENG.hold(floors, 0, isHigh, isUltra, isTunnel);
+  var req = H.gen;
   var cls    = req >= 60 ? 't60' : req >= 40 ? 't40' : 't20';
   var bdgCls = req >= 60 ? 'badge-ng' : req >= 40 ? 'badge-warn' : 'badge-ok';
   var icon   = req >= 60 ? '🔴' : req >= 40 ? '🟠' : '🟢';
-
-  var reasonHtml = reasons.length > 0
-    ? reasons.map(function(r){
-        return '<div class="hm-item" style="margin-top:4px;">' + r + '</div>';
-      }).join('')
-    : '<div class="hm-item" style="margin-top:4px;">특별 조건 없음 — 일반 기준 20분 적용</div>';
-
+  var tb = '<div class="tbl-wrap" style="margin-top:8px;"><table class="dt"><thead><tr><th>설비</th><th>시간</th><th>근거</th></tr></thead><tbody>';
+  H.rows.forEach(function (r) { tb += '<tr><td class="L">' + r[0] + '</td><td><b>' + r[1] + '분</b></td><td class="L">' + r[2] + '</td></tr>'; });
+  tb += '</tbody></table></div>';
+  var note = '<div class="hm-item" style="margin-top:6px;">발전기 연료 기준 — 발전기 부하 설비 중 최댓값 <b>' + req + '분</b> (옥내 · SP · 제연 · 부속실 · 연결송수관 · 비상조명등 · 무선통신 증폭기를 발전기로 공급하면 그 시간도 포함)</div>';
+  if (bsmt >= 3000) note += '<div class="hm-item" style="margin-top:4px;">지하층 바닥면적 합계 ' + bsmt.toFixed(0) + ' ㎡ (3,000 ㎡ 이상) → 옥내소화전 비상전원 설치 대상 (NFTC 102 2.5.2.2) · 유지시간은 위 표</div>';
+  else if (bsmt > 0) note += '<div class="hm-item" style="margin-top:4px;">지하층 바닥면적 합계 ' + bsmt.toFixed(0) + ' ㎡ — 유지시간 가산 요건 아님 (설치 대상은 NFTC 102 2.5.2 개별 확인)</div>';
   var html = '<div class="time-banner ' + cls + '">';
   html += '<div class="time-banner-icon">' + icon + '</div>';
   html += '<div style="flex:1;">';
   html += '<div class="time-banner-main">비상전원 유지시간 최소 <b>' + req + '분</b> 이상</div>';
-  html += '<div class="time-banner-sub" style="margin-bottom:4px;">판정 근거</div>';
-  html += reasonHtml;
+  html += '<div class="time-banner-sub" style="margin-bottom:4px;">' + (H.is50 ? '50층 이상 (NFTC 604)' : H.isHigh ? '고층건축물 (NFTC 604)' : isTunnel ? '도로터널 (NFTC 603)' : '일반 소방대상물') + '</div>';
   html += '</div>';
   html += '<div><span class="badge ' + bdgCls + '">' + req + '분↑</span></div>';
-  html += '</div>';
+  html += '</div>' + tb + note;
   document.getElementById('judge-result-area').innerHTML = html;
 }
 
@@ -2445,12 +2548,12 @@ function buildReport() {
 <!-- MANMIN 계산서 표제 규격 v5.0 — 01 옥내소화전 기준 -->
 <div style="text-align:center;margin-bottom:28px;border-bottom:3px double #334155;padding-bottom:16px;">
   <div style="font-size:22px;font-weight:900;letter-spacing:0.06em;color:#111827;font-family:'Noto Sans KR',sans-serif;">비상발전기 용량 산정 계산서</div>
-  <div style="font-size:12px;color:#64748b;margin-top:6px;font-family:'Noto Sans KR',sans-serif;">화재안전기술기준(NFTC 602) · 화재안전성능기준(NFPC 602) 적용</div>
+  <div style="font-size:12px;color:#64748b;margin-top:6px;font-family:'Noto Sans KR',sans-serif;">비상발전설비 설계기준(KDS 31 60 20 : 2021) 식 (4.1-1) · NFTC 103 2.9 · NFTC / NFPC 602 적용</div>
   <table style="margin:12px auto 0;border-collapse:collapse;"><tbody><tr>
     <td style="border:${B};padding:5px 14px;font-size:12px;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;"><b>공사명:</b> ${esc(name)}</td>
     <td style="border:${B};padding:5px 14px;font-size:12px;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;"><b>설계자:</b> ${esc(dsn)}</td>
     <td style="border:${B};padding:5px 14px;font-size:12px;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;"><b>작성일:</b> ${today}</td>
-    <td style="border:${B};padding:5px 14px;font-size:12px;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;"><b>적용기준:</b> NFTC 602 (2026.05.04)</td>
+    <td style="border:${B};padding:5px 14px;font-size:12px;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;"><b>적용기준:</b> KDS 31 60 20 · NFTC 602</td>
   </tr></tbody></table>
 </div>
 <div style="height:10px;"></div>
@@ -2462,18 +2565,16 @@ ${SecHd('Ⅰ-1. 소방 부하 집계 (KDS 31 60 20)')}
 </table>
 </div>
 <div style="break-inside:avoid;page-break-inside:avoid;">
-${SecHd('Ⅰ-2. 발전기 용량 산정식 (KDS 31 60 20)')}
+${SecHd('Ⅰ-2. 발전기 용량 산정식 (KDS 31 60 20:2021 4.1(6) 식 4.1-1)')}
 <table style="width:100%;border-collapse:collapse;border:${B};border-top:none;">
   <tbody>
-    <tr>
-      <td style="border-right:${B};border-bottom:${B};padding:6px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;width:32%;vertical-align:top;">산정식</td>
-      <td style="border-bottom:${B};padding:6px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#1E3A5F;">S [kVA] = ΣP [kW] × 수용률(DF) × 여유율(MF) ÷ 역률(PF)</td>
-    </tr>
-    <tr style="background:#f8fafc;"><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;">ΣP 소방부하 합계</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#111;">${r.total.toFixed(2)} kW</td></tr>
-    <tr><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;">수용률 DF</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;color:#111;">${r.df.toFixed(2)}</td></tr>
-    <tr style="background:#f8fafc;"><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;">여유율 MF</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;color:#111;">${r.mf.toFixed(2)}</td></tr>
-    <tr><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;">역률 PF</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;color:#111;">${r.pf.toFixed(2)}</td></tr>
-    <tr style="background:#f8fafc;"><td style="border-right:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;">유효 소방부하 (ΣP×DF×MF)</td><td style="padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#111;">${r.effLoad.toFixed(2)} kW</td></tr>
+    <tr><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;width:32%;vertical-align:top;">산정식</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;color:#111;font-weight:700;color:#1E3A5F;">GP [kVA] = [ΣP + (ΣPm − PL) × a + (PL × a × c)] × k</td></tr>
+    <tr style="background:#f8fafc;"><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;">ΣPm 전동기 부하 합계</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;color:#111;font-weight:700;">${r.K.sumPm.toFixed(2)} kW (옥내소화전 · 스프링클러 · 제연)</td></tr>
+    <tr><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;">PL 최대 기동 전동기</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;color:#111;">${r.K.PL.toFixed(2)} kW</td></tr>
+    <tr style="background:#f8fafc;"><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;">ΣP 비전동기 입력용량</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;color:#111;">${r.othSum.toFixed(2)} kW ÷ ${r.ef.toFixed(2)} (효율 × 역률) = ${r.K.sumP.toFixed(2)} kVA</td></tr>
+    <tr><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;">계수 a · c · k</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;color:#111;">a ${r.a.toFixed(2)} · c ${r.c} · k ${r.k.toFixed(2)}</td></tr>
+    <tr style="background:#f8fafc;"><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#374151;">발전기 형식 (NFTC 103 2.9.3.8)</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;color:#111;">${r.genType==='combo'?'소방부하 겸용 — 비상부하 별도 합산 필요':r.genType==='keep'?'소방전원 보존형':'소방전용'}</td></tr>
+    <tr><td style="border-right:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#6b7280;">참고 · MANMIN 간이식</td><td style="padding:5px 10px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;color:#6b7280;">S = ${r.total.toFixed(2)} × ${r.df.toFixed(2)} × ${r.mf.toFixed(2)} ÷ ${r.pf.toFixed(2)} = ${r.simpleKva.toFixed(1)} kVA (KDS 식 아님 · 판정 미사용)</td></tr>
   </tbody>
 </table>
 </div>
@@ -2482,8 +2583,8 @@ ${SecHd('Ⅰ-3. 발전기 필요 용량 산정 결과')}
 <table style="width:100%;border-collapse:collapse;border:${B};border-top:none;">
   <tbody>
     <tr style="background:#EEF4FB;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
-      <td style="border-right:${B};border-bottom:${B};padding:8px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#1E3A5F;width:32%;background:#EEF4FB;">필요 용량 S</td>
-      <td style="border-right:${B};border-bottom:${B};padding:8px 10px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;background:#EEF4FB;">${r.total.toFixed(2)} × ${r.df.toFixed(2)} × ${r.mf.toFixed(2)} ÷ ${r.pf.toFixed(2)}</td>
+      <td style="border-right:${B};border-bottom:${B};padding:8px 10px;font-size:7.9pt;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#1E3A5F;width:32%;background:#EEF4FB;">필요 용량 GP</td>
+      <td style="border-right:${B};border-bottom:${B};padding:8px 10px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;background:#EEF4FB;">[${r.K.sumP.toFixed(2)} + (${r.K.sumPm.toFixed(2)} − ${r.K.PL.toFixed(2)}) × ${r.a.toFixed(2)} + ${r.K.PL.toFixed(2)} × ${r.a.toFixed(2)} × ${r.c}] × ${r.k.toFixed(2)}</td>
       <td style="border-bottom:${B};padding:8px 10px;text-align:center;font-size:12pt;font-weight:900;font-family:'Noto Sans KR',sans-serif;color:#92400e;background:#EEF4FB;white-space:nowrap;">${r.reqKva.toFixed(1)} kVA</td>
     </tr>
     <tr>
@@ -2505,18 +2606,20 @@ ${listHtml ? '<div style="break-inside:avoid;page-break-inside:avoid;margin-top:
 <div style="break-inside:avoid;page-break-inside:avoid;">
 ${SecHd('▣ 적용 법령 및 기준')}
 <div style="border:${B};border-top:none;padding:9px 11px;font-size:7.9pt;font-family:'Noto Sans KR',sans-serif;color:#374151;line-height:1.95;">
-  ① 소방시설용 비상전원수전설비의 화재안전기술기준 (NFTC 602) — 소방청 고시 [2026.05.04 시행], 2026.5.4 시행<br/>
+  ① 소방시설용 비상전원수전설비의 화재안전기술기준 (NFTC 602) — 소방청공고 제2022-240호 (2022. 12. 1. 시행)<br/>
   &nbsp;&nbsp;&nbsp;- §2.1 인입구 배선: 내화배선 적용 (NFTC 102 §2.7.2 기준)<br/>
   &nbsp;&nbsp;&nbsp;- §2.2 고압 수전: 방화구획형·옥외개방형·큐비클형 중 선택, 소방회로 격벽 구획<br/>
   &nbsp;&nbsp;&nbsp;- §2.3 저압 수전: 제1·2종 배전반·분전반, 소방시설용 개폐기 표시 의무<br/>
-  ② 소방시설용 비상전원수전설비의 화재안전성능기준 (NFPC 602) — 소방청 고시 [2026.05.04 시행]<br/>
-  ③ KDS 31 60 20 예비전원설비 건설기준 (국토교통부) — 발전기 용량 산정식 근거<br/>
+  ② 소방시설용 비상전원수전설비의 화재안전성능기준 (NFPC 602) — 소방청고시 제2026-21호 (2026. 5. 4. 시행)<br/>
+  ③ KDS 31 60 20 : 2021 비상발전설비 설계기준 — 4.1(6) 발전기 용량 산정식 (4.1-1) (출처 kcsc.re.kr)<br/>
+  &nbsp;&nbsp;&nbsp;- NFTC 103 2.9.3.7 · 2.9.3.8: 동시 운전 부하 합계 · 최대 기동부하 전압 유지 · 발전기 형식<br/>
+  &nbsp;&nbsp;&nbsp;- 비상전원 시간: NFTC 102 2.5.3.2 · 103 2.9.3.2 · 501 2.9.1.2 (20분) · 604 (고층 40 · 50층 60분) · 603 (도로터널)<br/>
   ④ 소방시설 설치 및 관리에 관한 법률 시행령 별표 4
 </div>
 </div>
 <div style="display:flex;align-items:center;justify-content:flex-end;margin-top:18px;padding-top:8px;border-top:1.5px solid #CBD5E1;-webkit-print-color-adjust:exact;">
-  <span style="font-size:6.7pt;font-family:'Noto Sans KR',sans-serif;color:#9ca3af;letter-spacing:.04em;margin-right:10px;">NFTC 602 · NFPC 602 · 2026.05.04 기준</span>
-  <span style="font-family:'Orbitron',sans-serif;font-size:7.5pt;font-weight:700;color:#374151;letter-spacing:.1em;border-left:2px solid #CBD5E1;padding-left:10px;">MANMIN-Ver5.0</span>
+  <span style="font-size:6.7pt;font-family:'Noto Sans KR',sans-serif;color:#9ca3af;letter-spacing:.04em;margin-right:10px;">KDS 31 60 20 · NFTC 103 2.9 · NFPC 602 기준</span>
+  <span style="font-family:'Orbitron',sans-serif;font-size:7.5pt;font-weight:700;color:#374151;letter-spacing:.1em;border-left:2px solid #CBD5E1;padding-left:10px;">MANMIN-Ver5.1</span>
 </div>
 `;
 
@@ -2777,7 +2880,7 @@ if(isInstalled())document.addEventListener('DOMContentLoaded',hdrHide);
 
 
 
-<div id="mm-print-stamp" style="display:none">MANMIN-Ver5.0</div>
+<div id="mm-print-stamp" style="display:none">MANMIN-Ver5.1</div>
 <script>window.MM_JPG_CONFIG={zone:'#report-zone',name:'발전설비',prepare:'buildReport'};</script>
 
 
@@ -2801,7 +2904,7 @@ if(isInstalled())document.addEventListener('DOMContentLoaded',hdrHide);
 (function(){
   'use strict';
   var CFG = window.MM_JPG_CONFIG || { zone:'#report-zone', name:'MANMIN', prepare:null };
-  var VER = 'MANMIN-Ver5.0';
+  var VER = 'MANMIN-Ver5.1';
 
   var MM = function(v){ return v * 96 / 25.4; };
   var PAGE_W = MM(210), PAGE_H = MM(297);

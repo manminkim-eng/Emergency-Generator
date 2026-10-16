@@ -1,11 +1,12 @@
 /* ════════════════════════════════════════════════
+   v5.1.0 회차 2026-10-16 — KDS 31 60 20 식 (4.1-1) 주 산정식 · 설비별 유지시간 · NFTC 602 공고번호 정정 · 매뉴얼(/manual/ 캐시 제외) · 캐시명 v5.1.0
    S9 회차 2026-09-05 — R28 JPG v5.5 소제목 동반 이관 동반 캐시명 v5.0.7
    S4 회차 2026-09-04 — R1b #mm-print-stamp 인쇄 비표시 동반 캐시명 v5.0.6
    S3-0 회차 2026-09-04 — R27 html2canvas 클론 정화 동반 캐시명 v5.0.5
    S2 회차 2026-09-04 — index 소급(R1·R21·R26 등) 동반 캐시명 v5.0.4
    R25 회차 2026-09-04 — 자기 접두어 캐시 조회 · cors 프리캐시 · opaque 가드 · 캐시명 v5.0.3 (S10)
    sw.js — 발전설비 PWA Service Worker
-   MANMIN-Ver5.0  ·  NFTC 602 / NFPC 602
+   MANMIN-Ver5.1  ·  NFTC 602 / NFPC 602
    Cache-First (정적) + Network-First (Navigate)
 
    2026-08-31 — 캐시 버전 v3.1 → v5.0
@@ -31,8 +32,8 @@ const mmMatch = (req, opt) => caches.keys()
   .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
   .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
 
-const CACHE_S = 'genset-static-v5.0.7';   /* 정적 캐시 */
-const CACHE_F = 'genset-fonts-v5.0.7';    /* 폰트 캐시 */
+const CACHE_S = 'genset-static-v5.1.0';   /* 정적 캐시 */
+const CACHE_F = 'genset-fonts-v5.1.0';    /* 폰트 캐시 */
 
 const PRECACHE = [
   './',
@@ -71,6 +72,8 @@ self.addEventListener('activate', e => {
 /* ── fetch ── */
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
+  /* v5.1.0 — 사용자 매뉴얼(/manual/)은 온라인 전용 · 캐시하지 않음 */
+  if (url.pathname.indexOf('/manual/') !== -1) return;
 
   /* 폰트 → Cache-First */
   if (FONT_HOSTS.some(h => url.hostname.includes(h))) {
