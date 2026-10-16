@@ -19,8 +19,8 @@ window.__help=(id,i)=>{openHelp();helpTab(id,document.querySelectorAll('.hm-tab'
 window.__judge=(fl,tun)=>{__tab(2);__set({'j-floors':fl,'j-tunnel':!!tun,'j-bsmt':0});onFloorChange();};`;
 const EXA="__ex()";
 const SHOTS=[
- {id:'s01_overview',pre:EXA+";window.scrollTo(0,0)",clip:'viewport',m:[['nth:.tab-btn|0','작업 탭 5개'],['.mm-manual-btn','📘 매뉴얼'],['.sum-bar','요약 바'],['.link-banner','타 계산기 연동 띠'],['.gen-hero','필요 용량 GP']]},
- {id:'s02_header',clip:'.site-header',m:[['.hdr-h1','도구 이름 · Ver-5.1'],['.mm-manual-btn','📘 매뉴얼'],['.hdr-right','KDS 31 60 20 · NFTC 103 2.9 · NFPC 602'],['.tab-bar-wrap','탭 5개']]},
+ {id:'s01_overview',pre:EXA+";window.scrollTo(0,0)",clip:'viewport',m:[['nth:.tab-btn|0','작업 탭 5개'],['#mm-manual-btn','📘 매뉴얼 — 탭 막대 끝'],['.sum-bar','요약 바'],['.link-banner','타 계산기 연동 띠'],['.gen-hero','필요 용량 GP']]},
+ {id:'s02_header',clip:'.site-header',m:[['.hdr-h1','도구 이름 · Ver-5.1'],['#mm-manual-btn','📘 매뉴얼 — 탭 막대 끝'],['.hdr-right','KDS 31 60 20 · NFTC 103 2.9 · NFPC 602'],['.tab-bar-wrap','탭 5개']]},
  {id:'s03_input',clip:'box:소방 부하 입력',m:[['up:1|.bh-indigo','옥내소화전 — 전동기'],['up:1|.bh-green','스프링클러 — 전동기'],['up:1|.bh-amber','제연 — 전동기'],['up:1|.bh-energy','기타 — 전동기 이외']]},
  {id:'s04_coef',clip:'box:발전기 설계 계수',m:[['nth:code.fml.navy|1','식 (4.1-1)'],['up:1|#gp-a','a 입력용량 계수'],['up:1|#gp-c','c 기동계수'],['up:2|#gp-k','k 전압강하계수'],['up:2|#gp-pl','PL (0 = 자동)'],['up:2|#gp-ef','효율 × 역률'],['up:2|#pf','간이식(참고)'],['up:1|#gen-type','발전기 형식'],['up:1|#hold-time','유지시간'],['.calc-btn','필요 용량 산정']]},
  {id:'s05_hero',clip:'.gen-hero',m:[['#res-kva','GP (kVA)'],['#res-kva-sub','대입식']]},

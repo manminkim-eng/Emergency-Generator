@@ -8,7 +8,7 @@ import os, sys, json
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from manual_engine import fig, T, render, B, MARKS
 
-VER, REL, DATE = 'Ver-5.1', 'v5.1.0', '2026-10-16'
+VER, REL, DATE = 'Ver-5.1', 'v5.1.1', '2026-10-16'
 PDF = '비상발전기용량산정계산서_사용자매뉴얼_Ver-5.1.pdf'
 APP_URL = 'https://manminkim-eng.github.io/Emergency-Generator/'
 APP = '비상발전기 용량 산정 계산서'
@@ -94,7 +94,7 @@ S_.append(f"""<section class="ch" id="ch2"><h2><span class="n">02</span>1분 따
 S_.append(f"""<section class="ch" id="ch3"><h2><span class="n">03</span>화면별 기능</h2>
 <h3 id="s3-1">3-1. 머리 · 매뉴얼</h3>
 {F('s02_header', '머리')}
-<p>「📘 매뉴얼」은 이 문서를 새 창으로 엽니다(온라인 전용). 오른쪽은 적용 기준입니다.</p>
+<p>탭 막대 오른쪽 끝의 「📘 매뉴얼」은 이 문서를 새 창으로 엽니다(온라인 전용 — 인터넷 연결이 없으면 안내만 표시). 오른쪽은 적용 기준입니다.</p>
 <h3 id="s3-2">3-2. 소방 부하 입력</h3>
 {F('s03_input', '소방 부하 입력')}
 <p>옥내소화전 · 스프링클러 · 제연의 주펌프 · 충압펌프 · 팬 칸은 <b>전동기 부하</b>로, 「기타 소방부하」 칸(자탐 · 방송 · 비상조명 · 유도등 · 기타)은 <b>전동기 이외 부하</b>로 계산합니다. 다른 MANMIN 계산기에서 URL 파라미터로 넘어오면 위쪽 연동 띠에 수신 표시가 뜹니다.</p>
@@ -225,12 +225,13 @@ S_.append(f"""<section class="ch" id="ch5"><h2><span class="n">05</span>실무 �
  ['직입 기동이면 너무 커요', '최대 전동기의 기동방식이 지배합니다 — Y-Δ · VVVF · 리액터 기동 검토(3-5)'],
  ['두 펌프가 동시에 기동해요', 'PL에 두 전동기 kW의 합을 입력'],
  ['겸용 발전기예요', '이 도구는 소방부하만 계산 — 비상부하를 별도로 더하십시오(2.9.3.8)'],
- ['화면이 예전 판이에요', '새로 고침(Ctrl+F5) — v5.1.0부터 캐시 이름이 genset-*-v5.1.0입니다'],
+ ['화면이 예전 판이에요', '새로 고침(Ctrl+F5) — v5.1.1부터 캐시 이름이 genset-*-v5.1.1입니다'],
 ], ['증상', '해결']))}
 </section>""")
 S_.append(f"""<section class="ch" id="ch6"><h2><span class="n">부록</span></h2>
 <h3 id="a1">A1. 버전 변경 내역</h3>
 {K(T([
+ [f'Ver-5.1 · v5.1.1 ({DATE})', '「📘 매뉴얼」 버튼을 머리에서 탭 막대 오른쪽 끝으로 옮김 · 절대주소 · 오프라인 안내 · sw genset-*-v5.1.1'],
  [f'Ver-5.1 · v5.1.0 ({DATE})', 'KDS 식 (4.1-1) 주 산정식 · 설비별 비상전원 시간 · NFTC / NFPC 602 판 번호 정정(<a href="#s4-9">4-9</a>) · 「📘 매뉴얼」 · sw genset-*-v5.1.0'],
  ['Ver-5.0 (2026-08-31 ~ 09-05)', 'MANMIN 디자인 통일 · A4 규격 · JPG 저장 · sw 정비(v5.0.1 ~ 5.0.7)'],
 ], ['버전', '내용']))}
