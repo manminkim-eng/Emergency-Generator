@@ -1,5 +1,5 @@
 {
-  "name": "발전설비 — 비상발전기 용량 산정",
+  "name": "MANMIN 소방 · 비상발전기 용량 산정 계산서",
   "short_name": "발전설비",
   "description": "NFTC 602 / NFPC 602 비상발전기 필요 용량(kVA) 자동 산정 — MANMIN-Ver3.0",
   "start_url": "./index.html?pwa=1",
@@ -7,19 +7,62 @@
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#0d1c30",
-  "theme_color": "#0f2744",
+  "theme_color": "#15803d",
   "lang": "ko",
   "dir": "ltr",
-  "categories": ["utilities", "productivity"],
+  "categories": [
+    "utilities",
+    "productivity"
+  ],
   "icons": [
-    { "src": "./icons/icon-72x72.png",   "sizes": "72x72",   "type": "image/png", "purpose": "any" },
-    { "src": "./icons/icon-96x96.png",   "sizes": "96x96",   "type": "image/png", "purpose": "any" },
-    { "src": "./icons/icon-128x128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
-    { "src": "./icons/icon-144x144.png", "sizes": "144x144", "type": "image/png", "purpose": "any" },
-    { "src": "./icons/icon-152x152.png", "sizes": "152x152", "type": "image/png", "purpose": "any" },
-    { "src": "./icons/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "./icons/icon-384x384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
-    { "src": "./icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "./icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
   ],
   "shortcuts": [
     {
@@ -27,14 +70,24 @@
       "short_name": "발전설비",
       "description": "비상발전기 용량 산정 바로 시작",
       "url": "./index.html?tab=calc&pwa=1",
-      "icons": [{ "src": "./icons/icon-192x192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "./icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "부하 목록",
       "short_name": "부하목록",
       "description": "소방부하 목록표 탭",
       "url": "./index.html?tab=load&pwa=1",
-      "icons": [{ "src": "./icons/icon-192x192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "./icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ],
   "screenshots": [
