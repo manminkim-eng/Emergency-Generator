@@ -1,5 +1,5 @@
 {
-  "name": "MANMIN 소방 · 비상발전기 용량 산정 계산서",
+  "name": "MANMIN 발전설비",
   "short_name": "발전설비",
   "description": "NFTC 602 / NFPC 602 비상발전기 필요 용량(kVA) 자동 산정 — MANMIN-Ver3.0",
   "start_url": "./index.html?pwa=1",
