@@ -1,4 +1,5 @@
 /* ════════════════════════════════════════════════
+   v6.1.0 (2026-11-12) — 건물개요 공통 원본 MM-PROJECT v1.2 새로 넣음(사업명(공사명) · 작성자(설계자) · 지상층(유지시간 판정) · 정밀검토 B6 · 작업지시서 §25-6-77) · 판 6.1 · 캐시명 v6.1.0 (종전 genset-static-v5.1.8 · genset-fonts-v5.1.8)
    v5.1.1 회차 2026-10-16 — 「📘 매뉴얼」 헤더 → 탭 막대 오른쪽 끝(작업지시서 §4) · 절대주소 · 오프라인 안내 · 캐시명 v5.1.1
    v5.1.0 회차 2026-10-16 — KDS 31 60 20 식 (4.1-1) 주 산정식 · 설비별 유지시간 · NFTC 602 공고번호 정정 · 매뉴얼(/manual/ 캐시 제외) · 캐시명 v5.1.0
    S9 회차 2026-09-05 — R28 JPG v5.5 소제목 동반 이관 동반 캐시명 v5.0.7
@@ -7,7 +8,7 @@
    S2 회차 2026-09-04 — index 소급(R1·R21·R26 등) 동반 캐시명 v5.0.4
    R25 회차 2026-09-04 — 자기 접두어 캐시 조회 · cors 프리캐시 · opaque 가드 · 캐시명 v5.0.3 (S10)
    sw.js — 발전설비 PWA Service Worker
-   MANMIN-Ver5.1  ·  NFTC 602 / NFPC 602
+   MANMIN-Ver6.1  ·  NFTC 602 / NFPC 602
    Cache-First (정적) + Network-First (Navigate)
 
    2026-08-31 — 캐시 버전 v3.1 → v5.0
@@ -33,8 +34,8 @@ const mmMatch = (req, opt) => caches.keys()
   .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
   .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
 
-const CACHE_S = 'genset-static-v5.1.8';   /* 정적 캐시 */
-const CACHE_F = 'genset-fonts-v5.1.8';    /* 폰트 캐시 */
+const CACHE_S = 'genset-static-v6.1.0';   /* 정적 캐시 */
+const CACHE_F = 'genset-fonts-v6.1.0';    /* 폰트 캐시 */
 
 const PRECACHE = [
   './',
