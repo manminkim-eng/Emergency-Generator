@@ -12,5 +12,5 @@ for f in sorted(glob.glob(raw+'/s*.png')):
 shutil.copy(raw+'/_marks.json',M+'/images/_marks.json')
 PY
 MANUAL_DIR="$M" python3 gen_manual_gen.py
-node pdf_gen.js "$M" 비상발전기용량산정계산서_사용자매뉴얼_Ver-5.1.pdf "비상발전기 용량 산정 계산서 사용자 매뉴얼 Ver-5.1"
+node pdf_gen.js "$M" 비상발전기용량산정계산서_사용자매뉴얼_Ver-6.1.pdf "비상발전기 용량 산정 계산서 사용자 매뉴얼 Ver-6.1"
 node audit_responsive.js "$M/index.html" > "$RAW/_audit.json"

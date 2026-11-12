@@ -5,7 +5,13 @@
   "plAuto": 22,
   "sumP": 4.705882352941177,
   "GP": 153.3519705882353,
-  "plClamped": false
+  "plClamped": false,
+  "vfKw": 0,
+  "harmKw": 0,
+  "lam": 2.5,
+  "pBase": 4.705882352941177,
+  "pHarm": 0,
+  "pVf": 0
  },
  "D": {
   "sumPm": 70.9,
@@ -13,7 +19,13 @@
   "plAuto": 22,
   "sumP": 4.705882352941177,
   "GP": 293.7119705882353,
-  "plClamped": false
+  "plClamped": false,
+  "vfKw": 0,
+  "harmKw": 0,
+  "lam": 2.5,
+  "pBase": 4.705882352941177,
+  "pHarm": 0,
+  "pVf": 0
  },
  "V": {
   "sumPm": 70.9,
@@ -21,7 +33,27 @@
   "plAuto": 22,
   "sumP": 4.705882352941177,
   "GP": 135.8069705882353,
-  "plClamped": false
+  "plClamped": false,
+  "vfKw": 0,
+  "harmKw": 0,
+  "lam": 2.5,
+  "pBase": 4.705882352941177,
+  "pHarm": 0,
+  "pVf": 0
+ },
+ "VF": {
+  "sumPm": 48.9,
+  "PL": 18.5,
+  "plAuto": 18.5,
+  "sumP": 87.98529411764706,
+  "GP": 204.28682352941178,
+  "plClamped": false,
+  "vfKw": 22,
+  "harmKw": 2,
+  "lam": 2.5,
+  "pBase": 2.3529411764705883,
+  "pHarm": 5.882352941176471,
+  "pVf": 79.75
  },
  "S": {
   "eff": 89.88000000000001,
