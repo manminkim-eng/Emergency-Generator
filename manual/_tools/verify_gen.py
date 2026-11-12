@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """비상발전기 v5.1.0 계산 엔진 독립 검증 — usage: python3 verify_gen.py <index.html> [--inject]
-index.html 의 window.GENENG 를 node 로 실행해, 아래 파이썬 독립 구현(KDS 32 20 20:2024 식 4.1-1 — v6.1.2 opt 인자(인버터 · 고조파) 없는 호출은 종전과 같음 · 설비별 유지시간)과 전수 대조한다.
+index.html 의 window.GENENG 를 node 로 실행해, 아래 파이썬 독립 구현(KDS 32 20 20:2024 식 4.1-1 — v6.1.2 opt 인자(인버터 · 고조파) 없는 호출은 종전과 같음 · v6.1.4 opt 전체(인버터 4.1-4 · 고조파 4.1-5 · UPS 4.1-3) 독립 구현 대조 · 설비별 유지시간)과 전수 대조한다.
 --inject : 엔진에 오류 4종을 주입해 검증기가 잡아내는지 확인(잡지 못하면 실패)."""
 import sys, re, json, subprocess, itertools, tempfile, os
 src = open(sys.argv[1], encoding='utf-8').read()
@@ -12,6 +12,18 @@ def py_kds(motors, non, ef, a, c, k, pl):
     PL = min(pl, sPm) if pl > 0 else auto
     sP = non / ef if ef > 0 else 0
     return dict(sumPm=sPm, PL=PL, sumP=sP, GP=(sP + (sPm - PL) * a + PL * a * c) * k)
+
+def py_kds_opt(motors, non, ef, a, c, k, pl, o):
+    vf = o.get('vf', []); lam = o['lam'] if o.get('lam', 0) > 0 else 2.5
+    harm = min(max(o.get('harmKw', 0), 0), non)
+    dm = [v for i, v in enumerate(motors) if not (i < len(vf) and vf[i])]
+    vfKw = sum(v for i, v in enumerate(motors) if i < len(vf) and vf[i])
+    sPm = sum(dm); auto = max(dm) if dm else 0
+    PL = min(pl, sPm) if pl > 0 else auto
+    u = max(o.get('upsKva', 0), 0); ue = o['upsEff'] if o.get('upsEff', 0) > 0 else 0.9; uc = o['upsChg'] if o.get('upsChg', -1) >= 0 else 10
+    pU = u / ue * lam + u * uc / 100 if u > 0 else 0
+    sP = ((non - harm) / ef + harm / ef * lam if ef > 0 else 0) + vfKw * a * lam + pU
+    return dict(sumPm=sPm, PL=PL, sumP=sP, GP=(sP + (sPm - PL) * a + PL * a * c) * k, pUps=pU)
 
 def py_hold(fl, high, u50, tun):
     is50 = fl >= 50 or u50; isH = is50 or fl >= 30 or high
@@ -27,11 +39,14 @@ motorsets = [[15,2.2,0,22,2.2,0,18.5,11,0],[7.5,0,0,0,0,0,0,0,0],[0]*9,[30,3.7,1
 cases = []
 for ms, non, ef, a, c, k, pl in itertools.product(motorsets, [0,1.5,3,12.4], [0.85,0.72,1.0], [1.38,1.45], [6,2,1.5,3,3.9,4.8], [1.07,1.10,1.13], [0,22,200]):
     cases.append(('k', [ms, non, ef, a, c, k, pl]))
+for ms, non, ups, ue, uc, lam, vfm, hk in itertools.product(motorsets[:2] + motorsets[3:4], [0, 3, 12.4], [0, 5, 20, 100], [0.9, 0.95], [6, 10], [2.5, 1.5], [0, 1], [0, 1.5]):
+    o = {'vf': [bool(vfm) and i == 0 for i in range(9)], 'harmKw': hk, 'lam': lam, 'upsKva': ups, 'upsEff': ue, 'upsChg': uc}
+    cases.append(('o', [ms, non, 0.85, 1.45, 2, 1.10, 0, o]))
 for fl, h, u, t in itertools.product([1,5,10,11,12,29,30,31,49,50,51,80], [False,True], [False,True], [False,True]):
     cases.append(('h', [fl, 0, h, u, t]))
 
 def run(eng):
-    js = eng + '\nconst C=' + json.dumps(cases) + ';\nconsole.log(JSON.stringify(C.map(([t,a])=>t==="k"?GENENG.kds(...a):GENENG.hold(...a))));'
+    js = eng + '\nconst C=' + json.dumps(cases) + ';\nconsole.log(JSON.stringify(C.map(([t,a])=>t==="h"?GENENG.hold(...a):GENENG.kds(...a))));'
     js = js.replace('window.GENENG', 'var GENENG', 1)
     with tempfile.NamedTemporaryFile('w', suffix='.js', delete=False, encoding='utf-8') as f: f.write(js); p = f.name
     try: return json.loads(subprocess.check_output(['node', p]))
@@ -40,8 +55,8 @@ def run(eng):
 def compare(out):
     bad = 0; n = 0
     for (t, a), o in zip(cases, out):
-        if t == 'k':
-            e = py_kds(*a)
+        if t in ('k', 'o'):
+            e = py_kds(*a) if t == 'k' else py_kds_opt(*a)
             for key in e:
                 n += 1
                 if abs(e[key] - o[key]) > 1e-9: bad += 1
@@ -61,6 +76,8 @@ if '--inject' in sys.argv:
         'PL 자동값 = ΣPm': ('var PL = plIn > 0 ? Math.min(plIn, sumPm) : plAuto;', 'var PL = plIn > 0 ? Math.min(plIn, sumPm) : sumPm;'),
         'ΣP = kW × 효율역률(곱)': ('(nonMotorKw - harmKw) / ef', '(nonMotorKw - harmKw) * ef'),
         '50층 경계 49층': ('floors >= 50 ||', 'floors >= 49 ||'),
+        'UPS 충전용량 누락': ('+ upsKva * upsChg / 100 : 0', ': 0'),
+        'UPS λ 누락': ('upsKva / upsEff * lam', 'upsKva / upsEff'),
     }
     res['inject'] = {}
     for name, (x, y) in inj.items():

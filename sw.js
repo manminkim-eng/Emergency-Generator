@@ -1,4 +1,5 @@
 /* ════════════════════════════════════════════════
+   v6.1.4 (2026-11-12) — KDS 32 20 20 : 2024 UPS 입력용량 식 (4.1-3) 칸(출력 ÷ 효율 × λ + 축전지 충전 6 ~ 10 %, 출력 0 이면 종전과 같음) · 표 4.1-1 허용전압강하계수 고르기(발전기 정수 · 허용 전압강하율) · verify_gen.py UPS · 옵션 대조(정밀검토 KDS 남은 2건) · 작업지시서 §25-6-83 · 캐시명 v6.1.4 (종전 v6.1.3)
    v6.1.3 (2026-11-12) — Pretendard CSS SRI(integrity · crossorigin)(정밀검토 C2) — 화면 · 계산 · 인쇄 불변 · 작업지시서 §25-6-82 · 캐시명 v6.1.3 (종전 v6.1.2)
    v6.1.2 (2026-11-12) — 근거 코드 바로잡음 「KDS 31 60 20 : 2021」(없는 코드) → KDS 32 20 20 : 2024 예비전원설비 · 2024 개정 반영 — 인버터(VVVF) 전동기 식 (4.1-4) · LED 등 고조파 부하 식 (4.1-5) λ 2.5 선택 칸(고르지 않으면 종전과 같은 결과) · 개정 메모 칸(정밀검토 B12) · 작업지시서 §25-6-81 · 판 6.1 · 캐시명 v6.1.2 (종전 v6.1.1)
    v6.1.1 (2026-11-12) — 건물개요 공통 원본 MM-PROJECT v1.2 → v1.3(불러오기 창 표 칸 모양 고정 — 도구 CSS 가 새지 않음 · 저장값 같음, 정밀검토 C10) · 쓰지 않는 Noto Sans KR 구글 글꼴 불러오기 제거(실측으로 글자 하나도 안 쓰임 — 글꼴 지정은 그대로, 정밀검토 C4) · 작업지시서 §25-6-80 · 판 6.1 · 캐시명 v6.1.1 (종전 v6.1.0)
@@ -37,8 +38,8 @@ const mmMatch = (req, opt) => caches.keys()
   .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
   .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
 
-const CACHE_S = 'genset-static-v6.1.3';   /* 정적 캐시 */
-const CACHE_F = 'genset-fonts-v6.1.3';    /* 폰트 캐시 */
+const CACHE_S = 'genset-static-v6.1.4';   /* 정적 캐시 */
+const CACHE_F = 'genset-fonts-v6.1.4';    /* 폰트 캐시 */
 
 const PRECACHE = [
   './',

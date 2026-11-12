@@ -1161,8 +1161,13 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
           <div>
             <label class="lbl">k — 허용전압강하계수</label>
             <div class="inp-wrap">
-              <input class="inp" id="gp-k" type="number" min="0.8" max="1.5" step="0.01" value="1.10" oninput="calcAll()" inputmode="decimal"/>
+              <input class="inp" id="gp-k" type="number" min="0.8" max="1.5" step="0.01" value="1.10" oninput="kTblReset();calcAll()" inputmode="decimal"/>
               <span class="inp-unit">—</span>
+            </div>
+            <div style="display:flex;gap:6px;margin-top:6px;align-items:center;flex-wrap:wrap;font-size:11px;color:#64748b;">
+              <span>표 4.1-1</span>
+              <select class="inp" id="k-xd" onchange="kFromTbl()" style="width:auto;padding:4px 6px;font-size:11px;" aria-label="발전기 정수(%)"><option value="">발전기 정수 %</option><option>20</option><option>21</option><option>22</option><option>23</option><option>24</option><option>25</option></select>
+              <select class="inp" id="k-dv" onchange="kFromTbl()" style="width:auto;padding:4px 6px;font-size:11px;" aria-label="허용 전압강하율(%)"><option value="">허용 전압강하율 %</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option></select>
             </div>
           </div>
         </div>
@@ -1196,7 +1201,31 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
                 <span class="inp-unit">—</span>
               </div>
             </div>
-            <div class="tbl-note" style="align-self:end;">▸ 발전기로 들어가는 고조파 저감장치를 둔 경우 기기별 가중값을 낮춰 적용할 수 있음(KDS 32 20 20 4.1(6)④) · 인버터 전동기의 효율 × 역률은 1 ÷ a 로 봄 · UPS(식 4.1-3)는 별도 산정</div>
+            <div class="tbl-note" style="align-self:end;">▸ 발전기로 들어가는 고조파 저감장치를 둔 경우 기기별 가중값을 낮춰 적용할 수 있음(KDS 32 20 20 4.1(6)④) · 인버터 전동기의 효율 × 역률은 1 ÷ a 로 봄</div>
+          </div>
+          <div style="font-size:11px;font-weight:700;color:#374151;margin-top:10px;">UPS(무정전전원장치) — ΣP 에 UPS 출력 ÷ UPS 효율 × λ + 축전지 충전용량으로 더함(식 4.1-3) · 출력 0 이면 제외</div>
+          <div class="g-3" style="margin-top:6px;">
+            <div>
+              <label class="lbl">UPS 출력</label>
+              <div class="inp-wrap">
+                <input class="inp" id="ups-kva" type="number" min="0" step="0.1" value="0" oninput="calcAll()" inputmode="decimal"/>
+                <span class="inp-unit">kVA</span>
+              </div>
+            </div>
+            <div>
+              <label class="lbl">UPS 효율 <span style="font-weight:600;color:#94a3b8;">(MANMIN 참고값 0.90)</span></label>
+              <div class="inp-wrap">
+                <input class="inp" id="ups-eff" type="number" min="0.5" max="1" step="0.01" value="0.90" oninput="calcAll()" inputmode="decimal"/>
+                <span class="inp-unit">—</span>
+              </div>
+            </div>
+            <div>
+              <label class="lbl">축전지 충전용량 <span style="font-weight:600;color:#94a3b8;">(UPS 용량의 6 ~ 10 %)</span></label>
+              <div class="inp-wrap">
+                <input class="inp" id="ups-chg" type="number" min="6" max="10" step="0.5" value="10" oninput="calcAll()" inputmode="decimal"/>
+                <span class="inp-unit">%</span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="tbl-note" style="margin-top:8px;">▸ 펌프 · 팬(옥내소화전 · 스프링클러 · 제연 칸)은 전동기 ΣPm(인버터 제어로 고른 것은 ΣP), 기타 소방부하(자탐 · 방송 · 비상조명 · 유도등 · 기타)는 전동기 이외 ΣP(kVA = kW ÷ 효율 × 역률)로 계산합니다 · 동시에 기동하는 전동기가 있으면 PL에 그 합을 넣으십시오(KDS 4.1(6)) · k가 명확하지 않으면 1.07 ~ 1.13(표 4.1-1)</div>
@@ -1524,7 +1553,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
           발전기 용량 산정 기준 (KDS 32 20 20)
         </div>
         <div class="box-bd">
-          <div class="info-box" style="margin-top:10px;border:1.5px solid #c4b5fd;background:#f5f3ff;border-radius:8px;padding:10px 12px;"><div class="info-title mm-law-memo">📝 개정 메모 (2026. 11. 12. 확인)</div><div style="font-size:12px;line-height:1.6;color:#374151;">발전기 용량 산정식의 근거는 국가건설기준 <strong>KDS 32 20 20 예비전원설비 설계기준</strong>(2024-08-22 개정 · 국가건설기준센터)입니다 — 종전 표기 「KDS 32 20 20 : 2024」은 존재하지 않는 코드라 바로잡았습니다(v6.1.2). 2024 개정 반영: ① 인버터(VVVF) 제어 전동기는 ΣPm 에서 빼고 식 (4.1-4)로 ΣP 에 더함 ② LED 램프 등 고조파 발생 부하는 식 (4.1-5) — 특성을 모르면 가중값 λ 2.5 ③ 표 4.1-1 허용전압강하계수 일부 값 정정(이 도구는 k 직접 입력 · 기본 1.10). 주 산정식 (4.1-1)과 a · c · k 추천값은 그대로입니다. 인버터 · 고조파 칸을 고르지 않으면 종전과 같은 결과입니다.</div></div>
+          <div class="info-box" style="margin-top:10px;border:1.5px solid #c4b5fd;background:#f5f3ff;border-radius:8px;padding:10px 12px;"><div class="info-title mm-law-memo">📝 개정 메모 (2026. 11. 12. 확인)</div><div style="font-size:12px;line-height:1.6;color:#374151;">발전기 용량 산정식의 근거는 국가건설기준 <strong>KDS 32 20 20 예비전원설비 설계기준</strong>(2024-08-22 개정 · 국가건설기준센터)입니다 — 종전 표기 「KDS 32 20 20 : 2024」은 존재하지 않는 코드라 바로잡았습니다(v6.1.2). 2024 개정 반영: ① 인버터(VVVF) 제어 전동기는 ΣPm 에서 빼고 식 (4.1-4)로 ΣP 에 더함 ② LED 램프 등 고조파 발생 부하는 식 (4.1-5) — 특성을 모르면 가중값 λ 2.5 ③ 표 4.1-1 허용전압강하계수 일부 값 정정 — 발전기 정수 · 허용 전압강하율을 고르면 표 값이 k 칸에 들어감(직접 입력 · 기본 1.10 그대로, v6.1.4) ④ UPS 입력용량 식 (4.1-3) — UPS 출력 ÷ 효율 × λ + 축전지 충전용량(6 ~ 10 %) 칸(v6.1.4, 출력 0 이면 제외). 주 산정식 (4.1-1)과 a · c · k 추천값은 그대로입니다. 인버터 · 고조파 칸을 고르지 않으면 종전과 같은 결과입니다.</div></div>
           <div class="law-box" style="margin-bottom:10px;">
             <div class="law-ref">산정식</div>
             <div class="law-text">GP = [ΣP + (ΣPm − PL) × a + (PL × a × c)] × k [kVA] — 4.1(6) 식 (4.1-1)</div>
@@ -1761,8 +1790,8 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
           <div class="hm-item">ΣPm : 전동기 부하용량 합계 [kW] (옥내 · SP · 제연 항목)</div>
           <div class="hm-item">PL : 기동용량이 가장 큰 전동기 [kW] — 0 입력 시 최대값 자동 · 동시 기동이면 합 입력</div>
           <div class="hm-item">a : 고효율 1.38 · 표준형 1.45 &nbsp;|&nbsp; c : 직입 6 · Y-Δ 2 · VVVF 1.5 · 리액터 3 / 3.9 / 4.8</div>
-          <div class="hm-item">k : 허용전압강하계수 — 표 4.1-1 · 불명확 시 1.07 ~ 1.13 (기본 1.10)</div>
-          <div class="hm-item">인버터 전동기(식 4.1-4) · LED 등 고조파 부하(식 4.1-5)는 「인버터 · 고조파 부하」 칸에서 선택 · UPS 부하(식 4.1-3)는 포함하지 않음 — 해당 시 별도 산정</div>
+          <div class="hm-item">k : 허용전압강하계수 — 표 4.1-1(발전기 정수 · 허용 전압강하율을 고르면 자동) · 불명확 시 1.07 ~ 1.13 (기본 1.10)</div>
+          <div class="hm-item">인버터 전동기(식 4.1-4) · LED 등 고조파 부하(식 4.1-5)는 「인버터 · 고조파 부하」 칸에서 선택 · UPS 부하(식 4.1-3)는 UPS 출력 · 효율 · 충전용량 칸에 넣으면 ΣP 에 더함</div>
         </div>
         <div class="hm-card">
           <div class="hm-card-title">계산 예시 (Y-Δ · 표준형 · k 1.10 · 효율 × 역률 0.85)</div>
@@ -2049,10 +2078,14 @@ window.GENENG = {
     var pBase = ef > 0 ? (nonMotorKw - harmKw) / ef : 0;
     var pHarm = ef > 0 ? harmKw / ef * lam : 0;
     var pVf = vfKw * a * lam;
-    var sumP = pBase + pHarm + pVf;
+    /* v6.1.4 — 식 (4.1-3) UPS 입력용량 = UPS 출력(kVA) ÷ UPS 효율 × λ + 축전지 충전용량(UPS 용량 × 6 ~ 10 %) · upsKva 0 이면 0 */
+    var upsKva = Math.max(opt.upsKva || 0, 0), upsEff = opt.upsEff > 0 ? opt.upsEff : 0.9, upsChg = opt.upsChg >= 0 ? opt.upsChg : 10;
+    var pUps = upsKva > 0 ? upsKva / upsEff * lam + upsKva * upsChg / 100 : 0;
+    var sumP = pBase + pHarm + pVf + pUps;
     var GP = (sumP + (sumPm - PL) * a + PL * a * c) * k;
     return { sumPm: sumPm, PL: PL, plAuto: plAuto, sumP: sumP, GP: GP, plClamped: plIn > sumPm && sumPm > 0,
-             vfKw: vfKw, harmKw: harmKw, lam: lam, pBase: pBase, pHarm: pHarm, pVf: pVf };
+             vfKw: vfKw, harmKw: harmKw, lam: lam, pBase: pBase, pHarm: pHarm, pVf: pVf,
+             upsKva: upsKva, upsEff: upsEff, upsChg: upsChg, pUps: pUps };
   },
   simple: function (total, df, mf, pf) { return { eff: total * df * mf, S: total * df * mf / pf }; },
   /* 비상전원 작동시간 — 설비별 (LawMCP 원문 대조 2026-10-16) */
@@ -2074,6 +2107,15 @@ window.GENENG = {
     return { rows: rows, gen: gen, isHigh: isHigh, is50: is50 };
   }
 };
+
+/* ── KDS 32 20 20 : 2024 표 4.1-1 발전기 허용전압강하계수 k — 행: 허용 전압강하율 15 ~ 20 % · 열: 발전기 정수 20 ~ 25 % ── */
+var K411 = { 15:[1.13,1.19,1.25,1.30,1.36,1.42], 16:[1.05,1.10,1.16,1.21,1.26,1.31], 17:[0.98,1.03,1.07,1.12,1.17,1.22],
+             18:[0.91,0.96,1.00,1.05,1.09,1.14], 19:[0.85,0.90,0.94,0.98,1.02,1.07], 20:[0.80,0.84,0.88,0.92,0.96,1.00] };
+function kFromTbl() {
+  var xd = document.getElementById('k-xd').value, dv = document.getElementById('k-dv').value;
+  if (xd && dv && K411[dv]) { document.getElementById('gp-k').value = K411[dv][+xd - 20].toFixed(2); calcAll(); }
+}
+function kTblReset() { var a = document.getElementById('k-xd'), b = document.getElementById('k-dv'); if (a) a.value = ''; if (b) b.value = ''; }
 
 /* ── 메인 계산 ── */
 function calcAll() {
@@ -2100,7 +2142,7 @@ function calcAll() {
   var harmKw = (document.getElementById('hm-light') && document.getElementById('hm-light').checked ? nv('oth-light') : 0)
              + (document.getElementById('hm-sign') && document.getElementById('hm-sign').checked ? nv('oth-sign') : 0);
   var glam = nv('gp-lam') || 2.5;
-  var K = GENENG.kds(motors, othSum, gef, ga, gc, gk, nv('gp-pl'), { vf: vfSel, harmKw: harmKw, lam: glam });
+  var K = GENENG.kds(motors, othSum, gef, ga, gc, gk, nv('gp-pl'), { vf: vfSel, harmKw: harmKw, lam: glam, upsKva: nv('ups-kva'), upsEff: nv('ups-eff') || 0.9, upsChg: (document.getElementById('ups-chg').value === '' ? 10 : nv('ups-chg')) });
   var SM = GENENG.simple(total, df, mf, pf);
   var effLoad = SM.eff;
   var simpleKva = SM.S;
@@ -2120,7 +2162,7 @@ function calcAll() {
   setText('rd-sum', total.toFixed(2) + ' kW');
   setText('rd-pm', K.sumPm.toFixed(2) + ' kW');
   setText('rd-pl', K.PL.toFixed(2) + ' kW' + (nv('gp-pl') > 0 ? (K.plClamped ? ' (ΣPm으로 제한)' : ' (직접 입력)') : ' (최대 자동)'));
-  setText('rd-p', K.sumP.toFixed(2) + ' kVA' + ((K.vfKw > 0 || K.harmKw > 0) ? ' (인버터 ' + K.pVf.toFixed(2) + ' · 고조파 ' + K.pHarm.toFixed(2) + ' 포함)' : ''));
+  setText('rd-p', K.sumP.toFixed(2) + ' kVA' + ((K.vfKw > 0 || K.harmKw > 0 || K.upsKva > 0) ? ' (인버터 ' + K.pVf.toFixed(2) + ' · 고조파 ' + K.pHarm.toFixed(2) + (K.upsKva > 0 ? ' · UPS ' + K.pUps.toFixed(2) : '') + ' 포함)' : ''));
   setText('rd-ack', 'a ' + ga.toFixed(2) + ' · c ' + gc + ' · k ' + gk.toFixed(2));
   setText('rd-gp', reqKva.toFixed(1) + ' kVA');
   setText('rd-adj', 'DF ' + df.toFixed(2) + ' × MF ' + mf.toFixed(2) + ' ÷ PF ' + pf.toFixed(2));
@@ -2630,7 +2672,7 @@ ${SecHd('Ⅰ-2. 발전기 용량 산정식 (KDS 32 20 20:2024 4.1(6) 식 4.1-1)'
     <tr><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#374151;width:32%;vertical-align:top;">산정식</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#111;font-weight:700;color:#1E3A5F;">GP [kVA] = [ΣP + (ΣPm − PL) × a + (PL × a × c)] × k</td></tr>
     <tr style="background:#f8fafc;"><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#374151;">ΣPm 전동기 부하 합계</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#111;font-weight:700;">${r.K.sumPm.toFixed(2)} kW (옥내소화전 · 스프링클러 · 제연${r.K.vfKw>0?' — 인버터 '+r.K.vfKw.toFixed(2)+' kW 제외':''})</td></tr>
     <tr><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#374151;">PL 최대 기동 전동기</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#111;">${r.K.PL.toFixed(2)} kW</td></tr>
-    <tr style="background:#f8fafc;"><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#374151;">ΣP 비전동기 입력용량</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#111;">${(r.K.vfKw>0||r.K.harmKw>0)?(r.othSum-r.K.harmKw).toFixed(2)+' kW ÷ '+r.ef.toFixed(2)+(r.K.harmKw>0?' + 고조파 '+r.K.harmKw.toFixed(2)+' kW ÷ '+r.ef.toFixed(2)+' × λ '+r.K.lam:'')+(r.K.vfKw>0?' + 인버터 '+r.K.vfKw.toFixed(2)+' kW × a × λ '+r.K.lam:'')+' = '+r.K.sumP.toFixed(2)+' kVA (식 4.1-2 · 4.1-4 · 4.1-5)':r.othSum.toFixed(2)+' kW ÷ '+r.ef.toFixed(2)+' (효율 × 역률) = '+r.K.sumP.toFixed(2)+' kVA'}</td></tr>
+    <tr style="background:#f8fafc;"><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#374151;">ΣP 비전동기 입력용량</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#111;">${(r.K.vfKw>0||r.K.harmKw>0||r.K.upsKva>0)?(r.othSum-r.K.harmKw).toFixed(2)+' kW ÷ '+r.ef.toFixed(2)+(r.K.harmKw>0?' + 고조파 '+r.K.harmKw.toFixed(2)+' kW ÷ '+r.ef.toFixed(2)+' × λ '+r.K.lam:'')+(r.K.vfKw>0?' + 인버터 '+r.K.vfKw.toFixed(2)+' kW × a × λ '+r.K.lam:'')+(r.K.upsKva>0?' + UPS '+r.K.upsKva.toFixed(1)+' kVA ÷ '+r.K.upsEff.toFixed(2)+' × λ '+r.K.lam+' + 충전 '+r.K.upsChg+' %':'')+' = '+r.K.sumP.toFixed(2)+' kVA (식 4.1-2 · 4.1-3 · 4.1-4 · 4.1-5)':r.othSum.toFixed(2)+' kW ÷ '+r.ef.toFixed(2)+' (효율 × 역률) = '+r.K.sumP.toFixed(2)+' kVA'}</td></tr>
     <tr><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#374151;">계수 a · c · k</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#111;">a ${r.a.toFixed(2)} · c ${r.c} · k ${r.k.toFixed(2)}</td></tr>
     <tr style="background:#f8fafc;"><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#374151;">발전기 형식 (NFTC 103 2.9.3.8)</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#111;">${r.genType==='combo'?'소방부하 겸용 — 비상부하 별도 합산 필요':r.genType==='keep'?'소방전원 보존형':'소방전용'}</td></tr>
     <tr><td style="border-right:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#6b7280;">참고 · MANMIN 간이식</td><td style="padding:5px 10px;font-size:7.9pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#6b7280;">S = ${r.total.toFixed(2)} × ${r.df.toFixed(2)} × ${r.mf.toFixed(2)} ÷ ${r.pf.toFixed(2)} = ${r.simpleKva.toFixed(1)} kVA (KDS 식 아님 · 판정 미사용)</td></tr>
