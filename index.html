@@ -10,7 +10,7 @@
 <meta property="og:site_name" content="MANMIN ENGINEERING">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:title" content="비상발전기 용량 산정 계산서 · MANMIN Ver-6.1">
-<meta property="og:description" content="KDS 31 60 20 식 (4.1-1) · NFTC 602 / NFPC 602 비상발전기 필요 용량(kVA) 자동 산정 — MANMIN-Ver6.1">
+<meta property="og:description" content="KDS 32 20 20 식 (4.1-1) · NFTC 602 / NFPC 602 비상발전기 필요 용량(kVA) 자동 산정 — MANMIN-Ver6.1">
 <meta property="og:url" content="https://manminkim-eng.github.io/Emergency-Generator/">
 <meta property="og:image" content="https://manminkim-eng.github.io/Emergency-Generator/og-card.jpg">
 <meta property="og:image:secure_url" content="https://manminkim-eng.github.io/Emergency-Generator/og-card.jpg">
@@ -20,9 +20,9 @@
 <meta property="og:image:alt" content="비상발전기 용량 산정 계산서 · MANMIN Ver-6.1">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="비상발전기 용량 산정 계산서 · MANMIN Ver-6.1">
-<meta name="twitter:description" content="KDS 31 60 20 식 (4.1-1) · NFTC 602 / NFPC 602 비상발전기 필요 용량(kVA) 자동 산정 — MANMIN-Ver6.1">
+<meta name="twitter:description" content="KDS 32 20 20 식 (4.1-1) · NFTC 602 / NFPC 602 비상발전기 필요 용량(kVA) 자동 산정 — MANMIN-Ver6.1">
 <meta name="twitter:image" content="https://manminkim-eng.github.io/Emergency-Generator/og-card.jpg">
-<meta name="description" content="KDS 31 60 20 식 (4.1-1) · NFTC 602 / NFPC 602 비상발전기 필요 용량(kVA) 자동 산정 — MANMIN-Ver6.1"/>
+<meta name="description" content="KDS 32 20 20 식 (4.1-1) · NFTC 602 / NFPC 602 비상발전기 필요 용량(kVA) 자동 산정 — MANMIN-Ver6.1"/>
 <meta name="keywords" content="비상발전기,발전설비,비상전원,NFTC602,소방설계"/>
 <link rel="manifest" href="./manifest.json"/>
 <meta name="theme-color" content="#15803d"/>
@@ -889,11 +889,11 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
   <div class="hdr-inner">
     <div class="hdr-row">
       <div>
-        <div class="hdr-eyebrow">Emergency Generator Capacity · KDS 31 60 20 · NFTC 103 2.9 · NFPC 602</div>
+        <div class="hdr-eyebrow">Emergency Generator Capacity · KDS 32 20 20 · NFTC 103 2.9 · NFPC 602</div>
         <h1 class="hdr-h1">비상발전기 용량 산정 계산서</h1>
         <!-- v5.0-HDR — 부제는 영문 부제·기준(마스터형). 고시·시행일은 우측 근거블록에 있다 -->
         <div class="hdr-sub">
-          Emergency Generator Capacity Calculator · KDS 31 60 20 적용&nbsp;
+          Emergency Generator Capacity Calculator · KDS 32 20 20 적용&nbsp;
           <span class="hdr-manmin">MANMIN · Ver-6.1</span>
         </div>
       </div>
@@ -909,7 +909,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
           <span class="pwa-txt">앱 설치</span>
         </button>
         <div class="hdr-right">
-          <b>KDS 31 60 20</b>
+          <b>KDS 32 20 20</b>
           <div>예비전원설비 설계기준</div>
           <div>NFTC 103 2.9 · NFTC 602</div>
           <div class="accent">NFPC 602 시행 2026.05.04</div>
@@ -1132,10 +1132,10 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
       </div>
     </div>
 
-    <!-- Ⅲ 설계 계수 — v5.1.0: KDS 31 60 20:2021 4.1(6) 식 (4.1-1) 주 산정식 + MANMIN 간이식(참고) -->
+    <!-- Ⅲ 설계 계수 — v5.1.0: KDS 32 20 20:2024 4.1(6) 식 (4.1-1) 주 산정식 + MANMIN 간이식(참고) -->
     <div class="box">
       <div class="box-hd bh-teal">
-        발전기 설계 계수 — KDS 31 60 20 식 (4.1-1)
+        발전기 설계 계수 — KDS 32 20 20 식 (4.1-1)
       </div>
       <div class="box-bd">
         <code class="fml navy" style="margin-bottom:10px;">GP = [ΣP + (ΣPm − PL) × a + (PL × a × c)] × k</code>
@@ -1182,7 +1182,24 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
             </div>
           </div>
         </div>
-        <div class="tbl-note" style="margin-top:8px;">▸ 펌프 · 팬(옥내소화전 · 스프링클러 · 제연 칸)은 전동기 ΣPm, 기타 소방부하(자탐 · 방송 · 비상조명 · 유도등 · 기타)는 전동기 이외 ΣP(kVA = kW ÷ 효율 × 역률)로 계산합니다 · 동시에 기동하는 전동기가 있으면 PL에 그 합을 넣으십시오(KDS 4.1(6)) · k가 명확하지 않으면 1.07 ~ 1.13(표 4.1-1)</div>
+        <div style="margin-top:12px;padding:10px 12px;border:1px solid #dbe4ef;border-radius:8px;background:#f8fafc;">
+          <div style="font-size:11px;font-weight:800;color:#0f766e;margin-bottom:4px;">인버터 · 고조파 부하 (KDS 32 20 20 : 2024 식 4.1-4 · 4.1-5) <span style="font-weight:600;color:#94a3b8;">— 선택 안 하면 종전과 같은 계산</span></div>
+          <div style="font-size:11px;font-weight:700;color:#374151;margin-top:4px;">인버터(VVVF) 제어 전동기 — ΣPm · PL 에서 빼고 ΣP 에 kW × a × λ 로 더함</div>
+          <div style="display:flex;flex-wrap:wrap;"><span class="chk-row" style="display:inline-flex;padding:4px 10px 4px 0;"><input type="checkbox" id="vf-hyd-pump" onchange="calcAll()"/><label for="vf-hyd-pump" style="flex:none;">옥내 주펌프</label></span><span class="chk-row" style="display:inline-flex;padding:4px 10px 4px 0;"><input type="checkbox" id="vf-hyd-charge" onchange="calcAll()"/><label for="vf-hyd-charge" style="flex:none;">옥내 충압</label></span><span class="chk-row" style="display:inline-flex;padding:4px 10px 4px 0;"><input type="checkbox" id="vf-hyd-etc" onchange="calcAll()"/><label for="vf-hyd-etc" style="flex:none;">옥내 기타</label></span><span class="chk-row" style="display:inline-flex;padding:4px 10px 4px 0;"><input type="checkbox" id="vf-spr-pump" onchange="calcAll()"/><label for="vf-spr-pump" style="flex:none;">SP 주펌프</label></span><span class="chk-row" style="display:inline-flex;padding:4px 10px 4px 0;"><input type="checkbox" id="vf-spr-charge" onchange="calcAll()"/><label for="vf-spr-charge" style="flex:none;">SP 충압</label></span><span class="chk-row" style="display:inline-flex;padding:4px 10px 4px 0;"><input type="checkbox" id="vf-spr-etc" onchange="calcAll()"/><label for="vf-spr-etc" style="flex:none;">SP 기타</label></span><span class="chk-row" style="display:inline-flex;padding:4px 10px 4px 0;"><input type="checkbox" id="vf-smk-supply" onchange="calcAll()"/><label for="vf-smk-supply" style="flex:none;">급기팬</label></span><span class="chk-row" style="display:inline-flex;padding:4px 10px 4px 0;"><input type="checkbox" id="vf-smk-exhaust" onchange="calcAll()"/><label for="vf-smk-exhaust" style="flex:none;">배기팬</label></span><span class="chk-row" style="display:inline-flex;padding:4px 10px 4px 0;"><input type="checkbox" id="vf-smk-etc" onchange="calcAll()"/><label for="vf-smk-etc" style="flex:none;">제연 기타</label></span></div>
+          <div style="font-size:11px;font-weight:700;color:#374151;margin-top:4px;">LED 램프 등 고조파 발생 부하 — ΣP 에 kW ÷ (효율 × 역률) × λ 로 더함</div>
+          <div style="display:flex;flex-wrap:wrap;"><span class="chk-row" style="display:inline-flex;padding:4px 10px 4px 0;"><input type="checkbox" id="hm-light" onchange="calcAll()"/><label for="hm-light" style="flex:none;">비상조명</label></span><span class="chk-row" style="display:inline-flex;padding:4px 10px 4px 0;"><input type="checkbox" id="hm-sign" onchange="calcAll()"/><label for="hm-sign" style="flex:none;">유도등</label></span></div>
+          <div class="g-2" style="margin-top:6px;">
+            <div>
+              <label class="lbl">λ — 고조파(THD) 가중값 <span style="font-weight:600;color:#94a3b8;">(특성 모르면 2.5 · KS C IEC 61000-3-6 표 6)</span></label>
+              <div class="inp-wrap">
+                <input class="inp" id="gp-lam" type="number" min="1" max="5" step="0.05" value="2.5" oninput="calcAll()" inputmode="decimal"/>
+                <span class="inp-unit">—</span>
+              </div>
+            </div>
+            <div class="tbl-note" style="align-self:end;">▸ 발전기로 들어가는 고조파 저감장치를 둔 경우 기기별 가중값을 낮춰 적용할 수 있음(KDS 32 20 20 4.1(6)④) · 인버터 전동기의 효율 × 역률은 1 ÷ a 로 봄 · UPS(식 4.1-3)는 별도 산정</div>
+          </div>
+        </div>
+        <div class="tbl-note" style="margin-top:8px;">▸ 펌프 · 팬(옥내소화전 · 스프링클러 · 제연 칸)은 전동기 ΣPm(인버터 제어로 고른 것은 ΣP), 기타 소방부하(자탐 · 방송 · 비상조명 · 유도등 · 기타)는 전동기 이외 ΣP(kVA = kW ÷ 효율 × 역률)로 계산합니다 · 동시에 기동하는 전동기가 있으면 PL에 그 합을 넣으십시오(KDS 4.1(6)) · k가 명확하지 않으면 1.07 ~ 1.13(표 4.1-1)</div>
         <div style="margin-top:14px;padding-top:12px;border-top:1px dashed #cbd5e1;">
           <div style="font-size:11px;font-weight:800;color:#64748b;margin-bottom:8px;">MANMIN 간이식(참고) — S = ΣP × DF × MF ÷ PF · KDS에 없는 약식</div>
           <div class="g-3">
@@ -1307,7 +1324,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
           <div class="result-row"><span class="rl">PL 기동용량 최대 전동기</span><span class="rv" id="rd-pl">— kW</span></div>
           <div class="result-row"><span class="rl">ΣP 전동기 이외 입력용량</span><span class="rv" id="rd-p">— kVA</span></div>
           <div class="result-row"><span class="rl">a · c · k</span><span class="rv" id="rd-ack">—</span></div>
-          <div class="result-row"><span class="rl">GP (KDS 31 60 20 식 4.1-1)</span><span class="rv lg" id="rd-gp">— kVA</span></div>
+          <div class="result-row"><span class="rl">GP (KDS 32 20 20 식 4.1-1)</span><span class="rv lg" id="rd-gp">— kVA</span></div>
           <hr class="r-divider"/>
           <div class="result-row"><span class="rl">참고 · 간이식 DF × MF ÷ PF</span><span class="rv" id="rd-adj">—</span></div>
           <div class="result-row"><span class="rl">참고 · 유효 소방부하</span><span class="rv" id="rd-eff">— kW</span></div>
@@ -1319,7 +1336,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
         </div>
         <div style="margin-top:12px;">
           <div style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">산정식</div>
-          <code class="fml navy">GP[kVA] = [ΣP + (ΣPm − PL) × a + (PL × a × c)] × k — KDS 31 60 20:2021 식 (4.1-1)</code>
+          <code class="fml navy">GP[kVA] = [ΣP + (ΣPm − PL) × a + (PL × a × c)] × k — KDS 32 20 20:2024 식 (4.1-1)</code>
           <code class="fml" id="fml-calc">산정 전</code>
           <code class="fml" id="fml-simple" style="opacity:.75;">참고 · 간이식 산정 전</code>
         </div>
@@ -1467,7 +1484,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
     <span class="lbk">④ 적용 기준</span>
     <div class="lbi"><span class="lbi-k">NFTC 602</span><span class="lbi-v">소방청공고 제2022-240호 [2022. 12. 1.]</span></div>
     <div class="lbi"><span class="lbi-k">NFPC 602</span><span class="lbi-v">소방청고시 제2026-21호 [2026. 5. 4.]</span></div>
-    <div class="lbi"><span class="lbi-k">KDS 31 60 20</span><span class="lbi-v">예비전원설비 설계기준 : 2021</span></div>
+    <div class="lbi"><span class="lbi-k">KDS 32 20 20</span><span class="lbi-v">예비전원설비 설계기준 : 2021</span></div>
   </div>
   <div class="g-2">
     <div>
@@ -1504,16 +1521,17 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
       </div>
       <div class="box">
         <div class="box-hd bh-amber">
-          발전기 용량 산정 기준 (KDS 31 60 20)
+          발전기 용량 산정 기준 (KDS 32 20 20)
         </div>
         <div class="box-bd">
+          <div class="info-box" style="margin-top:10px;border:1.5px solid #c4b5fd;background:#f5f3ff;border-radius:8px;padding:10px 12px;"><div class="info-title mm-law-memo">📝 개정 메모 (2026. 11. 12. 확인)</div><div style="font-size:12px;line-height:1.6;color:#374151;">발전기 용량 산정식의 근거는 국가건설기준 <strong>KDS 32 20 20 예비전원설비 설계기준</strong>(2024-08-22 개정 · 국가건설기준센터)입니다 — 종전 표기 「KDS 32 20 20 : 2024」은 존재하지 않는 코드라 바로잡았습니다(v6.1.2). 2024 개정 반영: ① 인버터(VVVF) 제어 전동기는 ΣPm 에서 빼고 식 (4.1-4)로 ΣP 에 더함 ② LED 램프 등 고조파 발생 부하는 식 (4.1-5) — 특성을 모르면 가중값 λ 2.5 ③ 표 4.1-1 허용전압강하계수 일부 값 정정(이 도구는 k 직접 입력 · 기본 1.10). 주 산정식 (4.1-1)과 a · c · k 추천값은 그대로입니다. 인버터 · 고조파 칸을 고르지 않으면 종전과 같은 결과입니다.</div></div>
           <div class="law-box" style="margin-bottom:10px;">
             <div class="law-ref">산정식</div>
             <div class="law-text">GP = [ΣP + (ΣPm − PL) × a + (PL × a × c)] × k [kVA] — 4.1(6) 식 (4.1-1)</div>
           </div>
           <code class="fml">ΣP = 비전동기 부하용량(kW) ÷ (효율 × 역률) — 식 (4.1-2)</code>
           <div class="info-card" style="margin-top:10px;">
-            <div class="info-title">계수 (KDS 31 60 20:2021 4.1(6))</div>
+            <div class="info-title">계수 (KDS 32 20 20:2024 4.1(6))</div>
             <ul class="info-list">
               <li>a: 전동기 kW당 입력용량 계수 — 고효율 1.38 · 표준형 1.45</li>
               <li>c: 기동계수 — 직입 6(5 ~ 7) · Y-Δ 2(2 ~ 3) · VVVF 1.5(1 ~ 1.5) · 리액터 탭 50 % 3 · 65 % 3.9 · 80 % 4.8</li>
@@ -1737,14 +1755,14 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
       <div class="hm-sec">
         <div class="hm-sec-title">발전기 필요 용량 산정식</div>
         <div class="hm-card">
-          <div class="hm-card-title">주 산정식 — KDS 31 60 20:2021 4.1(6) 식 (4.1-1)</div>
+          <div class="hm-card-title">주 산정식 — KDS 32 20 20:2024 4.1(6) 식 (4.1-1)</div>
           <code class="hm-eq">GP = [ΣP + (ΣPm − PL) × a + (PL × a × c)] × k [kVA]</code>
           <div class="hm-item">ΣP : 전동기 이외 부하 입력용량 합계 [kVA] = 부하용량 ÷ (효율 × 역률) — 식 (4.1-2)</div>
           <div class="hm-item">ΣPm : 전동기 부하용량 합계 [kW] (옥내 · SP · 제연 항목)</div>
           <div class="hm-item">PL : 기동용량이 가장 큰 전동기 [kW] — 0 입력 시 최대값 자동 · 동시 기동이면 합 입력</div>
           <div class="hm-item">a : 고효율 1.38 · 표준형 1.45 &nbsp;|&nbsp; c : 직입 6 · Y-Δ 2 · VVVF 1.5 · 리액터 3 / 3.9 / 4.8</div>
           <div class="hm-item">k : 허용전압강하계수 — 표 4.1-1 · 불명확 시 1.07 ~ 1.13 (기본 1.10)</div>
-          <div class="hm-item">UPS 부하(식 4.1-3) · 고조파 가중(식 4.1-4)은 이 도구에 포함하지 않음 — 해당 시 별도 산정</div>
+          <div class="hm-item">인버터 전동기(식 4.1-4) · LED 등 고조파 부하(식 4.1-5)는 「인버터 · 고조파 부하」 칸에서 선택 · UPS 부하(식 4.1-3)는 포함하지 않음 — 해당 시 별도 산정</div>
         </div>
         <div class="hm-card">
           <div class="hm-card-title">계산 예시 (Y-Δ · 표준형 · k 1.10 · 효율 × 역률 0.85)</div>
@@ -1934,8 +1952,8 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
           <div class="hm-item">재검토 기한: 2023.1.1 기준 매 3년</div>
         </div>
         <div class="hm-card">
-          <div class="hm-card-title">📋 KDS 31 60 20 : 2021 예비전원설비 설계기준</div>
-          <div class="hm-item">국가건설기준 — 4.1(6) 발전기 용량 산정식 (4.1-1) ~ (4.1-4) · 출처 kcsc.re.kr</div>
+          <div class="hm-card-title">📋 KDS 32 20 20 : 2024 예비전원설비 설계기준</div>
+          <div class="hm-item">국가건설기준 — 4.1(6) 발전기 용량 산정식 (4.1-1) ~ (4.1-5) · 출처 kcsc.re.kr</div>
           <div class="hm-item">계수 a · c · k 기준 (표 4.1-1)</div>
         </div>
         <div class="hm-card">
@@ -1985,7 +2003,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
 'use strict';
 /* ════════════════════════════════════════════════
    MANMIN-Ver6.1 · 비상발전기 용량 산정
-   NFTC 602 / NFPC 602 · KDS 31 60 20
+   NFTC 602 / NFPC 602 · KDS 32 20 20
 ════════════════════════════════════════════════ */
 
 var _calc = {};   /* 전역 계산 결과 저장 */
@@ -2012,19 +2030,29 @@ function setText(id, v) { var e = document.getElementById(id); if(e) e.textConte
 function setHTML(id, v) { var e = document.getElementById(id); if(e) e.innerHTML = v; }
 
 /* ── v5.1.0 계산 엔진(순수 함수) — 화면 · A4 · 검증 도구(manual/_tools/verify_gen.py)가 같은 식을 쓴다 ──
-   KDS 31 60 20:2021 4.1(6) 식 (4.1-1)  GP = [ΣP + (ΣPm − PL) × a + (PL × a × c)] × k
+   KDS 32 20 20:2024 4.1(6) 식 (4.1-1)  GP = [ΣP + (ΣPm − PL) × a + (PL × a × c)] × k
      ΣP  : 전동기 이외 부하의 입력용량 합계(kVA) — 식 (4.1-2) 부하용량(kW) ÷ (효율 × 역률)
      ΣPm : 전동기 부하용량 합계(kW) · PL : 기동용량이 가장 큰 전동기(kW, 동시 기동이면 합)
      a   : 전동기 kW당 입력용량 계수(고효율 1.38 · 표준형 1.45) · c : 기동계수 · k : 허용전압강하계수(표 4.1-1, 불명확 시 1.07 ~ 1.13)
    간이식 S = ΣP × DF × MF ÷ PF 는 KDS에 없는 MANMIN 약식(참고)으로만 표시 */
 window.GENENG = {
-  kds: function (motors, nonMotorKw, ef, a, c, k, plIn) {
-    var sumPm = motors.reduce(function (t, v) { return t + v; }, 0);
-    var plAuto = motors.reduce(function (m, v) { return Math.max(m, v); }, 0);
+  /* v6.1.2 — KDS 32 20 20:2024 반영: opt.vf[i] 가 참인 전동기는 인버터(VVVF) 제어 → ΣPm · PL 에서 빼고 ΣP 에 식 (4.1-4) kW × a × λ 로 더함
+     (a = 1 ÷ (효율 × 역률), 전동기 kW당 입력용량 계수) · opt.harmKw 는 LED 등 고조파 부하(kW) → 식 (4.1-5) kW ÷ ef × λ · opt 없으면 종전과 같음 */
+  kds: function (motors, nonMotorKw, ef, a, c, k, plIn, opt) {
+    opt = opt || {}; var vf = opt.vf || [], lam = opt.lam > 0 ? opt.lam : 2.5;
+    var harmKw = Math.min(Math.max(opt.harmKw || 0, 0), nonMotorKw);
+    var dm = motors.filter(function (v, i) { return !vf[i]; });
+    var vfKw = motors.reduce(function (t, v, i) { return t + (vf[i] ? v : 0); }, 0);
+    var sumPm = dm.reduce(function (t, v) { return t + v; }, 0);
+    var plAuto = dm.reduce(function (m, v) { return Math.max(m, v); }, 0);
     var PL = plIn > 0 ? Math.min(plIn, sumPm) : plAuto;
-    var sumP = ef > 0 ? nonMotorKw / ef : 0;
+    var pBase = ef > 0 ? (nonMotorKw - harmKw) / ef : 0;
+    var pHarm = ef > 0 ? harmKw / ef * lam : 0;
+    var pVf = vfKw * a * lam;
+    var sumP = pBase + pHarm + pVf;
     var GP = (sumP + (sumPm - PL) * a + PL * a * c) * k;
-    return { sumPm: sumPm, PL: PL, plAuto: plAuto, sumP: sumP, GP: GP, plClamped: plIn > sumPm && sumPm > 0 };
+    return { sumPm: sumPm, PL: PL, plAuto: plAuto, sumP: sumP, GP: GP, plClamped: plIn > sumPm && sumPm > 0,
+             vfKw: vfKw, harmKw: harmKw, lam: lam, pBase: pBase, pHarm: pHarm, pVf: pVf };
   },
   simple: function (total, df, mf, pf) { return { eff: total * df * mf, S: total * df * mf / pf }; },
   /* 비상전원 작동시간 — 설비별 (LawMCP 원문 대조 2026-10-16) */
@@ -2067,7 +2095,12 @@ function calcAll() {
   var gc = parseFloat(document.getElementById('gp-c').value) || 2;
   var gk = nv('gp-k') || 1.10;
   var gef = nv('gp-ef') || 0.85;
-  var K = GENENG.kds(motors, othSum, gef, ga, gc, gk, nv('gp-pl'));
+  var VFID = ['hyd-pump','hyd-charge','hyd-etc','spr-pump','spr-charge','spr-etc','smk-supply','smk-exhaust','smk-etc'];
+  var vfSel = VFID.map(function (id) { var e = document.getElementById('vf-' + id); return !!(e && e.checked); });
+  var harmKw = (document.getElementById('hm-light') && document.getElementById('hm-light').checked ? nv('oth-light') : 0)
+             + (document.getElementById('hm-sign') && document.getElementById('hm-sign').checked ? nv('oth-sign') : 0);
+  var glam = nv('gp-lam') || 2.5;
+  var K = GENENG.kds(motors, othSum, gef, ga, gc, gk, nv('gp-pl'), { vf: vfSel, harmKw: harmKw, lam: glam });
   var SM = GENENG.simple(total, df, mf, pf);
   var effLoad = SM.eff;
   var simpleKva = SM.S;
@@ -2087,7 +2120,7 @@ function calcAll() {
   setText('rd-sum', total.toFixed(2) + ' kW');
   setText('rd-pm', K.sumPm.toFixed(2) + ' kW');
   setText('rd-pl', K.PL.toFixed(2) + ' kW' + (nv('gp-pl') > 0 ? (K.plClamped ? ' (ΣPm으로 제한)' : ' (직접 입력)') : ' (최대 자동)'));
-  setText('rd-p', K.sumP.toFixed(2) + ' kVA');
+  setText('rd-p', K.sumP.toFixed(2) + ' kVA' + ((K.vfKw > 0 || K.harmKw > 0) ? ' (인버터 ' + K.pVf.toFixed(2) + ' · 고조파 ' + K.pHarm.toFixed(2) + ' 포함)' : ''));
   setText('rd-ack', 'a ' + ga.toFixed(2) + ' · c ' + gc + ' · k ' + gk.toFixed(2));
   setText('rd-gp', reqKva.toFixed(1) + ' kVA');
   setText('rd-adj', 'DF ' + df.toFixed(2) + ' × MF ' + mf.toFixed(2) + ' ÷ PF ' + pf.toFixed(2));
@@ -2574,30 +2607,30 @@ function buildReport() {
 <!-- MANMIN 계산서 표제 규격 v5.0 — 01 옥내소화전 기준 -->
 <div style="text-align:center;margin-bottom:28px;border-bottom:3px double #334155;padding-bottom:16px;">
   <div style="font-size:22px;font-weight:900;letter-spacing:0.06em;color:#111827;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;">비상발전기 용량 산정 계산서</div>
-  <div style="font-size:12px;color:#64748b;margin-top:6px;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;">예비전원설비 설계기준(KDS 31 60 20 : 2021) 식 (4.1-1) · NFTC 103 2.9 · NFTC / NFPC 602 적용</div>
+  <div style="font-size:12px;color:#64748b;margin-top:6px;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;">예비전원설비 설계기준(KDS 32 20 20 : 2024) 식 (4.1-1) · NFTC 103 2.9 · NFTC / NFPC 602 적용</div>
   <table style="margin:12px auto 0;border-collapse:collapse;"><tbody><tr>
     <td style="border:${B};padding:5px 10px;font-size:12px;white-space:nowrap;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;"><b>공사명:</b> ${esc(name)}</td>
     <td style="border:${B};padding:5px 10px;font-size:12px;white-space:nowrap;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;"><b>설계자:</b> ${esc(dsn)}</td>
     <td style="border:${B};padding:5px 10px;font-size:12px;white-space:nowrap;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;"><b>작성일:</b> ${today}</td>
-    <td style="border:${B};padding:5px 10px;font-size:12px;white-space:nowrap;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;"><b>적용기준:</b> KDS 31 60 20 · NFTC 602</td>
+    <td style="border:${B};padding:5px 10px;font-size:12px;white-space:nowrap;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;"><b>적용기준:</b> KDS 32 20 20 · NFTC 602</td>
   </tr></tbody></table>
 </div>
 <div style="height:10px;"></div>
 <div style="break-inside:avoid;page-break-inside:avoid;">
-${SecHd('Ⅰ-1. 소방 부하 집계 (KDS 31 60 20)')}
+${SecHd('Ⅰ-1. 소방 부하 집계 (KDS 32 20 20)')}
 <table style="width:100%;border-collapse:collapse;">
   <thead><tr>${TH('구분','32px','center')}${TH('설비명','','left')}${TH('주펌프/팬 (kW)','82px','center')}${TH('충압/보조 (kW)','82px','center')}${TH('기타 (kW)','68px','center')}${TH('소계 (kW)','74px','center')}</tr></thead>
   <tbody>${loadRowsHtml}</tbody>
 </table>
 </div>
 <div style="break-inside:avoid;page-break-inside:avoid;">
-${SecHd('Ⅰ-2. 발전기 용량 산정식 (KDS 31 60 20:2021 4.1(6) 식 4.1-1)')}
+${SecHd('Ⅰ-2. 발전기 용량 산정식 (KDS 32 20 20:2024 4.1(6) 식 4.1-1)')}
 <table style="width:100%;border-collapse:collapse;border:${B};border-top:none;">
   <tbody>
     <tr><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#374151;width:32%;vertical-align:top;">산정식</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#111;font-weight:700;color:#1E3A5F;">GP [kVA] = [ΣP + (ΣPm − PL) × a + (PL × a × c)] × k</td></tr>
-    <tr style="background:#f8fafc;"><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#374151;">ΣPm 전동기 부하 합계</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#111;font-weight:700;">${r.K.sumPm.toFixed(2)} kW (옥내소화전 · 스프링클러 · 제연)</td></tr>
+    <tr style="background:#f8fafc;"><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#374151;">ΣPm 전동기 부하 합계</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#111;font-weight:700;">${r.K.sumPm.toFixed(2)} kW (옥내소화전 · 스프링클러 · 제연${r.K.vfKw>0?' — 인버터 '+r.K.vfKw.toFixed(2)+' kW 제외':''})</td></tr>
     <tr><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#374151;">PL 최대 기동 전동기</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#111;">${r.K.PL.toFixed(2)} kW</td></tr>
-    <tr style="background:#f8fafc;"><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#374151;">ΣP 비전동기 입력용량</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#111;">${r.othSum.toFixed(2)} kW ÷ ${r.ef.toFixed(2)} (효율 × 역률) = ${r.K.sumP.toFixed(2)} kVA</td></tr>
+    <tr style="background:#f8fafc;"><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#374151;">ΣP 비전동기 입력용량</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#111;">${(r.K.vfKw>0||r.K.harmKw>0)?(r.othSum-r.K.harmKw).toFixed(2)+' kW ÷ '+r.ef.toFixed(2)+(r.K.harmKw>0?' + 고조파 '+r.K.harmKw.toFixed(2)+' kW ÷ '+r.ef.toFixed(2)+' × λ '+r.K.lam:'')+(r.K.vfKw>0?' + 인버터 '+r.K.vfKw.toFixed(2)+' kW × a × λ '+r.K.lam:'')+' = '+r.K.sumP.toFixed(2)+' kVA (식 4.1-2 · 4.1-4 · 4.1-5)':r.othSum.toFixed(2)+' kW ÷ '+r.ef.toFixed(2)+' (효율 × 역률) = '+r.K.sumP.toFixed(2)+' kVA'}</td></tr>
     <tr><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#374151;">계수 a · c · k</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#111;">a ${r.a.toFixed(2)} · c ${r.c} · k ${r.k.toFixed(2)}</td></tr>
     <tr style="background:#f8fafc;"><td style="border-right:${B};border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#374151;">발전기 형식 (NFTC 103 2.9.3.8)</td><td style="border-bottom:${B};padding:5px 10px;font-size:7.9pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#111;">${r.genType==='combo'?'소방부하 겸용 — 비상부하 별도 합산 필요':r.genType==='keep'?'소방전원 보존형':'소방전용'}</td></tr>
     <tr><td style="border-right:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#6b7280;">참고 · MANMIN 간이식</td><td style="padding:5px 10px;font-size:7.9pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#6b7280;">S = ${r.total.toFixed(2)} × ${r.df.toFixed(2)} × ${r.mf.toFixed(2)} ÷ ${r.pf.toFixed(2)} = ${r.simpleKva.toFixed(1)} kVA (KDS 식 아님 · 판정 미사용)</td></tr>
@@ -2637,14 +2670,14 @@ ${SecHd('▣ 적용 법령 및 기준')}
   &nbsp;&nbsp;&nbsp;- §2.2 고압 수전: 방화구획형·옥외개방형·큐비클형 중 선택, 소방회로 격벽 구획<br/>
   &nbsp;&nbsp;&nbsp;- §2.3 저압 수전: 제1·2종 배전반·분전반, 소방시설용 개폐기 표시 의무<br/>
   ② 소방시설용 비상전원수전설비의 화재안전성능기준 (NFPC 602) — 소방청고시 제2026-21호 (2026. 5. 4. 시행)<br/>
-  ③ KDS 31 60 20 : 2021 예비전원설비 설계기준 — 4.1(6) 발전기 용량 산정식 (4.1-1) (출처 kcsc.re.kr)<br/>
+  ③ KDS 32 20 20 : 2024 예비전원설비 설계기준 — 4.1(6) 발전기 용량 산정식 (4.1-1) (출처 kcsc.re.kr)<br/>
   &nbsp;&nbsp;&nbsp;- NFTC 103 2.9.3.7 · 2.9.3.8: 동시 운전 부하 합계 · 최대 기동부하 전압 유지 · 발전기 형식<br/>
   &nbsp;&nbsp;&nbsp;- 비상전원 시간: NFTC 102 2.5.3.2 · 103 2.9.3.2 · 501 2.9.1.2 (20분) · 604 (고층 40 · 50층 60분) · 603 (도로터널)<br/>
   ④ 소방시설 설치 및 관리에 관한 법률 시행령 별표 4
 </div>
 </div>
 <div style="display:flex;align-items:center;justify-content:flex-end;margin-top:18px;padding-top:8px;border-top:1.5px solid #CBD5E1;-webkit-print-color-adjust:exact;">
-  <span style="font-size:6.7pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#9ca3af;letter-spacing:.04em;margin-right:10px;">KDS 31 60 20 · NFTC 103 2.9 · NFPC 602 기준</span>
+  <span style="font-size:6.7pt;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#9ca3af;letter-spacing:.04em;margin-right:10px;">KDS 32 20 20 · NFTC 103 2.9 · NFPC 602 기준</span>
   <span style="font-family:'Orbitron',sans-serif;font-size:7.5pt;font-weight:700;color:#374151;letter-spacing:.1em;border-left:2px solid #CBD5E1;padding-left:10px;">MANMIN-Ver6.1</span>
 </div>
 `;
@@ -3264,7 +3297,7 @@ if(isInstalled())document.addEventListener('DOMContentLoaded',hdrHide);
   <div class="foot-inner">
     <div>
       <div class="foot-nm">MANMIN Ver-6.1</div>
-      <div class="foot-desc">비상발전기 용량 산정 계산서 | KDS 31 60 20 · NFTC 103 2.9 · NFPC 602</div>
+      <div class="foot-desc">비상발전기 용량 산정 계산서 | KDS 32 20 20 · NFTC 103 2.9 · NFPC 602</div>
     </div>
     <div class="foot-copy">ARCHITECT KIM MANMIN © 2026</div>
   </div>

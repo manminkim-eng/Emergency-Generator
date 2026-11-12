@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """비상발전기 v5.1.0 계산 엔진 독립 검증 — usage: python3 verify_gen.py <index.html> [--inject]
-index.html 의 window.GENENG 를 node 로 실행해, 아래 파이썬 독립 구현(KDS 31 60 20:2021 식 4.1-1 · 설비별 유지시간)과 전수 대조한다.
+index.html 의 window.GENENG 를 node 로 실행해, 아래 파이썬 독립 구현(KDS 32 20 20:2024 식 4.1-1 — v6.1.2 opt 인자(인버터 · 고조파) 없는 호출은 종전과 같음 · 설비별 유지시간)과 전수 대조한다.
 --inject : 엔진에 오류 4종을 주입해 검증기가 잡아내는지 확인(잡지 못하면 실패)."""
 import sys, re, json, subprocess, itertools, tempfile, os
 src = open(sys.argv[1], encoding='utf-8').read()
@@ -59,7 +59,7 @@ if '--inject' in sys.argv:
     inj = {
         'a·c 순서 오류(PL × c 만)': ('PL * a * c', 'PL * c'),
         'PL 자동값 = ΣPm': ('var PL = plIn > 0 ? Math.min(plIn, sumPm) : plAuto;', 'var PL = plIn > 0 ? Math.min(plIn, sumPm) : sumPm;'),
-        'ΣP = kW × 효율역률(곱)': ('nonMotorKw / ef', 'nonMotorKw * ef'),
+        'ΣP = kW × 효율역률(곱)': ('(nonMotorKw - harmKw) / ef', '(nonMotorKw - harmKw) * ef'),
         '50층 경계 49층': ('floors >= 50 ||', 'floors >= 49 ||'),
     }
     res['inject'] = {}
