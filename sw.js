@@ -1,4 +1,5 @@
 /* ════════════════════════════════════════════════
+   v6.1.1 (2026-11-12) — 건물개요 공통 원본 MM-PROJECT v1.2 → v1.3(불러오기 창 표 칸 모양 고정 — 도구 CSS 가 새지 않음 · 저장값 같음, 정밀검토 C10) · 쓰지 않는 Noto Sans KR 구글 글꼴 불러오기 제거(실측으로 글자 하나도 안 쓰임 — 글꼴 지정은 그대로, 정밀검토 C4) · 작업지시서 §25-6-80 · 판 6.1 · 캐시명 v6.1.1 (종전 v6.1.0)
    v6.1.0 (2026-11-12) — 건물개요 공통 원본 MM-PROJECT v1.2 새로 넣음(사업명(공사명) · 작성자(설계자) · 지상층(유지시간 판정) · 정밀검토 B6 · 작업지시서 §25-6-77) · 판 6.1 · 캐시명 v6.1.0 (종전 genset-static-v5.1.8 · genset-fonts-v5.1.8)
    v5.1.1 회차 2026-10-16 — 「📘 매뉴얼」 헤더 → 탭 막대 오른쪽 끝(작업지시서 §4) · 절대주소 · 오프라인 안내 · 캐시명 v5.1.1
    v5.1.0 회차 2026-10-16 — KDS 31 60 20 식 (4.1-1) 주 산정식 · 설비별 유지시간 · NFTC 602 공고번호 정정 · 매뉴얼(/manual/ 캐시 제외) · 캐시명 v5.1.0
@@ -34,8 +35,8 @@ const mmMatch = (req, opt) => caches.keys()
   .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
   .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
 
-const CACHE_S = 'genset-static-v6.1.0';   /* 정적 캐시 */
-const CACHE_F = 'genset-fonts-v6.1.0';    /* 폰트 캐시 */
+const CACHE_S = 'genset-static-v6.1.1';   /* 정적 캐시 */
+const CACHE_F = 'genset-fonts-v6.1.1';    /* 폰트 캐시 */
 
 const PRECACHE = [
   './',
