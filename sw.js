@@ -1,4 +1,5 @@
 /* ════════════════════════════════════════════════
+   v6.1.6 (2026-11-24) — 교차검증 2026-11-23 필수 P1 · P2: 유지시간 = ① 선택과 ③ 판정 중 긴 값(① 이 짧으면 경고 · 요약 · A4 연동) · ② 부하 목록 예시 행은 고치기 전 A4 Ⅱ에서 뺌 + 목록표 합계 ↔ Ⅰ-1 합계 대조 — 계산 엔진 · 예제 불변 · 캐시명 v6.1.6 (종전 v6.1.5)
    v6.1.5 (2026-11-12) — html2canvas 1.4.1 머리 태그 SRI(integrity sha384 · crossorigin) · 공통 인쇄 원본 MM-PRINT v1.0 → v1.1(지연 로더도 SRI)(정밀검토 B8 · html2canvas SRI) — 화면 · 계산 · 인쇄 불변 · 작업지시서 §25-6-87 · 캐시명 v6.1.5 (종전 v6.1.4)
    v6.1.4 (2026-11-12) — KDS 32 20 20 : 2024 UPS 입력용량 식 (4.1-3) 칸(출력 ÷ 효율 × λ + 축전지 충전 6 ~ 10 %, 출력 0 이면 종전과 같음) · 표 4.1-1 허용전압강하계수 고르기(발전기 정수 · 허용 전압강하율) · verify_gen.py UPS · 옵션 대조(정밀검토 KDS 남은 2건) · 작업지시서 §25-6-83 · 캐시명 v6.1.4 (종전 v6.1.3)
    v6.1.3 (2026-11-12) — Pretendard CSS SRI(integrity · crossorigin)(정밀검토 C2) — 화면 · 계산 · 인쇄 불변 · 작업지시서 §25-6-82 · 캐시명 v6.1.3 (종전 v6.1.2)
@@ -39,8 +40,8 @@ const mmMatch = (req, opt) => caches.keys()
   .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
   .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
 
-const CACHE_S = 'genset-static-v6.1.5';   /* 정적 캐시 */
-const CACHE_F = 'genset-fonts-v6.1.5';    /* 폰트 캐시 */
+const CACHE_S = 'genset-static-v6.1.6';   /* 정적 캐시 */
+const CACHE_F = 'genset-fonts-v6.1.6';    /* 폰트 캐시 */
 
 const PRECACHE = [
   './',

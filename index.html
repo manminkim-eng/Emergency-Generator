@@ -1273,6 +1273,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
               <option value="40">40분 이상 (고층건축물 — NFTC 604 · 도로터널 옥내소화전 — 603)</option>
               <option value="60">60분 이상 (50층 이상 — NFTC 604 · 도로터널 제연 · 비상조명 — 603)</option>
             </select>
+            <div class="tbl-note" id="hold-time-note" style="margin-top:6px;"></div>
           </div>
           <div>
             <label class="lbl">설치(선정) 발전기 용량</label>
@@ -1421,7 +1422,8 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
       </div>
       <div class="tbl-note" style="margin-top:10px;">
         ▸ 합계kW는 수량 × 단위kW 자동 계산 · 계산서 출력 시 이 목록이 포함됩니다<br/>
-        ▸ 이 표의 합계는 [① 용량 산정] 탭과 별개의 참고용 목록입니다
+        ▸ 이 표의 합계는 [① 용량 산정] 탭과 별개의 참고용 목록입니다<br/>
+        ▸ 처음 깔린 행(No 아래 「예시」)은 예시입니다 — 고치거나 새로 추가한 행만 계산서 Ⅱ에 실리고, 계산서에는 목록표 합계와 Ⅰ-1 합계(① 입력)의 일치 여부를 함께 적습니다
       </div>
     </div>
   </div>
@@ -2129,7 +2131,20 @@ function calcAll() {
   var df   = Math.max(0.01, nv('df')  || 1.0);  /* 수용률: 0이면 1.0으로 */
   var mf   = Math.max(1.0,  nv('mf')  || 1.2);  /* 여유율: 최소 1.0 */
   if (nv('df') === 0) { document.getElementById('df').value = 1.0; df = 1.0; }
-  var time = parseInt(document.getElementById('hold-time').value) || 20;
+  /* v6.1.6 (교차검증 2026-11-23 P1) — 유지시간 = ① 선택과 ③ 판정(건물 조건 · GENENG.hold 발전기 연료 기준) 중 긴 값 · ① 이 짧으면 경고 */
+  var selTime = parseInt(document.getElementById('hold-time').value) || 20;
+  var reqTime = holdReq3();
+  var time = Math.max(selTime, reqTime);
+  var htn = document.getElementById('hold-time-note');
+  if (htn) {
+    if (selTime < reqTime) {
+      htn.style.color = '#b45309'; htn.style.fontWeight = '700';
+      htn.textContent = '⚠ ③ 유지시간 판정 ' + reqTime + '분 — ① 선택 ' + selTime + '분보다 깁니다. 요약 · 계산서에는 ' + reqTime + '분을 적습니다(① 선택을 ' + reqTime + '분 이상으로 고르십시오).';
+    } else {
+      htn.style.color = ''; htn.style.fontWeight = '';
+      htn.textContent = '▸ ③ 유지시간 판정 ' + reqTime + '분(③ 탭 건물 조건) · 요약 · 계산서 = ① 선택과 ③ 판정 중 긴 값';
+    }
+  }
   var inst = nv('inst-kva');
 
   var motors = ['hyd-pump','hyd-charge','hyd-etc','spr-pump','spr-charge','spr-etc','smk-supply','smk-exhaust','smk-etc'].map(nv);
@@ -2217,7 +2232,7 @@ function calcAll() {
 
   _calc = { hydSum:hydSum, sprSum:sprSum, smkSum:smkSum, othSum:othSum,
             total:total, pf:pf, df:df, mf:mf, effLoad:effLoad, simpleKva:simpleKva,
-            reqKva:reqKva, inst:inst, time:time, K:K, a:ga, c:gc, k:gk, ef:gef, genType:gt };
+            reqKva:reqKva, inst:inst, time:time, selTime:selTime, reqTime:reqTime, K:K, a:ga, c:gc, k:gk, ef:gef, genType:gt };
   _calcDone = true;
 }
 
@@ -2349,6 +2364,14 @@ function onUltraChange() {
   judgeTime();
 }
 
+/* v6.1.6 — ③ 탭 건물 조건으로 본 발전기 연료 기준 유지시간(분) — judgeTime 과 같은 입력 · 같은 GENENG.hold */
+function holdReq3() {
+  var fl = document.getElementById('j-floors');
+  if (!fl) return 20;
+  var floors = parseInt(fl.value) || 1;
+  return GENENG.hold(floors, 0, document.getElementById('j-highrise').checked, document.getElementById('j-ultra').checked, document.getElementById('j-tunnel').checked).gen;
+}
+
 /* ── 유지시간 판정 (탭③) — v5.1.0 설비별 판정 (GENENG.hold) ── */
 function judgeTime() {
   var floors   = parseInt(document.getElementById('j-floors').value) || 1;
@@ -2376,12 +2399,14 @@ function judgeTime() {
   html += '<div><span class="badge ' + bdgCls + '">' + req + '분↑</span></div>';
   html += '</div>' + tb + note;
   document.getElementById('judge-result-area').innerHTML = html;
+  if (typeof calcAll === 'function') calcAll();   /* v6.1.6 P1 — ③ 판정 → ① 요약 · 계산서 유지시간 */
 }
 
 /* ── 부하 목록 ── */
-function addLoadRow(name, spec, qty, kw, remark) {
+function addLoadRow(name, spec, qty, kw, remark, ex) {
   var id = ++loadRowId;
-  loadRows.push({ id:id, name:name||'', spec:spec||'', qty:qty||1, kw:kw||0, remark:remark||'' });
+  /* v6.1.6 (교차검증 2026-11-23 P2) — ex: 처음 깔린 예시 행. 고치기 전에는 A4 계산서 Ⅱ에 싣지 않음 */
+  loadRows.push({ id:id, name:name||'', spec:spec||'', qty:qty||1, kw:kw||0, remark:remark||'', ex:!!ex });
   renderLoadTable();
 }
 function removeLoadRow(id) {
@@ -2392,6 +2417,7 @@ function updateLoadRow(id, field, val) {
   var row = loadRows.find(function(r){ return r.id === id; });
   if (!row) return;
   row[field] = val;
+  clearLoadEx(row);
   /* 수치 필드(qty/kw)면 해당 행 합계 셀 + 총합만 갱신 → 포커스 유지 */
   if (field === 'qty' || field === 'kw') {
     updateRowSum(id);
@@ -2431,7 +2457,7 @@ function renderLoadTable() {
     var bg  = idx%2===0 ? 'white' : '#fffbf0';
     var rid = row.id;
     return '<tr style="background:' + bg + ';" data-rid="' + rid + '">' +
-      '<td style="font-size:11px;text-align:center;color:#64748b;font-weight:700;">' + (idx+1) + '</td>' +
+      '<td style="font-size:11px;text-align:center;color:#64748b;font-weight:700;">' + (idx+1) + (row.ex ? '<div id="lr-ex-' + rid + '" title="예시 행 — 고치기 전에는 계산서에 싣지 않음" style="font-size:9px;color:#94a3b8;font-weight:600;">예시</div>' : '') + '</td>' +
       /* 설비명 */
       '<td><input class="lr-name" data-rid="' + rid + '" style="' + IS + '" value="' + esc(row.name) + '" placeholder="설비명"/></td>' +
       /* 규격 */
@@ -2470,6 +2496,7 @@ function attachLoadTableEvents() {
     if (!row) return;
     if (el.classList.contains('lr-qty')) { row.qty = el.value; updateRowSum(rid); updateTotalSum(); }
     if (el.classList.contains('lr-kw'))  { row.kw  = el.value; updateRowSum(rid); updateTotalSum(); }
+    clearLoadEx(row);
   });
 
   /* 텍스트 blur → 저장 */
@@ -2484,6 +2511,7 @@ function attachLoadTableEvents() {
     if (el.classList.contains('lr-rmk'))  row.remark = el.value;
     if (el.classList.contains('lr-qty'))  { row.qty  = el.value; updateRowSum(rid); updateTotalSum(); }
     if (el.classList.contains('lr-kw'))   { row.kw   = el.value; updateRowSum(rid); updateTotalSum(); }
+    clearLoadEx(row);
   });
 
   /* 삭제 버튼 */
@@ -2505,6 +2533,13 @@ function attachLoadTableEvents() {
       if (idx >= 0 && idx < inputs.length - 1) inputs[idx+1].focus();
     }
   });
+}
+/* v6.1.6 P2 — 예시 행을 고치면 실제 행으로(계산서 Ⅱ에 실림) */
+function clearLoadEx(row) {
+  if (!row || !row.ex) return;
+  row.ex = false;
+  var tag = document.getElementById('lr-ex-' + row.id);
+  if (tag) tag.remove();
 }
 function esc(s) { return (s+'').replace(/"/g,'&quot;'); }
 
@@ -2616,13 +2651,14 @@ function buildReport() {
 
   /* 부하 목록표 HTML */
   var listHtml = '';
-  if (loadRows.length > 0) {
+  var listRows = loadRows.filter(function(row){ return !row.ex; });   /* v6.1.6 P2 — 예시 행 제외 */
+  if (listRows.length > 0) {
     var ltot = 0;
     listHtml = SecHd('Ⅱ. 소방부하 목록표');
     listHtml += '<table style="width:100%;border-collapse:collapse;">';
     listHtml += '<thead><tr>' + ['No','설비명','규격','수량','단위kW','합계kW','비고'].map(function(h){ return TH(h); }).join('') + '</tr></thead>';
     listHtml += '<tbody>';
-    loadRows.forEach(function(row, i) {
+    listRows.forEach(function(row, i) {
       var sum = (parseFloat(row.qty)||0)*(parseFloat(row.kw)||0);
       ltot += sum;
       var even = i%2===1;
@@ -2642,6 +2678,11 @@ function buildReport() {
       '<td style="border:'+B+';padding:6px 9px;text-align:center;font-size:8.2pt;font-weight:900;font-family:\'Noto Sans KR\',sans-serif;color:#1E3A5F;background:#EEF4FB;">' + ltot.toFixed(2) + '</td>' +
       '<td style="border:'+B+';background:#EEF4FB;"></td></tr>';
     listHtml += '</tbody></table>';
+    /* v6.1.6 P2 — 목록표 합계 ↔ Ⅰ-1 합계(① 입력, 용량 계산에 쓰는 값) 대조 */
+    var lsame = Math.abs(ltot - r.total) < 0.005;
+    listHtml += '<div style="border:'+B+';border-top:none;padding:5px 9px;font-size:7.6pt;font-family:\'Noto Sans KR\',sans-serif;color:' + (lsame ? '#166534' : '#b45309') + ';">' +
+      (lsame ? '※ 목록표 합계 ' + ltot.toFixed(2) + ' kW = Ⅰ-1 합계 ' + r.total.toFixed(2) + ' kW (일치)'
+             : '※ 목록표 합계 ' + ltot.toFixed(2) + ' kW ≠ Ⅰ-1 합계 ' + r.total.toFixed(2) + ' kW — 발전기 용량은 Ⅰ-1(① 입력) 기준이며 목록표는 참고') + '</div>';
   }
 
   /* ══ 계산서 HTML 본문 — PDF 완전 동일 포맷 ══ */
@@ -2698,7 +2739,7 @@ ${SecHd('Ⅰ-3. 발전기 필요 용량 산정 결과')}
     </tr>
     <tr>
       <td style="border-right:${B};padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;color:#1E3A5F;">비상전원 유지시간</td>
-      <td colspan="2" style="padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;">${r.time}분 이상</td>
+      <td colspan="2" style="padding:5px 10px;font-size:7.9pt;font-weight:700;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;">${r.time}분 이상${r.selTime < r.reqTime ? ' <span style="font-weight:400;color:#b45309;">(③ 유지시간 판정 ' + r.reqTime + '분 적용 — ① 선택 ' + r.selTime + '분보다 김)</span>' : ' <span style="font-weight:400;color:#6b7280;">(① 선택 ' + r.selTime + '분 · ③ 판정 ' + r.reqTime + '분 중 긴 값)</span>'}</td>
     </tr>
   </tbody>
 </table>
@@ -2834,12 +2875,12 @@ function doPdfSave() {
   var pd = document.getElementById('proj-date');
   if (pd) pd.value = ds;
 
-  /* 기본 부하 목록 */
-  addLoadRow('옥내소화전 주펌프',  '5.5kW × 2P', 1, 5.5,  '');
-  addLoadRow('충압펌프',           '0.75kW',      1, 0.75, '');
-  addLoadRow('스프링클러 주펌프',  '11kW × 2P',   1, 11,   '');
-  addLoadRow('제연팬 급기',        '15kW',         1, 15,   '');
-  addLoadRow('비상조명등',         '2.0kW',        1, 2.0,  '비상전원 회로');
+  /* 기본 부하 목록 — v6.1.6 예시 행(ex) · 고치기 전에는 계산서 Ⅱ에 싣지 않음 */
+  addLoadRow('옥내소화전 주펌프',  '5.5kW × 2P', 1, 5.5,  '', true);
+  addLoadRow('충압펌프',           '0.75kW',      1, 0.75, '', true);
+  addLoadRow('스프링클러 주펌프',  '11kW × 2P',   1, 11,   '', true);
+  addLoadRow('제연팬 급기',        '15kW',         1, 15,   '', true);
+  addLoadRow('비상조명등',         '2.0kW',        1, 2.0,  '비상전원 회로', true);
 
   /* URL 연동 */
   loadFromUrl();
