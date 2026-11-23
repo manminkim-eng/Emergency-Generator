@@ -21,7 +21,14 @@ const set=(pg,o)=>pg.evaluate(o=>{for(const k in o){const e=document.getElementB
    await set(pg,{'j-floors':fl,'j-tunnel':tun});await pg.evaluate(()=>onFloorChange());await pg.waitForTimeout(80);
    const t=(await pg.textContent('#judge-result-area .time-banner-main')).trim();R.push({w,floors:fl,tunnel:tun,banner:t,ok:t.includes(exp)});}
   await pg.screenshot({path:path.join(out,`judge_${w}.png`),fullPage:true});
+  /* v6.1.6 P1 — 마지막 판정(도로터널 60분) > ① 선택 20분 → 요약 · 계산서 60분 + ① 경고 */
+  const p1=await pg.evaluate(()=>({time:_calc.time,sel:_calc.selTime,req:_calc.reqTime,warn:document.getElementById('hold-time-note').textContent.includes('⚠')}));
+  R.push({w,p1,ok:p1.time===60&&p1.sel===20&&p1.req===60&&p1.warn});
   const ov=[];for(const [i,id] of [[3,'t-std'],[4,'t-print'],[0,'t-calc']]){await pg.evaluate(([i,id])=>showTab(id,document.querySelectorAll('.tab-btn')[i]),[i,id]);await pg.waitForTimeout(700);
    ov.push(await pg.evaluate(()=>document.documentElement.scrollWidth-innerWidth));await pg.screenshot({path:path.join(out,`${id}_${w}.png`),fullPage:true});}
+  /* v6.1.6 P2 — 예시 행만 있으면 계산서 Ⅱ 없음 · 1행 고치면 Ⅱ + 대조 줄 */
+  const p2a=await pg.evaluate(()=>{buildReport();return document.getElementById('report-zone').textContent.includes('Ⅱ. 소방부하 목록표');});
+  const p2b=await pg.evaluate(()=>{clearLoadEx(loadRows[0]);buildReport();const t=document.getElementById('report-zone').textContent;return t.includes('Ⅱ. 소방부하 목록표')&&t.includes('목록표 합계 5.50 kW');});
+  R.push({w,p2:{exOnlyHasII:p2a,editedHasII:p2b},ok:!p2a&&p2b});
   R.push({w,overflow:ov,errs,manualBtn:await pg.evaluate(()=>!!document.getElementById('mm-manual-btn')&&getComputedStyle(document.getElementById('mm-manual-btn')).display)});await ctx.close();}
  console.log(JSON.stringify(R));await b.close();s.close();})();
