@@ -24,6 +24,17 @@ const set=(pg,o)=>pg.evaluate(o=>{for(const k in o){const e=document.getElementB
   /* v6.1.6 P1 — 마지막 판정(도로터널 60분) > ① 선택 20분 → 요약 · 계산서 60분 + ① 경고 */
   const p1=await pg.evaluate(()=>({time:_calc.time,sel:_calc.selTime,req:_calc.reqTime,warn:document.getElementById('hold-time-note').textContent.includes('⚠')}));
   R.push({w,p1,ok:p1.time===60&&p1.sel===20&&p1.req===60&&p1.warn});
+  /* v6.1.7 P13 · P14 — 높이 120 m · 비상조명 5용도 · 발전기로 공급 */
+  const p13=[];for(const [o,exp] of [[{'j-floors':20,'j-tunnel':false,'j-height':120,'j-light5':false,'j-genlw':false},'40분'],[{'j-floors':5,'j-height':'','j-genlw':true},'30분'],[{'j-floors':5,'j-light5':true,'j-genlw':true},'60분'],[{'j-floors':5,'j-light5':false,'j-genlw':false},'20분']]){
+   await set(pg,o);await pg.evaluate(()=>judgeTime());await pg.waitForTimeout(80);const t=(await pg.textContent('#judge-result-area .time-banner-main')).trim();p13.push(t.includes(exp));}
+  R.push({w,p13,ok:p13.every(Boolean)});
+  /* v6.1.7 P3 · P12 · P16 — mm-warn(k 2.0) · 부족 0.1 kVA 올림 · 「기타 전동기」 */
+  await pg.evaluate(()=>showTab('t-calc',document.querySelectorAll('.tab-btn')[0]));
+  await set(pg,{'gp-k':2.0});await pg.evaluate(()=>{calcAll();MMWarn.run();});await pg.waitForTimeout(100);
+  const p3=await pg.evaluate(()=>document.getElementById('gp-k').getAttribute('data-mm-warn')==='1');
+  await set(pg,{'gp-k':1.07,'inst-kva':0});await pg.evaluate(()=>{calcAll();const g=_calc.reqKva;document.getElementById('inst-kva').value=(g-0.01).toFixed(2);calcAll();MMWarn.run();});
+  const p12=(await pg.textContent('#rd-judge')).trim();const p16=await pg.evaluate(()=>[...document.querySelectorAll('label.lbl')].filter(l=>l.textContent.trim()==='기타 전동기').length);
+  R.push({w,p3,p12,p16,ok:p3&&p12.includes('0.1 kVA 부족')&&p16===3});
   const ov=[];for(const [i,id] of [[3,'t-std'],[4,'t-print'],[0,'t-calc']]){await pg.evaluate(([i,id])=>showTab(id,document.querySelectorAll('.tab-btn')[i]),[i,id]);await pg.waitForTimeout(700);
    ov.push(await pg.evaluate(()=>document.documentElement.scrollWidth-innerWidth));await pg.screenshot({path:path.join(out,`${id}_${w}.png`),fullPage:true});}
   /* v6.1.6 P2 — 예시 행만 있으면 계산서 Ⅱ 없음 · 1행 고치면 Ⅱ + 대조 줄 */

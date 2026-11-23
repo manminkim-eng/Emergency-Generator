@@ -16,21 +16,22 @@ window.__set=o=>{for(const k in o){const e=document.getElementById(k);if(e.type=
 window.__EXA={'hyd-pump':15,'hyd-charge':2.2,'hyd-etc':0,'spr-pump':22,'spr-charge':2.2,'spr-etc':0,'smk-supply':18.5,'smk-exhaust':11,'smk-etc':0,'oth-detect':1.5,'oth-light':2,'oth-sign':0.5,'oth-misc':0,'gp-a':'1.45','gp-c':'2','gp-k':1.10,'gp-pl':0,'gp-ef':0.85,'gen-type':'fire','hold-time':'20','inst-kva':200,'pf':0.8,'df':1.0,'mf':1.2,'ups-kva':0,'ups-eff':0.9,'ups-chg':10};
 window.__ex=(o)=>{__tab(0);document.querySelectorAll('[id^="vf-"],#hm-light,#hm-sign').forEach(e=>{e.checked=false;});__set(__EXA);if(o)__set(o);calcAll();};
 window.__help=(id,i)=>{openHelp();helpTab(id,document.querySelectorAll('.hm-tab')[i]);};
-window.__judge=(fl,tun)=>{__tab(2);__set({'j-floors':fl,'j-tunnel':!!tun,'j-bsmt':0});onFloorChange();};
+window.__judge=(fl,tun,o)=>{__tab(2);__set(Object.assign({'j-floors':fl,'j-tunnel':!!tun,'j-bsmt':0,'j-height':'','j-light5':false,'j-genlw':false},o||{}));onFloorChange();};
 window.__loadA=()=>{loadRows.length=0;[['옥내소화전 주펌프','15kW · Y-Δ',15],['옥내소화전 충압펌프','2.2kW',2.2],['스프링클러 주펌프','22kW · Y-Δ',22],['스프링클러 충압펌프','2.2kW',2.2],['제연 급기팬','18.5kW',18.5],['제연 배기팬','11kW',11],['자동화재탐지 · 비상방송','1.5kW',1.5],['비상조명등','2.0kW',2],['유도등','0.5kW',0.5]].forEach(r=>addLoadRow(r[0],r[1],1,r[2],''));};`;
 const EXA="__ex()";
 const SHOTS=[
  {id:'s01_overview',pre:EXA+";window.scrollTo(0,0)",clip:'viewport',m:[['nth:.tab-btn|0','작업 탭 5개'],['#mm-manual-btn','📘 매뉴얼 — 탭 막대 끝'],['.sum-bar','요약 바'],['.link-banner','타 계산기 연동 띠'],['.gen-hero','필요 용량 GP']]},
- {id:'s02_header',clip:'.site-header',m:[['.hdr-h1','도구 이름 · Ver-6.1'],['#mm-manual-btn','📘 매뉴얼 — 탭 막대 끝'],['.hdr-right','KDS 32 20 20 · NFTC 103 2.9 · NFTC 602'],['.tab-bar-wrap','탭 5개']]},
- {id:'s03_input',clip:'box:소방 부하 입력',m:[['up:1|.bh-indigo','옥내소화전 — 전동기'],['up:1|.bh-green','스프링클러 — 전동기'],['up:1|.bh-amber','제연 — 전동기'],['up:1|.bh-energy','기타 — 전동기 이외']]},
- {id:'s04_coef',clip:'box:발전기 설계 계수',m:[['nth:code.fml.navy|1','식 (4.1-1)'],['up:1|#gp-a','a 입력용량 계수'],['up:1|#gp-c','c 기동계수'],['up:2|#gp-k','k 전압강하계수'],['up:2|#gp-pl','PL (0 = 자동)'],['up:2|#gp-ef','효율 × 역률'],['up:2|#vf-hyd-pump','인버터 · 고조파 부하 (식 4.1-4 · 4.1-5)'],['up:2|#pf','간이식(참고)'],['up:1|#gen-type','발전기 형식'],['up:1|#hold-time','유지시간'],['#hold-time-note','③ 판정 연동 안내 · 경고'],['.calc-btn','필요 용량 산정'],['up:2|#ups-kva','UPS (식 4.1-3)'],['#k-xd','k — 표 4.1-1 고르기']]},
+ {id:'s02_header',clip:'.site-header',m:[['.hdr-h1','도구 이름 · Ver-6.1'],['#mm-manual-btn','📘 매뉴얼 — 탭 막대 끝'],['.hdr-right','KDS 32 20 20 · NFPC 103 제12조 · NFTC 103 2.9.3'],['.tab-bar-wrap','탭 5개']]},
+ {id:'s03_input',clip:'box:소방 부하 입력',m:[['up:1|.bh-indigo','옥내소화전 — 전동기'],['up:1|.bh-green','스프링클러 — 전동기'],['up:1|.bh-amber','제연 — 전동기'],['up:2|#hyd-etc','「기타 전동기」 — 전동기 ΣPm'],['up:1|.bh-energy','기타 소방부하 — 전동기 이외']]},
+ {id:'s04_coef',clip:'box:발전기 설계 계수',m:[['nth:code.fml.navy|1','식 (4.1-1)'],['up:1|#gp-a','a 입력용량 계수'],['up:1|#gp-c','c 기동계수'],['up:2|#gp-k','k 전압강하계수'],['up:2|#gp-pl','PL (0 = 자동) · 인버터 제외 · 동시 기동 합'],['up:2|#gp-ef','효율 × 역률'],['up:2|#vf-hyd-pump','인버터 · 고조파 부하 (식 4.1-4 · 4.1-5) — 「기타 전동기」'],['up:2|#pf','간이식(참고)'],['up:1|#gen-type','발전기 형식'],['up:1|#hold-time','유지시간'],['#hold-time-note','③ 판정 연동 안내 · 경고'],['.calc-btn','필요 용량 산정'],['up:2|#ups-kva','UPS (식 4.1-3)'],['#k-xd','k — 표 4.1-1 고르기']]},
  {id:'s05_hero',clip:'.gen-hero',m:[['#res-kva','GP (kVA)'],['#res-kva-sub','대입식']]},
  {id:'s06_detail',clip:'box:산정 상세',m:[['row:ΣPm 전동기','ΣPm'],['row:PL 기동용량','PL'],['row:ΣP 전동기 이외','ΣP'],['row:GP (KDS','GP'],['row:참고 · S =','간이식(참고)'],['row:판  정','판정'],['#fml-calc','대입식']]},
  {id:'s07_dol',pre:"__ex({'gp-c':'6'})",clip:'box:산정 상세',post:EXA,m:[['row:a · c · k','c = 6 (직입)'],['row:GP (KDS','GP'],['row:판  정','부족']]},
+ {id:'s24_warn',pre:"__ex({'gp-pl':30,'gp-ef':1.2})",wait:1400,clip:'up:3|#gp-pl',post:EXA+";MMWarn.run()",m:[['up:2|#gp-pl','PL — 가장 큰 직입 전동기보다 큼'],['up:2|#gp-ef','효율 × 역률 — 1 초과']]},
  {id:'s22_vf',pre:"__ex({'vf-spr-pump':true,'hm-light':true})",clip:'box:산정 상세',post:EXA,m:[['row:ΣPm 전동기','ΣPm — 인버터 전동기 뺌'],['row:PL 기동용량','PL'],['row:ΣP 전동기 이외','ΣP — 인버터 · 고조파 더함'],['row:GP (KDS','GP']]},
  {id:'s23_ups',pre:"__ex({'ups-kva':30})",clip:'box:산정 상세',post:EXA,m:[['row:ΣP 전동기 이외','ΣP — UPS 입력용량 더함'],['row:GP (KDS','GP'],['row:판  정','부족']]},
  {id:'s08_load',pre:"__tab(1);window.scrollTo(0,0)",clip:'box:소방부하 목록표',m:[['nth:[id^="lr-ex-"]|0','예시 행 — 고치기 전에는 계산서 Ⅱ 제외']]},
- {id:'s09_judge35',pre:"__judge(35)",clip:'#t-judge',m:[['box:건물 조건 입력','층수 · 지하층 · 특수 조건'],['.time-banner','최소 40분'],['nth:#judge-result-area .dt|0','설비별 시간 · 근거'],['box:판정 기준표','판정 기준표']]},
+ {id:'s09_judge35',pre:"__judge(35)",clip:'#t-judge',m:[['box:건물 조건 입력','층수 · 지하층 · 특수 조건'],['up:2|#j-height','건물 높이 (120 m 이상 고층)'],['up:1|#j-light5','비상조명등 지하층 · 무창층 5용도'],['up:1|#j-genlw','비상조명등 · 무선통신 증폭기를 발전기로 공급'],['.time-banner','최소 40분'],['nth:#judge-result-area .dt|0','설비별 시간 · 근거'],['box:판정 기준표','판정 기준표']]},
  {id:'s10_tunnel',pre:"__judge(1,true)",clip:'box:판정 결과',post:"__judge(5)",m:[['.time-banner','도로터널 60분']]},
  {id:'s11_std602',pre:"__tab(3);window.scrollTo(0,0)",clip:'box:NFTC 602 핵심',m:[]},
  {id:'s12_stdkds',clip:'box:발전기 용량 산정 기준',m:[]},
@@ -68,7 +69,7 @@ const SHOTS=[
   meta[S.id]={w:Math.round(cl.width),h:Math.round(Math.min(cl.height,S.fixed?VH:1e9)),marks:info.marks};
   if(S.post){try{await pg.evaluate(S.post);}catch(e){errs.push(S.id+' post '+e.message);}await pg.waitForTimeout(300);}
  }
- const EX=await pg.evaluate(()=>{const m=[15,2.2,0,22,2.2,0,18.5,11,0];return {A:GENENG.kds(m,4,0.85,1.45,2,1.10,0),D:GENENG.kds(m,4,0.85,1.45,6,1.10,0),V:GENENG.kds(m,4,0.85,1.45,1.5,1.10,0),VF:GENENG.kds(m,4,0.85,1.45,2,1.10,0,{vf:[false,false,false,true,false,false,false,false,false],harmKw:2,lam:2.5}),UP:GENENG.kds(m,4,0.85,1.45,2,1.10,0,{lam:2.5,upsKva:30,upsEff:0.9,upsChg:10}),S:GENENG.simple(74.9,1,1.2,0.8),H35:GENENG.hold(35,0,false,false,false),H55:GENENG.hold(55,0,false,false,false),HT:GENENG.hold(1,0,false,false,true),H5:GENENG.hold(5,0,false,false,false)};});
+ const EX=await pg.evaluate(()=>{const m=[15,2.2,0,22,2.2,0,18.5,11,0];return {A:GENENG.kds(m,4,0.85,1.45,2,1.10,0),D:GENENG.kds(m,4,0.85,1.45,6,1.10,0),V:GENENG.kds(m,4,0.85,1.45,1.5,1.10,0),VF:GENENG.kds(m,4,0.85,1.45,2,1.10,0,{vf:[false,false,false,true,false,false,false,false,false],harmKw:2,lam:2.5}),UP:GENENG.kds(m,4,0.85,1.45,2,1.10,0,{lam:2.5,upsKva:30,upsEff:0.9,upsChg:10}),S:GENENG.simple(74.9,1,1.2,0.8),H35:GENENG.hold(35,0,false,false,false),H55:GENENG.hold(55,0,false,false,false),HT:GENENG.hold(1,0,false,false,true),H5:GENENG.hold(5,0,false,false,false),H5LW:GENENG.hold(5,0,false,false,false,{genLW:true}),H5L5:GENENG.hold(5,0,false,false,false,{light5:true}),H5L5LW:GENENG.hold(5,0,false,false,false,{light5:true,genLW:true}),H120:GENENG.hold(20,120,false,false,false)};});
  fs.writeFileSync(path.join(out,'_example.json'),JSON.stringify(EX,null,1));
  const mctx=await b.newContext({viewport:{width:390,height:844},deviceScaleFactor:2,serviceWorkers:'block',isMobile:true,hasTouch:true,locale:'ko-KR'});await setup(mctx);
  const mp=await mctx.newPage();await mp.goto(`http://127.0.0.1:${PORT}/index.html`);await mp.waitForTimeout(1500);await mp.addStyleTag({content:HIDE});await mp.evaluate(HELP);
