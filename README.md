@@ -1,4 +1,9 @@
-# 🔴 비상발전기 용량 산정 계산서 PWA — **Ver 6.1 (v6.1.7)**
+# 🔴 비상발전기 용량 산정 계산서 PWA — **Ver 6.1 (v6.1.8)**
+
+## v6.1.8 (2026-11-24) — 건물개요 단추 위치를 다른 도구와 같게
+
+- FAB 묶음에서 「앱 설치」 FAB(`#install-fab-btn`, beforeinstallprompt 때만 표시)를 뺌 — 설치 FAB가 숨으면 묶음 높이가 161 → 77px로 줄어 건물개요 단추(`bottom:190px`)가 FAB 위 95px에 떠 보였음(다른 도구 9 ~ 15px). 설치는 하단 안내 띠 `#pwa-banner` · 머리 `#pwa-hdr-btn` 그대로.
+- 공통 건물개요 원본 v1.3 `tools.json` Emergency-Generator `data-pos` `bottom:190px` → `bottom:104px`(09 제연 · 11 소방시설과 같음) · inject.py 로 MM-PROJECT 구간 갱신(원본 js 변경 없음) · sw 캐시명 v6.1.8 · 계산 · 인쇄 · MM-PRINT 불변.
 
 ## v6.1.7 (2026-11-24) — 교차검증 2026-11-23 권장 · 권고
 

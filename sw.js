@@ -1,4 +1,5 @@
 /* ════════════════════════════════════════════════
+   v6.1.8 (2026-11-24) — FAB 묶음에서 조건부 「앱 설치」 FAB 뺌(건물개요 단추가 FAB 위 95px 떠 보이던 문제 · MM-PROJECT data-pos 190 → 104) — 계산 · 인쇄 불변 · 캐시명 v6.1.8 (종전 v6.1.7)
    v6.1.7 (2026-11-24) — 교차검증 2026-11-23 권장 · 권고: 입력 경고(mm-warn) · 근거 표기(KDS 32 20 20 · NFPC 103 제12조 · NFTC 103 2.9.3 주 근거, 602는 수전설비로 할 때) · A4 합계 라벨 · 판정 0.1 kVA 표시 · ③ 높이 칸 · 비상조명 5용도 · 발전기로 공급 체크 · 「기타 전동기」 · PL 안내 · KDS 옛 코드 · 602 제2종 · NFTC 102 2.5.2.1 문구 — 기본 입력 계산값 불변 · 캐시명 v6.1.7 (종전 v6.1.6)
    v6.1.6 (2026-11-24) — 교차검증 2026-11-23 필수 P1 · P2: 유지시간 = ① 선택과 ③ 판정 중 긴 값(① 이 짧으면 경고 · 요약 · A4 연동) · ② 부하 목록 예시 행은 고치기 전 A4 Ⅱ에서 뺌 + 목록표 합계 ↔ Ⅰ-1 합계 대조 — 계산 엔진 · 예제 불변 · 캐시명 v6.1.6 (종전 v6.1.5)
    v6.1.5 (2026-11-12) — html2canvas 1.4.1 머리 태그 SRI(integrity sha384 · crossorigin) · 공통 인쇄 원본 MM-PRINT v1.0 → v1.1(지연 로더도 SRI)(정밀검토 B8 · html2canvas SRI) — 화면 · 계산 · 인쇄 불변 · 작업지시서 §25-6-87 · 캐시명 v6.1.5 (종전 v6.1.4)
@@ -41,8 +42,8 @@ const mmMatch = (req, opt) => caches.keys()
   .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
   .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
 
-const CACHE_S = 'genset-static-v6.1.7';   /* 정적 캐시 */
-const CACHE_F = 'genset-fonts-v6.1.7';    /* 폰트 캐시 */
+const CACHE_S = 'genset-static-v6.1.8';   /* 정적 캐시 */
+const CACHE_F = 'genset-fonts-v6.1.8';    /* 폰트 캐시 */
 
 const PRECACHE = [
   './',

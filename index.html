@@ -1675,13 +1675,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
     <span class="fab-sub">법규자료</span>
   </button>
 
-  <!-- ② 앱 설치 FAB (beforeinstallprompt 발생 시 표시) -->
-  <button class="help-fab" id="install-fab-btn" onclick="pwaTrigger('fab')" title="발전설비 앱 설치"
-    style="display:none;background:linear-gradient(135deg,#15803d 0%,#16a34a 55%,#22c55e 100%);border:1px solid rgba(255,255,255,.3);animation:fabIn .55s cubic-bezier(.34,1.56,.64,1) forwards;">
-    <span class="fab-icon">📲</span>
-    <span class="fab-lbl">앱 설치</span>
-    <span class="fab-sub">PWA</span>
-  </button>
+  <!-- v6.1.8 (2026-11-24) — ② 앱 설치 FAB 뺌: 설치 가능할 때만 보여 묶음 높이가 77 ↔ 161px로 바뀌어 건물개요 단추(MM-PROJECT data-pos)가 95px 떠 보이던 문제. 다른 도구처럼 FAB 묶음은 이용안내 하나 · 설치는 하단 안내 띠 #pwa-banner · 머리 #pwa-hdr-btn -->
 
 </div>
 
@@ -3003,9 +2997,6 @@ if('serviceWorker'in navigator){
 /* ── beforeinstallprompt ── */
 window.addEventListener('beforeinstallprompt',function(e){
   e.preventDefault();_p=e;hdrShow();
-  /* ── 설치 FAB 표시 ── */
-  var fab=$id('install-fab-btn');
-  if(fab){fab.style.display='flex';fab.style.animation='fabIn .55s cubic-bezier(.34,1.56,.64,1) forwards';}
   if(!sessionStorage.getItem('pwa-no-banner'))setTimeout(bannerShow,3000);
 });
 
@@ -3021,7 +3012,6 @@ window.pwaTrigger=function(src){
   _p.userChoice.then(function(r){
     if(r.outcome==='accepted'){
       hdrHide();
-      var fab=$id('install-fab-btn');if(fab)fab.style.display='none';
     }
     _p=null;
   });
@@ -3046,7 +3036,6 @@ window.swDoUpdate=function(){
 /* ── 설치 완료 ── */
 window.addEventListener('appinstalled',function(){
   hdrHide();bannerHide();_p=null;
-  var fab=$id('install-fab-btn');if(fab)fab.style.display='none';
 });
 if(isInstalled())document.addEventListener('DOMContentLoaded',hdrHide);
 })();
@@ -3643,7 +3632,7 @@ window.MM_WARN_CFG={all:true,report:['#report-zone','#rpt-print-doc'],rules:[
 })();
 </script>
 <!-- MM-PROJECT:BEGIN v1.3 -->
-<script id="mm-project-js" data-tool="발전설비" data-pos="bottom:190px;right:18px" data-map="{&quot;사업명&quot;:&quot;#bld-name&quot;,&quot;위치&quot;:&quot;-&quot;,&quot;발주처&quot;:&quot;-&quot;,&quot;작성자&quot;:&quot;#designer&quot;,&quot;연면적&quot;:&quot;-&quot;,&quot;지상층&quot;:&quot;#j-floors&quot;,&quot;지하층&quot;:&quot;-&quot;,&quot;높이&quot;:&quot;-&quot;,&quot;구조&quot;:&quot;-&quot;}">
+<script id="mm-project-js" data-tool="발전설비" data-pos="bottom:104px;right:18px" data-map="{&quot;사업명&quot;:&quot;#bld-name&quot;,&quot;위치&quot;:&quot;-&quot;,&quot;발주처&quot;:&quot;-&quot;,&quot;작성자&quot;:&quot;#designer&quot;,&quot;연면적&quot;:&quot;-&quot;,&quot;지상층&quot;:&quot;#j-floors&quot;,&quot;지하층&quot;:&quot;-&quot;,&quot;높이&quot;:&quot;-&quot;,&quot;구조&quot;:&quot;-&quot;}">
 /* MANMIN 공통 건물개요 원본 manmin-project.js v1.3 (2026-11-12, 작업지시서 §25-6-80 · v1.2 §25-6-52 · v1.1 §25-6-51 · v1.0 §25-6-50)
    v1.3: 불러오기 창 표에 도구 CSS(줄무늬 · 칸 배경 · 글자색 · 머리칸 대문자 · 작은 글자)가 새지 않도록 표 칸 모양 고정(정밀검토 C10) — 동작 · 저장값 · 파일 형식 같음
    정본: Z:\MIN-A\01.만민자료\02.설계자료\11.개발자료\65.개발자료[건물개요]\버전s-1.3\manmin-project-v1.3\
